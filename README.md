@@ -2,9 +2,11 @@
 
 ## Introduction
 
-**Novus Engine** is a bare-bones 3D game engine built in Direct3D 11. This is made with the intent of helping me experiment with complex shaders and effects.
+**Novus Engine** is a bare-bones 3D game engine built using Direct3D 11. This is made with the intent of helping me experiment with complex shaders and effects.
 
 Currently I am porting code over from my old project into this new engine and refactoring it as I go in order to be more consistent with the coding style as a whole.
+
+This project is built in Visual Studio 2013 and is currently only targeted at x64 hardware.
 
 ## Features (Planned)
 
