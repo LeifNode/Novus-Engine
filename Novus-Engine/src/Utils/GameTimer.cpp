@@ -102,19 +102,17 @@ void GameTimer::SleepForDuration(const float& ms)
 	__int64 currentTime, previousTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 	double remainingTime = ms - (double)(currentTime - mPrevTime) * mSecondsPerCount * 1000.0;
-
 	while (remainingTime > 0.0)
 	{
 		previousTime = currentTime;
 		QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
-
 		double elapsedTime = (double)(currentTime - previousTime) * mSecondsPerCount * 1000.0;
-		//std::cout << elapsedTime << std::endl;
+
 		remainingTime -= elapsedTime;
 
-		if (remainingTime > 4.0)
+		/*if (remainingTime > 10.0)
 		{
-			Sleep(4);
-		}
+			Sleep(10);
+		}*/
 	}
 }

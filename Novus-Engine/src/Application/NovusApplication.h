@@ -16,6 +16,8 @@
 namespace novus
 {
 
+class D3DRenderer;
+
 class NovusApplication
 {
 public:
@@ -37,6 +39,9 @@ public:
 	int getClientHeight() const;
 	float getAspectRatio() const;
 
+	HWND getMainWnd() const;
+	HWND getConsoleWnd() const;
+
 protected:
 	bool InitWindow();
 	bool InitConsole();
@@ -57,7 +62,11 @@ private:
 	std::wstring mMainWndCaption;
 
 	GameTimer mTimer;
+
+	D3DRenderer* mpRenderer;
 };
+
+NovusApplication* gpApplication;
 
 }
 #endif

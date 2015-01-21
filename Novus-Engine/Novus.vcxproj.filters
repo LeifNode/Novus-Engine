@@ -21,19 +21,58 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{8ee69c97-c454-4b58-b50c-828106d52b4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{5bfb3b6f-bd90-4cd5-9e16-a4f0453e677f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{b76e00aa-e9bf-4380-84da-76c67ba5a9f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rdParty">
+      <UniqueIdentifier>{ebfedc30-3cf4-4b59-8708-7e166a3d25b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils\Memory">
+      <UniqueIdentifier>{b4ec91d7-2f03-4991-a6e7-f41b07a6a4ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils\Logging">
+      <UniqueIdentifier>{e9451196-5fb5-4463-90b7-736e303a853b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{8d4bf935-79cb-4578-9a54-9edb3173c55b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Application\NovusApplication.h">
+    <ClInclude Include="src\Graphics\D3DRenderer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\NovusApplication.h">
       <Filter>Source Files\Application</Filter>
     </ClInclude>
-    <ClInclude Include="include\Application\Common.h">
+    <ClInclude Include="src\Application\Common.h">
       <Filter>Source Files\Application</Filter>
     </ClInclude>
-    <ClInclude Include="include\Application\Statics.h">
-      <Filter>Source Files\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\GameTimer.h">
+    <ClInclude Include="src\Utils\GameTimer.h">
       <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Memory\MallocTracker.h">
+      <Filter>Source Files\Utils\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Memory\Memory.h">
+      <Filter>Source Files\Utils\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\InputSystem.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\dxerr.h">
+      <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\GBuffer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\EngineStatics.h">
+      <Filter>Source Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shader.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +81,24 @@
     </ClCompile>
     <ClCompile Include="src\Utils\GameTimer.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\D3DRenderer.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Memory\Memory.cpp">
+      <Filter>Source Files\Utils\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Memory\MallocTracker.cpp">
+      <Filter>Source Files\Utils\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\dxerr.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\GBuffer.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\EngineStatics.cpp">
+      <Filter>Source Files\Application</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

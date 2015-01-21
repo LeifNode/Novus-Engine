@@ -1,10 +1,15 @@
 #include "Application/NovusApplication.h"
+#include "Graphics/D3DRenderer.h"
+#include "EngineStatics.h"
+#include "Utils/Memory/MallocTracker.h"
 
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")
 #pragma comment(lib, "dxguid")
 
 using novus::NovusApplication;
+
+novus::NovusApplication* gpApplication = NULL;
 
 namespace
 {
@@ -20,7 +25,7 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 NovusApplication::NovusApplication(HINSTANCE hInstance)
 :
 mhAppInstance(hInstance),
-mMainWndCaption(L"Direct 3D 11 Application"),
+mMainWndCaption(L"Novus Application"),
 mClientWidth(1980),
 mClientHeight(1080),
 mhWnd(0),
@@ -31,16 +36,37 @@ mResizing(false),
 mRunning(true)
 {
 	gNovusApp = this;
+	gpApplication = this;
+
+	mpRenderer = NE_NEW D3DRenderer();
+
+
+
+	EngineStatics::mspRenderer = mpRenderer;
 }
 
 NovusApplication::~NovusApplication()
 {
-	//MallocTracker::getInstance().dumpTrackedMemory();
+
+
+	NE_DELETE(mpRenderer);
+
+	novus::MallocTracker::getInstance()->DumpTrackedMemory();
 }
 
 float NovusApplication::getAspectRatio() const
 {
 	return static_cast<float>(mClientWidth) / mClientHeight;
+}
+
+HWND NovusApplication::getMainWnd() const
+{
+	return mhWnd;
+}
+
+HWND NovusApplication::getConsoleWnd() const
+{
+	return mhConsoleWnd;
 }
 
 int NovusApplication::Run()
@@ -100,8 +126,8 @@ bool NovusApplication::Init()
 	if (!InitWindow())
 		return false;
 
-	//if (!mpRenderer->initialize())
-		//return false;
+	if (!mpRenderer->Init())
+		return false;
 
 	//LeapManager::getInstance().Initialize();
 	
@@ -144,7 +170,7 @@ LRESULT NovusApplication::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 		// Save the new client area dimensions.
 		mClientWidth = LOWORD(lParam);
 		mClientHeight = HIWORD(lParam);
-		if (/*mpRenderer->device()*/true)
+		if (mpRenderer->device())
 		{
 			if (wParam == SIZE_MINIMIZED)
 			{

@@ -38,6 +38,10 @@
 #include <string>
 #include <algorithm>
 
+#include "Utils/dxerr.h"
+
+#include "Utils/Memory/Memory.h"
+
 using namespace DirectX;
 
 using std::shared_ptr;

@@ -17,7 +17,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Application\TestApplication.h">
+    <ClInclude Include="src\Application\TestApplication.h">
       <Filter>Source Files\Application</Filter>
     </ClInclude>
   </ItemGroup>
