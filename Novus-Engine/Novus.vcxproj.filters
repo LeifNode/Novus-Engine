@@ -18,9 +18,6 @@
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{db65fcea-d23f-4fd5-884a-dbdca4cf9fa6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{8ee69c97-c454-4b58-b50c-828106d52b4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{5bfb3b6f-bd90-4cd5-9e16-a4f0453e677f}</UniqueIdentifier>
     </Filter>
@@ -38,6 +35,9 @@
     </Filter>
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{8d4bf935-79cb-4578-9a54-9edb3173c55b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Textures">
+      <UniqueIdentifier>{2163b478-a407-4e2e-beea-272e12bf696b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +74,12 @@
     <ClInclude Include="src\Graphics\Shader.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\ConstantBuffers.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Textures\Texture.h">
+      <Filter>Source Files\Graphics\Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -99,6 +105,12 @@
     </ClCompile>
     <ClCompile Include="src\Application\EngineStatics.cpp">
       <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Textures\Texture.cpp">
+      <Filter>Source Files\Graphics\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shader.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

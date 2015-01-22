@@ -137,20 +137,20 @@ void GBuffer::OnResize(int width, int height)
 	desc.MiscFlags = 0;
 
 	desc.Format = depthStencilTextureFormat;
-	mpDepthStencilTexture = renderer->createTexture(&desc, DXGI_FORMAT_R24_UNORM_X8_TYPELESS);
+	renderer->CreateTexture(&desc, &mpDepthStencilTexture, &mpDepthStencilResourceView, DXGI_FORMAT_R24_UNORM_X8_TYPELESS);
 
 	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	desc.Format = diffuseTextureFormat;
-	mpDiffuseTexture = renderer->createTexture(&desc);
+	renderer->CreateTexture(&desc, &mpDiffuseTexture, &mpDiffuseResourceView);
 
 	desc.Format = normalTextureFormat;
-	mpNormalTexture = renderer->createTexture(&desc);
+	renderer->CreateTexture(&desc, &mpNormalTexture, &mpNormalResourceView);
 
-	desc.Format = specularTextureFormat;
-	mpSpecularTexture = renderer->createTexture(&desc);
+	desc.Format = roughnessTextureFormat;
+	renderer->CreateTexture(&desc, &mpRoughnessTexture, &mpRoughnessResourceView);
 
 	desc.Format = emissiveTextureFormat;
-	mpEmissiveTexture = renderer->createTexture(&desc);
+	renderer->CreateTexture(&desc, &mpEmissiveTexture, &mpEmissiveResourceView);
 
 	//Create resource views
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd =
@@ -160,7 +160,7 @@ void GBuffer::OnResize(int width, int height)
 		0
 	};
 
-	renderer->device()->CreateDepthStencilView(mpDepthStencilTexture->getD3DTexture(), &dsvd, &mpDepthStencilTargetView);
+	renderer->device()->CreateDepthStencilView(mpDepthStencilTexture, &dsvd, &mpDepthStencilTargetView);
 
 	D3D11_RENDER_TARGET_VIEW_DESC rtsvd =
 	{
@@ -168,16 +168,16 @@ void GBuffer::OnResize(int width, int height)
 		D3D11_RTV_DIMENSION_TEXTURE2D
 	};
 
-	renderer->device()->CreateRenderTargetView(mpDiffuseTexture->getD3DTexture(), &rtsvd, &mpDiffuseTargetView);
+	renderer->device()->CreateRenderTargetView(mpDiffuseTexture, &rtsvd, &mpDiffuseTargetView);
 
 	rtsvd.Format = normalRenderViewFormat;
-	renderer->device()->CreateRenderTargetView(mpNormalTexture->getD3DTexture(), &rtsvd, &mpNormalTargetView);
+	renderer->device()->CreateRenderTargetView(mpNormalTexture, &rtsvd, &mpNormalTargetView);
 
-	rtsvd.Format = specularRenderViewFormat;
-	renderer->device()->CreateRenderTargetView(mpSpecularTexture->getD3DTexture(), &rtsvd, &mpSpecularTargetView);
+	rtsvd.Format = roughnessRenderViewFormat;
+	renderer->device()->CreateRenderTargetView(mpRoughnessTexture, &rtsvd, &mpRoughnessTargetView);
 
 	rtsvd.Format = emissiveRenderViewFormat;
-	renderer->device()->CreateRenderTargetView(mpEmissiveTexture->getD3DTexture(), &rtsvd, &mpEmissiveTargetView);
+	renderer->device()->CreateRenderTargetView(mpEmissiveTexture, &rtsvd, &mpEmissiveTargetView);
 
 	mWidth = width;
 	mHeight = height;
@@ -187,15 +187,15 @@ void GBuffer::OnResize(int width, int height)
 
 void GBuffer::bindRenderTargets()
 {
-	D3DRenderer* renderer = gpApplication->getRenderer();
+	D3DRenderer* renderer = EngineStatics::getRenderer();
 
-	renderer->unbindTextureResources(); //Avoid having render targets bound as input textures
+	renderer->UnbindTextureResources(); //Avoid having render targets bound as input textures
 
 	ID3D11RenderTargetView* renderTargets[4] =
 	{
 		mpDiffuseTargetView,
 		mpNormalTargetView,
-		mpSpecularTargetView,
+		mpRoughnessTargetView,
 		mpEmissiveTargetView
 	};
 
@@ -204,14 +204,14 @@ void GBuffer::bindRenderTargets()
 
 void GBuffer::bindTextures()
 {
-	D3DRenderer* renderer = gpApplication->getRenderer();
+	D3DRenderer* renderer = EngineStatics::getRenderer();
 
-	Texture* texArray[5] = {
-		mpDiffuseTexture,
-		mpNormalTexture,
-		mpSpecularTexture,
-		mpEmissiveTexture,
-		mpDepthStencilTexture
+	ID3D11ShaderResourceView* texArray[5] = {
+		mpDiffuseResourceView,
+		mpNormalResourceView,
+		mpRoughnessResourceView,
+		mpEmissiveResourceView,
+		mpDepthStencilResourceView
 	};
 
 	renderer->setTextureResources(texArray, 0, 5);
@@ -219,19 +219,19 @@ void GBuffer::bindTextures()
 
 void GBuffer::bindSampler()
 {
-	gpApplication->getRenderer()->setSampler(0, mpSamplerState);
+	EngineStatics::getRenderer()->setSampler(0, mpSamplerState);
 }
 
 void GBuffer::clearRenderTargets()
 {
 	float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	ID3D11DeviceContext* context = gpApplication->getRenderer()->context();
+	ID3D11DeviceContext* context = EngineStatics::getRenderer()->context();
 
 	context->ClearDepthStencilView(mpDepthStencilTargetView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	context->ClearRenderTargetView(mpDiffuseTargetView, clearColor);
 	context->ClearRenderTargetView(mpNormalTargetView, clearColor);
-	context->ClearRenderTargetView(mpSpecularTargetView, clearColor);
+	context->ClearRenderTargetView(mpRoughnessTargetView, clearColor);
 	context->ClearRenderTargetView(mpEmissiveTargetView, clearColor);
 }

@@ -23,17 +23,17 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 NovusApplication::NovusApplication(HINSTANCE hInstance)
-:
-mhAppInstance(hInstance),
-mMainWndCaption(L"Novus Application"),
-mClientWidth(1980),
-mClientHeight(1080),
-mhWnd(0),
-mAppPaused(false),
-mMinimized(false),
-mMaximized(false),
-mResizing(false),
-mRunning(true)
+	:
+	mhAppInstance(hInstance),
+	mMainWndCaption(L"Novus Application"),
+	mClientWidth(1980),
+	mClientHeight(1080),
+	mhWnd(0),
+	mAppPaused(false),
+	mMinimized(false),
+	mMaximized(false),
+	mResizing(false),
+	mRunning(true)
 {
 	gNovusApp = this;
 	gpApplication = this;
@@ -41,17 +41,25 @@ mRunning(true)
 	mpRenderer = NE_NEW D3DRenderer();
 
 
-
+	EngineStatics::mspApplication = this;
 	EngineStatics::mspRenderer = mpRenderer;
 }
 
 NovusApplication::~NovusApplication()
 {
-
-
 	NE_DELETE(mpRenderer);
 
 	novus::MallocTracker::getInstance()->DumpTrackedMemory();
+}
+
+int NovusApplication::getClientWidth() const
+{
+	return mClientWidth;
+}
+
+int NovusApplication::getClientHeight() const
+{
+	return mClientHeight;
 }
 
 float NovusApplication::getAspectRatio() const
@@ -142,7 +150,7 @@ bool NovusApplication::Init()
 
 void NovusApplication::OnResize()
 {
-	//mpRenderer->onResize();
+	mpRenderer->OnResize();
 }
 
 LRESULT NovusApplication::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)

@@ -36,7 +36,7 @@ public:
 	unsigned int getUsedMemory() const { return mTotalMemory; }
 
 private:
-	MallocTracker() {}
+	MallocTracker();
 	~MallocTracker() {}
 
 private:

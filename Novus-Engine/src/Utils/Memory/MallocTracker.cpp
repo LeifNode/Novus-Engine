@@ -14,6 +14,13 @@ MallocTracker* MallocTracker::getInstance()
 	return mpInstance;
 }
 
+MallocTracker::MallocTracker()
+	:
+	mTotalMemory(0)
+{
+
+}
+
 void MallocTracker::Alloc(void* p, size_t size, const char* fileName, const char* functionName, int lineNum)
 {
 	//if (free(p))
@@ -26,7 +33,7 @@ void MallocTracker::Alloc(void* p, size_t size, const char* fileName, const char
 
 	mAllocations[p] = memAlloc;
 
-	mTotalMemory += size;
+	mTotalMemory += static_cast<unsigned int>(size);
 }
 
 bool MallocTracker::FreePtr(void* p)
@@ -35,7 +42,7 @@ bool MallocTracker::FreePtr(void* p)
 
 	if (it != mAllocations.end())
 	{
-		mTotalMemory -= it->second.Size;
+		mTotalMemory -= static_cast<unsigned int>(it->second.Size);
 
 		mAllocations.erase(it);
 
@@ -47,7 +54,7 @@ bool MallocTracker::FreePtr(void* p)
 
 void MallocTracker::DumpTrackedMemory()
 {
-	char sizeStr[15];
+	char sizeStr[25] = { 0 };
 
 	sprintf(sizeStr, "%fKB\n", mTotalMemory / 1024.0f);
 

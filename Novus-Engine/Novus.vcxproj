@@ -69,27 +69,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>Novus_$(Platform)d</TargetName>
+    <TargetName>Novusd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>Novus_$(Platform)</TargetName>
+    <TargetName>Novus</TargetName>
     <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>Novus_$(Platform)d</TargetName>
+    <TargetName>Novusd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>Novus_$(Platform)</TargetName>
+    <TargetName>Novus</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,7 +97,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,7 +125,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -142,7 +142,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,9 +155,11 @@
     <ClInclude Include="src\Application\Common.h" />
     <ClInclude Include="src\Application\NovusApplication.h" />
     <ClInclude Include="src\Application\EngineStatics.h" />
+    <ClInclude Include="src\Graphics\ConstantBuffers.h" />
     <ClInclude Include="src\Graphics\D3DRenderer.h" />
     <ClInclude Include="src\Graphics\GBuffer.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Graphics\Textures\Texture.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
@@ -169,6 +171,8 @@
     <ClCompile Include="src\Application\NovusApplication.cpp" />
     <ClCompile Include="src\Graphics\D3DRenderer.cpp" />
     <ClCompile Include="src\Graphics\GBuffer.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Graphics\Textures\Texture.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />

@@ -16,16 +16,18 @@ namespace novus
 {
 
 class D3DRenderer;
+class NovusApplication;
 
 class EngineStatics
 {
 	friend class NovusApplication;
 
 public:
+	static NovusApplication* getApplication();
 	static D3DRenderer* getRenderer();
 
-
 private:
+	static NovusApplication* mspApplication;
 	static D3DRenderer* mspRenderer;
 };
 

@@ -13,6 +13,8 @@
 #include "Application/Common.h"
 #include "GBuffer.h"
 #include "Shader.h"
+#include "ConstantBuffers.h"
+#include "Textures\Texture.h"
 
 namespace novus
 {
@@ -46,6 +48,7 @@ public:
 
 	void setTextureResource(int index, Texture*);
 	void setTextureResources(Texture** texArray, int startSlot, unsigned count);
+	void setTextureResources(ID3D11ShaderResourceView** texArray, int startSlot, unsigned count);
 	void setSampler(int index, ID3D11SamplerState* samplerState);
 	void setConstantBuffer(int index, ID3D11Buffer*);
 	void setPerFrameBuffer(CBPerFrame& buffer);
@@ -56,9 +59,10 @@ public:
 
 	//Texture* CreateTexture(UINT format, int width, int height);
 	Texture* CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, DXGI_FORMAT resViewFmt = DXGI_FORMAT_UNKNOWN);
+	bool CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, ID3D11Texture2D** textureOut, ID3D11ShaderResourceView** resourceOut, DXGI_FORMAT resViewFmt = DXGI_FORMAT_UNKNOWN);
 	//Texture* CreateTexture(int width, int height, DXGI_FORMAT colorFormat, )
-	RenderTarget* CreateRenderTarget(int width, int height, bool useDepthBuffer = true);
-	void setRenderTarget(RenderTarget* target);
+	//RenderTarget* CreateRenderTarget(int width, int height, bool useDepthBuffer = true);
+	//void setRenderTarget(RenderTarget* target);
 
 	void setBlendState(bool blendingEnabled);
 	void setDepthStencilState(DepthStencilState::Type state);
@@ -80,19 +84,19 @@ public:
 	Shader* LoadShader(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize);
 	Shader* LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize);
 
-	void Clear(RenderTarget* target);
+	//void Clear(RenderTarget* target);
 
 	void PreRender();
 	void PostRender();
 	void RenderDeferredLighting();
 
-	void pushTransform(Transform& transform);
-	void popTransform();
-	XMMATRIX getTopTransform() const;
-	XMMATRIX getTopTransformInverse() const;
+	//void pushTransform(Transform& transform);
+	//void popTransform();
+	//XMMATRIX getTopTransform() const;
+	//XMMATRIX getTopTransformInverse() const;
 
 	GBuffer* getGBuffer() const { return mpGBuffer; }
-	OVRManager* getHMD() const { return mpOVRManager; }
+	//OVRManager* getHMD() const { return mpOVRManager; }
 	bool isUsingHMD() const;
 
 private:
@@ -101,11 +105,11 @@ private:
 	void InitDepthStencilStates();
 
 private:
-	OVRManager* mpOVRManager;
+	//OVRManager* mpOVRManager;
 	bool mUseHMD;
 
 	GBuffer* mpGBuffer;
-	DeferredRenderer* mpDeferredRenderer;
+	//DeferredRenderer* mpDeferredRenderer;
 
 	UINT m4xMsaaQuality;
 
@@ -139,7 +143,7 @@ private:
 
 	std::map<std::string, Shader*> mLoadedShaders;
 
-	MatrixStack mMatrixStack;
+	//MatrixStack mMatrixStack;
 };
 
 }

@@ -1,36 +1,40 @@
 #include "Graphics/D3DRenderer.h"
+#include "Application/EngineStatics.h"
 #include "Application/NovusApplication.h"
 
 using novus::D3DRenderer;
+using novus::Shader;
+using novus::Texture;
+using novus::EngineStatics;
 
 D3DRenderer::D3DRenderer()
-:
-md3dDriverType(D3D_DRIVER_TYPE_HARDWARE),
-mEnable4xMsaa(false),
-m4xMsaaQuality(16),
+	:
+	md3dDriverType(D3D_DRIVER_TYPE_HARDWARE),
+	mEnable4xMsaa(false),
+	m4xMsaaQuality(16),
 
-mpd3dDevice(NULL),
-mpd3dImmediateContext(NULL),
-mpd3dDebug(NULL),
-mpSwapChain(NULL),
-mpDepthStencilBuffer(NULL),
-mpRenderTarget(NULL),
-mpDepthStencilView(NULL),
-mpPerFrameBuffer(NULL),
-mpPerObjectBuffer(NULL),
-mpBlendStateAlpha(NULL),
-mpBlendStateOpaque(NULL),
-mpGBuffer(NULL),
-mpDeferredRenderer(NULL),
-mpOVRManager(NULL),
-mUseHMD(false)
+	mpd3dDevice(NULL),
+	mpd3dImmediateContext(NULL),
+	mpd3dDebug(NULL),
+	mpSwapChain(NULL),
+	mpDepthStencilBuffer(NULL),
+	mpRenderTarget(NULL),
+	mpDepthStencilView(NULL),
+	mpPerFrameBuffer(NULL),
+	mpPerObjectBuffer(NULL),
+	mpBlendStateAlpha(NULL),
+	mpBlendStateOpaque(NULL),
+	mpGBuffer(NULL),
+	//mpDeferredRenderer(NULL),
+	//mpOVRManager(NULL),
+	mUseHMD(false)
 {
 	/*mClearColor[0] = 0.0f;
 	mClearColor[1] = 0.125f;
 	mClearColor[2] = 0.3f;
 	mClearColor[3] = 1.0f;*/
 
-	mClearColor[0] = 0.0f;
+	mClearColor[0] = 1.0f;
 	mClearColor[1] = 0.0f;
 	mClearColor[2] = 0.0f;
 	mClearColor[3] = 1.0f;
@@ -38,14 +42,14 @@ mUseHMD(false)
 	ZeroMemory(&mScreenViewport, sizeof(D3D11_VIEWPORT));
 	ZeroMemory(&mpDepthStencilStates[0], sizeof(ID3D11DepthStencilState*)* DepthStencilState::COUNT);
 
-	mpOVRManager = NE_NEW OVRManager();
+	//mpOVRManager = NE_NEW OVRManager();
 }
 
 D3DRenderer::~D3DRenderer()
 {
 	NE_DELETE(mpGBuffer);
-	NE_DELETE(mpDeferredRenderer);
-	NE_DELETE(mpOVRManager);
+	//NE_DELETE(mpDeferredRenderer);
+	//NE_DELETE(mpOVRManager);
 
 	for (auto it = mLoadedShaders.begin(); it != mLoadedShaders.end(); ++it)
 	{
@@ -93,8 +97,8 @@ void D3DRenderer::OnResize()
 	}
 	else
 	{
-		width = gpApplication->getClientWidth();
-		height = gpApplication->getClientHeight();
+		width = EngineStatics::getApplication()->getClientWidth();
+		height = EngineStatics::getApplication()->getClientHeight();
 	}
 
 	assert(mpd3dImmediateContext);
@@ -159,7 +163,7 @@ void D3DRenderer::OnResize()
 
 	setViewport(width, height, 0, 0);
 
-	mpOVRManager->OnResize();
+	//mpOVRManager->OnResize();
 
 	mpGBuffer->OnResize(width, height);
 }
@@ -209,8 +213,8 @@ bool D3DRenderer::Init()
 
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
-	sd.BufferDesc.Width = gpApplication->getClientWidth();
-	sd.BufferDesc.Height = gpApplication->getClientHeight();
+	sd.BufferDesc.Width = EngineStatics::getApplication()->getClientWidth();
+	sd.BufferDesc.Height = EngineStatics::getApplication()->getClientHeight();
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -232,7 +236,7 @@ bool D3DRenderer::Init()
 
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
-	sd.OutputWindow = gpApplication->getMainWnd();
+	sd.OutputWindow = EngineStatics::getApplication()->getMainWnd();
 	sd.Windowed = true;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -340,14 +344,14 @@ bool D3DRenderer::Init()
 	mpd3dDevice->CreateSamplerState(&sampDesc, &mpSamplerState);
 
 	mpGBuffer = NE_NEW GBuffer();
-	mpGBuffer->Initialize(gpApplication->getClientWidth(), gpApplication->getClientHeight());
+	mpGBuffer->Initialize(EngineStatics::getApplication()->getClientWidth(), EngineStatics::getApplication()->getClientHeight());
 
-	mpDeferredRenderer = NE_NEW DeferredRenderer();
-	mpDeferredRenderer->Initialize();
+	//mpDeferredRenderer = NE_NEW DeferredRenderer();
+	//mpDeferredRenderer->Initialize();
 
 	OnResize();
 
-	mpOVRManager->Initialize();
+	//mpOVRManager->Initialize();
 
 	InitDepthStencilStates();
 
@@ -416,7 +420,7 @@ HRESULT D3DRenderer::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoin
 	return S_OK;
 }
 
-novus::Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize)
+Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize)
 {
 	char* name = NE_NEW char[MAX_PATH];
 
@@ -557,7 +561,7 @@ novus::Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderI
 	return newShader;
 }
 
-novus::Shader* D3DRenderer::LoadShader(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize)
+Shader* D3DRenderer::LoadShader(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize)
 {
 	char* name = NE_NEW char[MAX_PATH];
 
@@ -621,6 +625,25 @@ void D3DRenderer::setTextureResources(Texture** texArray, int startSlot, unsigne
 	}
 }
 
+void D3DRenderer::setTextureResources(ID3D11ShaderResourceView** texArray, int startSlot, unsigned count)
+{
+	if (mpActiveShader)
+	{
+		if (mpActiveShader->hasVertexShader())
+			mpd3dImmediateContext->VSSetShaderResources(startSlot, count, texArray);
+		if (mpActiveShader->hasPixelShader())
+			mpd3dImmediateContext->PSSetShaderResources(startSlot, count, texArray);
+		if (mpActiveShader->hasGeometryShader())
+			mpd3dImmediateContext->GSSetShaderResources(startSlot, count, texArray);
+		if (mpActiveShader->hasComputeShader())
+			mpd3dImmediateContext->CSSetShaderResources(startSlot, count, texArray);
+		if (mpActiveShader->hasHullShader())
+			mpd3dImmediateContext->HSSetShaderResources(startSlot, count, texArray);
+		if (mpActiveShader->hasDomainShader())
+			mpd3dImmediateContext->DSSetShaderResources(startSlot, count, texArray);
+	}
+}
+
 void D3DRenderer::UnbindTextureResources()
 {
 	ID3D11ShaderResourceView** arr = NE_NEW ID3D11ShaderResourceView*[8];
@@ -674,7 +697,7 @@ void D3DRenderer::setConstantBuffer(int index, ID3D11Buffer* buffer)
 	}
 }
 
-void D3DRenderer::setPerFrameBuffer(CBPerFrame& buffer)
+void D3DRenderer::setPerFrameBuffer(novus::CBPerFrame& buffer)
 {
 	///TODO: use map with discard flag instead of UpdateSubresource
 	mpd3dImmediateContext->UpdateSubresource(mpPerFrameBuffer, 0, NULL, &buffer, 0, 0);
@@ -682,7 +705,7 @@ void D3DRenderer::setPerFrameBuffer(CBPerFrame& buffer)
 	mPerFrameData = buffer;
 }
 
-void D3DRenderer::setPerObjectBuffer(CBPerObject& buffer)
+void D3DRenderer::setPerObjectBuffer(novus::CBPerObject& buffer)
 {
 	///TODO: use map with discard flag instead of UpdateSubresource
 	mpd3dImmediateContext->UpdateSubresource(mpPerObjectBuffer, 0, NULL, &buffer, 0, 0);
@@ -727,54 +750,78 @@ Texture* D3DRenderer::CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, DX
 	return newTexture;
 }
 
-RenderTarget* D3DRenderer::CreateRenderTarget(int width, int height, bool useDepthBuffer)
+bool D3DRenderer::CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, ID3D11Texture2D** textureOut, ID3D11ShaderResourceView** resourceOut, DXGI_FORMAT resViewFmt)
 {
-	RenderTarget* newRenderTarget = NE_NEW RenderTarget();
-	newRenderTarget->mpRenderTargetTexture = createTexture(Texture_RenderTarget | Texture_RGBA, width, height);
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 
-	if (useDepthBuffer)
-		newRenderTarget->mpDepthTexture = createTexture(Texture_RenderTarget | Texture_Depth, width, height);
+	if (resViewFmt == DXGI_FORMAT_UNKNOWN)
+		shaderResourceViewDesc.Format = textureDescription->Format;
+	else
+		shaderResourceViewDesc.Format = resViewFmt;
 
-	newRenderTarget->mWidth = width;
-	newRenderTarget->mHeight = height;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = textureDescription->MipLevels;
 
-	HRESULT result;
-
-	D3D11_RENDER_TARGET_VIEW_DESC renderViewDesc;
-
-	renderViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	renderViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderViewDesc.Texture2D.MipSlice = 0;
-
-	result = mpd3dDevice->CreateRenderTargetView(newRenderTarget->mpRenderTargetTexture->mpTexture, &renderViewDesc, &newRenderTarget->mpRenderTargetView);
+	HRESULT result = mpd3dDevice->CreateTexture2D(textureDescription, NULL, textureOut);
 	if (FAILED(result))
-	{
-		NE_DELETE(newRenderTarget);
-		return NULL;
-	}
+		return false;
 
-	if (useDepthBuffer)
-	{
-		D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
-		depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		depthViewDesc.Texture2D.MipSlice = 0;
+	result = mpd3dDevice->CreateShaderResourceView(*textureOut, &shaderResourceViewDesc, resourceOut);
+	if (FAILED(result))
+		return false;
 
-		result = mpd3dDevice->CreateDepthStencilView(newRenderTarget->mpDepthTexture->mpTexture, NULL, &newRenderTarget->mpDepthView);
-		if (FAILED(result))
-		{
-			NE_DELETE(newRenderTarget);
-			return NULL;
-		}
-	}
-
-	return newRenderTarget;
+	return true;
 }
 
-void D3DRenderer::setRenderTarget(RenderTarget* target)
-{
-	mpd3dImmediateContext->OMSetRenderTargets(1, &target->mpRenderTargetView, target->mpDepthView);
-}
+//RenderTarget* D3DRenderer::CreateRenderTarget(int width, int height, bool useDepthBuffer)
+//{
+//	RenderTarget* newRenderTarget = NE_NEW RenderTarget();
+//	newRenderTarget->mpRenderTargetTexture = createTexture(Texture_RenderTarget | Texture_RGBA, width, height);
+//
+//	if (useDepthBuffer)
+//		newRenderTarget->mpDepthTexture = createTexture(Texture_RenderTarget | Texture_Depth, width, height);
+//
+//	newRenderTarget->mWidth = width;
+//	newRenderTarget->mHeight = height;
+//
+//	HRESULT result;
+//
+//	D3D11_RENDER_TARGET_VIEW_DESC renderViewDesc;
+//
+//	renderViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+//	renderViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+//	renderViewDesc.Texture2D.MipSlice = 0;
+//
+//	result = mpd3dDevice->CreateRenderTargetView(newRenderTarget->mpRenderTargetTexture->mpTexture, &renderViewDesc, &newRenderTarget->mpRenderTargetView);
+//	if (FAILED(result))
+//	{
+//		NE_DELETE(newRenderTarget);
+//		return NULL;
+//	}
+//
+//	if (useDepthBuffer)
+//	{
+//		D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
+//		depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+//		depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+//		depthViewDesc.Texture2D.MipSlice = 0;
+//
+//		result = mpd3dDevice->CreateDepthStencilView(newRenderTarget->mpDepthTexture->mpTexture, NULL, &newRenderTarget->mpDepthView);
+//		if (FAILED(result))
+//		{
+//			NE_DELETE(newRenderTarget);
+//			return NULL;
+//		}
+//	}
+//
+//	return newRenderTarget;
+//}
+
+//void D3DRenderer::setRenderTarget(RenderTarget* target)
+//{
+//	mpd3dImmediateContext->OMSetRenderTargets(1, &target->mpRenderTargetView, target->mpDepthView);
+//}
 
 void D3DRenderer::setBlendState(bool blendingEnabled)
 {
@@ -884,12 +931,12 @@ void D3DRenderer::ResetRenderTarget()
 {
 	mpd3dImmediateContext->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 }
-
-void D3DRenderer::Clear(RenderTarget* target)
-{
-	mpd3dImmediateContext->ClearRenderTargetView(target->mpRenderTargetView, mClearColor);
-	mpd3dImmediateContext->ClearDepthStencilView(target->mpDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-}
+//
+//void D3DRenderer::Clear(RenderTarget* target)
+//{
+//	mpd3dImmediateContext->ClearRenderTargetView(target->mpRenderTargetView, mClearColor);
+//	mpd3dImmediateContext->ClearDepthStencilView(target->mpDepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+//}
 
 void D3DRenderer::PreRender()
 {
@@ -909,12 +956,12 @@ void D3DRenderer::PreRender()
 
 	setBlendState(false);
 
-	if (isUsingHMD())
+	/*if (isUsingHMD())
 	{
 		mpOVRManager->UpdateTrackingState();
 		mpOVRManager->BeginFrame();
 	}
-
+*/
 	//mGBuffer->clearRenderTargets();
 	//mGBuffer->bindRenderTargets();
 }
@@ -923,9 +970,9 @@ void D3DRenderer::PostRender()
 {
 	mpd3dImmediateContext->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 
-	if (isUsingHMD())
-		mpOVRManager->PostRender();
-	else
+	//if (isUsingHMD())
+	//	mpOVRManager->PostRender();
+	//else
 		mpSwapChain->Present(0, 0);
 }
 
@@ -933,30 +980,32 @@ void D3DRenderer::RenderDeferredLighting()
 {
 	mpd3dImmediateContext->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 
-	mpDeferredRenderer->Render(this);
+	//mpDeferredRenderer->Render(this);
 }
 
-void D3DRenderer::pushTransform(Transform& transform)
-{
-	mMatrixStack.push(transform.getTransform());
-}
-
-void D3DRenderer::popTransform()
-{
-	mMatrixStack.pop();
-}
-
-XMMATRIX D3DRenderer::getTopTransform() const
-{
-	return mMatrixStack.getTop();
-}
-
-XMMATRIX D3DRenderer::getTopTransformInverse() const
-{
-	return mMatrixStack.getTopInverse();
-}
+//void D3DRenderer::pushTransform(Transform& transform)
+//{
+//	mMatrixStack.push(transform.getTransform());
+//}
+//
+//void D3DRenderer::popTransform()
+//{
+//	mMatrixStack.pop();
+//}
+//
+//XMMATRIX D3DRenderer::getTopTransform() const
+//{
+//	return mMatrixStack.getTop();
+//}
+//
+//XMMATRIX D3DRenderer::getTopTransformInverse() const
+//{
+//	return mMatrixStack.getTopInverse();
+//}
 
 bool D3DRenderer::isUsingHMD() const
 {
-	return mUseHMD && mpOVRManager != NULL && mpOVRManager->IsDeviceConnected();
+	//return mUseHMD && mpOVRManager != NULL && mpOVRManager->IsDeviceConnected();
+
+	return false;
 }

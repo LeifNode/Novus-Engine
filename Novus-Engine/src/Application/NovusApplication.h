@@ -48,6 +48,12 @@ protected:
 
 	void CalculateFrameStats();
 
+protected:
+	D3DRenderer* mpRenderer;
+
+	std::wstring mMainWndCaptionFull;
+	std::wstring mMainWndCaption;
+
 private:
 	HINSTANCE mhAppInstance;
 	HWND mhWnd;
@@ -58,15 +64,8 @@ private:
 	int mClientWidth;
 	int mClientHeight;
 
-	std::wstring mMainWndCaptionFull;
-	std::wstring mMainWndCaption;
-
 	GameTimer mTimer;
-
-	D3DRenderer* mpRenderer;
 };
-
-NovusApplication* gpApplication;
 
 }
 #endif

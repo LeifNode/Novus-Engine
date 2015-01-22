@@ -12,13 +12,15 @@
     <Filter Include="Source Files\Application">
       <UniqueIdentifier>{fc5faff4-c1e9-4805-b5ed-645b76818122}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{b2191d19-1a98-48c0-93fb-aaa92fe96c96}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\TestApplication.h">
       <Filter>Source Files\Application</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Application\TestApplication.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
