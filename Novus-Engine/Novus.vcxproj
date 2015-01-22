@@ -161,8 +161,10 @@
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Textures\Texture.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
+    <ClInclude Include="src\Input\KeyboardState.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
+    <ClInclude Include="src\Utils\Logger\Logger.h" />
     <ClInclude Include="src\Utils\Memory\MallocTracker.h" />
     <ClInclude Include="src\Utils\Memory\Memory.h" />
   </ItemGroup>
@@ -173,8 +175,10 @@
     <ClCompile Include="src\Graphics\GBuffer.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture.cpp" />
+    <ClCompile Include="src\Input\KeyboardState.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
+    <ClCompile Include="src\Utils\Logger\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
   </ItemGroup>

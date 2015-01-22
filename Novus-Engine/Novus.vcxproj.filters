@@ -39,6 +39,9 @@
     <Filter Include="Source Files\Graphics\Textures">
       <UniqueIdentifier>{2163b478-a407-4e2e-beea-272e12bf696b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Net">
+      <UniqueIdentifier>{d6cfd64d-eb3b-4db9-b320-1eb682e60116}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -80,6 +83,12 @@
     <ClInclude Include="src\Graphics\Textures\Texture.h">
       <Filter>Source Files\Graphics\Textures</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\Logger\Logger.h">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\KeyboardState.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -111,6 +120,12 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Logger\Logger.cpp">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\KeyboardState.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
