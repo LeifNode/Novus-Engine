@@ -55,13 +55,13 @@ using std::dynamic_pointer_cast;
 
 #if defined(DEBUG) | defined(_DEBUG)
 	#ifndef HR
-	#define HR(x)                                              \
-	{                                                          \
-		HRESULT hr = (x);                                      \
-	if (FAILED(hr))                                         \
-	{                                                      \
+	#define HR(x)                                                                      \
+	{                                                                                  \
+		HRESULT hr = (x);                                                              \
+	if (FAILED(hr))                                                                    \
+	{                                                                                  \
 		DXTrace(const_cast<WCHAR*>((WCHAR*)__FILE__), (DWORD)__LINE__, hr, L#x, true); \
-	}                                                      \
+	}                                                                                  \
 	}
 	#endif
 

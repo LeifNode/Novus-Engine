@@ -152,16 +152,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\3rdParty\FastDelegate.h" />
+    <ClInclude Include="src\3rdParty\FastDelegateBind.h" />
     <ClInclude Include="src\Application\Common.h" />
     <ClInclude Include="src\Application\NovusApplication.h" />
     <ClInclude Include="src\Application\EngineStatics.h" />
+    <ClInclude Include="src\Events\Events.h" />
+    <ClInclude Include="src\Events\EventSystem.h" />
     <ClInclude Include="src\Graphics\ConstantBuffers.h" />
     <ClInclude Include="src\Graphics\D3DRenderer.h" />
     <ClInclude Include="src\Graphics\GBuffer.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Graphics\Shaders\IShader.h" />
     <ClInclude Include="src\Graphics\Textures\Texture.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
     <ClInclude Include="src\Input\KeyboardState.h" />
+    <ClInclude Include="src\Input\MouseState.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
     <ClInclude Include="src\Utils\Logger\Logger.h" />
@@ -171,11 +177,15 @@
   <ItemGroup>
     <ClCompile Include="src\Application\EngineStatics.cpp" />
     <ClCompile Include="src\Application\NovusApplication.cpp" />
+    <ClCompile Include="src\Events\Events.cpp" />
+    <ClCompile Include="src\Events\EventSystem.cpp" />
     <ClCompile Include="src\Graphics\D3DRenderer.cpp" />
     <ClCompile Include="src\Graphics\GBuffer.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture.cpp" />
+    <ClCompile Include="src\Input\InputSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardState.cpp" />
+    <ClCompile Include="src\Input\MouseState.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
     <ClCompile Include="src\Utils\Logger\Logger.cpp" />

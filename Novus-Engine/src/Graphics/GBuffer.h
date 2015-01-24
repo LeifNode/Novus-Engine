@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef GBUFFER_H
-#define GBUFFER_H
+#ifndef NOVUS_GBUFFER_H
+#define NOVUS_GBUFFER_H
 
 #include "Application/Common.h"
 

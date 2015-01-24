@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef NOVUS_TEXTURE_H
+#define NOVUS_TEXTURE_H
 
 #include "Application/Common.h"
 

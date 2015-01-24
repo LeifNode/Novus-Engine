@@ -17,6 +17,8 @@ namespace novus
 {
 
 class D3DRenderer;
+class InputSystem;
+class EventSystem;
 
 class NovusApplication
 {
@@ -26,7 +28,7 @@ public:
 
 	int Run();
 
-	void Exit();
+	void ExitApp();
 
 	virtual bool Init();
 	virtual void OnResize();
@@ -50,6 +52,8 @@ protected:
 
 protected:
 	D3DRenderer* mpRenderer;
+	InputSystem* mpInputSystem;
+	EventSystem* mpEventSystem;
 
 	std::wstring mMainWndCaptionFull;
 	std::wstring mMainWndCaption;

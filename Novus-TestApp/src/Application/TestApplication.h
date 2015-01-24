@@ -14,6 +14,7 @@
 #include <Application/NovusApplication.h>
 #include <Graphics/Shader.h>
 #include <Graphics/ConstantBuffers.h>
+#include <Events/EventSystem.h>
 
 class TestApplication : public novus::NovusApplication
 {
@@ -21,12 +22,15 @@ public:
 	TestApplication(HINSTANCE instance);
 	virtual ~TestApplication();
 
-	void Cleanup();
-
 	virtual bool Init() override;
 	virtual void OnResize() override;
 	virtual void Update(float dt) override;
 	virtual void Render() override;
+
+	void HookInputEvents();
+	void UnhookInputEvents();
+
+	void OnKeyDown(novus::IEventDataPtr eventData);
 
 private:
 	novus::Shader* mpMainShader;

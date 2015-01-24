@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef NOVUS_MEMORY_H
+#define NOVUS_MEMORY_H
 
 //#define DEBUG_MEMORY_ALLOC
 

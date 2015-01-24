@@ -42,6 +42,12 @@
     <Filter Include="Source Files\Net">
       <UniqueIdentifier>{d6cfd64d-eb3b-4db9-b320-1eb682e60116}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{44bbc5ef-2eec-470a-813a-fc12f9847aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Shaders">
+      <UniqueIdentifier>{68b31067-dc8d-4ccb-8954-fa8769fabf36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -89,6 +95,24 @@
     <ClInclude Include="src\Input\KeyboardState.h">
       <Filter>Source Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Input\MouseState.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\EventSystem.h">
+      <Filter>Source Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdParty\FastDelegate.h">
+      <Filter>Source Files\3rdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdParty\FastDelegateBind.h">
+      <Filter>Source Files\3rdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\Events.h">
+      <Filter>Source Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shaders\IShader.h">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -126,6 +150,18 @@
     </ClCompile>
     <ClCompile Include="src\Input\KeyboardState.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\MouseState.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\InputSystem.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Events\Events.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Events\EventSystem.cpp">
+      <Filter>Source Files\Events</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

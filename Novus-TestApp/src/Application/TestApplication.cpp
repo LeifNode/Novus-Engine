@@ -1,8 +1,11 @@
 #include "TestApplication.h"
 
+#include <Application/EngineStatics.h>
 #include <Graphics/D3DRenderer.h>
+#include <Events/Events.h>
+#include <Events/EventSystem.h>
 
-using novus::NovusApplication;
+using namespace novus;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd){
 	UNREFERENCED_PARAMETER(prevInstance);
@@ -34,12 +37,9 @@ TestApplication::TestApplication(HINSTANCE instance)
 
 TestApplication::~TestApplication()
 {
-	NE_DELETE(mpMainShader);
-}
+	UnhookInputEvents();
 
-void TestApplication::Cleanup()
-{
-	
+	NE_DELETE(mpMainShader);
 }
 
 bool TestApplication::Init()
@@ -49,16 +49,43 @@ bool TestApplication::Init()
 
 	OnResize();
 
+	HookInputEvents();
+
 	return true;
+}
+
+void TestApplication::HookInputEvents()
+{
+	EngineStatics::getEventSystem()->AddListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
+}
+
+void TestApplication::UnhookInputEvents()
+{
+	EngineStatics::getEventSystem()->RemoveListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
+}
+
+void TestApplication::OnKeyDown(novus::IEventDataPtr eventData)
+{
+	auto dataPtr = static_pointer_cast<EventData_KeyboardDown>(eventData);
+
+	if (dataPtr->getKey() == KeyboardKey::KEY_ESC)
+	{
+		ExitApp();
+	}
 }
 
 void TestApplication::OnResize()
 {
+	NovusApplication::OnResize();
+
 
 }
 
 void TestApplication::Update(float dt)
 {
+
+
+
 }
 
 void TestApplication::Render()

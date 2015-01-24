@@ -1,6 +1,8 @@
 #include "Application/NovusApplication.h"
+#include "Application/EngineStatics.h"
 #include "Graphics/D3DRenderer.h"
-#include "EngineStatics.h"
+#include "Input/InputSystem.h"
+#include "Events/EventSystem.h"
 #include "Utils/Memory/MallocTracker.h"
 
 #pragma comment(lib, "d3d11")
@@ -39,14 +41,20 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	gpApplication = this;
 
 	mpRenderer = NE_NEW D3DRenderer();
+	mpInputSystem = NE_NEW InputSystem();
+	mpEventSystem = NE_NEW EventSystem();
 
 
 	EngineStatics::mspApplication = this;
 	EngineStatics::mspRenderer = mpRenderer;
+	EngineStatics::mspInputSystem = mpInputSystem;
+	EngineStatics::mspEventSystem = mpEventSystem;
 }
 
 NovusApplication::~NovusApplication()
 {
+	NE_DELETE(mpInputSystem);
+	NE_DELETE(mpEventSystem);
 	NE_DELETE(mpRenderer);
 
 	novus::MallocTracker::getInstance()->DumpTrackedMemory();
@@ -97,7 +105,7 @@ int NovusApplication::Run()
 			if (!mAppPaused)
 			{
 				CalculateFrameStats();
-				//EventSystem::get()->update();
+				EngineStatics::getEventSystem()->Update();
 				//LeapManager::getInstance().Update(0.0f);
 
 				if (!mRunning)
@@ -121,7 +129,7 @@ int NovusApplication::Run()
 	return (int)msg.wParam;
 }
 
-void NovusApplication::Exit()
+void NovusApplication::ExitApp()
 {
 	mRunning = false;
 }
@@ -262,9 +270,9 @@ LRESULT NovusApplication::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 		((MINMAXINFO*)lParam)->ptMinTrackSize.x = 200;
 		((MINMAXINFO*)lParam)->ptMinTrackSize.y = 200;
 		return 0;
-	//default:
-		//if (mpInputSystem->processWindowsMessage(hwnd, msg, wParam, lParam))
-			//return 0;
+	default:
+		if (mpInputSystem->ProcessWindowsMessage(hwnd, msg, wParam, lParam))
+			return 0;
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);

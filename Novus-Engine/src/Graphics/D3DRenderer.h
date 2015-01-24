@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef D3D_RENDERER_H
-#define D3D_RENDERER_H
+#ifndef NOVUS_D3D_RENDERER_H
+#define NOVUS_D3D_RENDERER_H
 
 #include "Application/Common.h"
 #include "GBuffer.h"

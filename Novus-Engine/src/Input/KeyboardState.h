@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef KEYBOARD_STATE_H
-#define KEYBOARD_STATE_H
+#ifndef NOVUS_KEYBOARD_STATE_H
+#define NOVUS_KEYBOARD_STATE_H
 
 #include <vector>
 

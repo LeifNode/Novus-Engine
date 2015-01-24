@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef MALLOC_TRACKER_H
-#define MALLOC_TRACKER_H
+#ifndef NOVUS_MALLOC_TRACKER_H
+#define NOVUS_MALLOC_TRACKER_H
 
 #include "Application/Common.h"
 

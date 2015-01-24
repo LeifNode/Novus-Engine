@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef NOVUS_LOGGER_H
+#define NOVUS_LOGGER_H
 
 #include <vector>
 #include <string>

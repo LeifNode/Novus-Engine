@@ -11,8 +11,8 @@
 
 #pragma once
 
-#ifndef GAME_TIMER_H
-#define GAME_TIMER_H
+#ifndef NOVUS_GAME_TIMER_H
+#define NOVUS_GAME_TIMER_H
 
 #include "Application/Common.h"
 

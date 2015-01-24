@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef NOVUS_SHADER_H
+#define NOVUS_SHADER_H
 
 #include "Application/Common.h"
 

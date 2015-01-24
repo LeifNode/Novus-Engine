@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef STATICS_H
-#define STATICS_H
+#ifndef NOVUS_STATICS_H
+#define NOVUS_STATICS_H
 
 #include "Common.h"
 
@@ -17,6 +17,8 @@ namespace novus
 
 class D3DRenderer;
 class NovusApplication;
+class InputSystem;
+class EventSystem;
 
 class EngineStatics
 {
@@ -25,10 +27,14 @@ class EngineStatics
 public:
 	static NovusApplication* getApplication();
 	static D3DRenderer* getRenderer();
+	static InputSystem* getInputSystem();
+	static EventSystem* getEventSystem();
 
 private:
 	static NovusApplication* mspApplication;
 	static D3DRenderer* mspRenderer;
+	static InputSystem* mspInputSystem;
+	static EventSystem* mspEventSystem;
 };
 
 }
