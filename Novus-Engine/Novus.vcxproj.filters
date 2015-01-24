@@ -113,6 +113,18 @@
     <ClInclude Include="src\Graphics\Shaders\IShader.h">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Shaders\VertexShader.h">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Geometry.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Math.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\MeshRenderer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -162,6 +174,12 @@
     </ClCompile>
     <ClCompile Include="src\Events\EventSystem.cpp">
       <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Math.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Geometry.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

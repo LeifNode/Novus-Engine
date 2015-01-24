@@ -14,6 +14,8 @@
 #include <Application/NovusApplication.h>
 #include <Graphics/Shader.h>
 #include <Graphics/ConstantBuffers.h>
+#include <Graphics/MeshRenderer.h>
+#include <Graphics/Geometry.h>
 #include <Events/EventSystem.h>
 
 class TestApplication : public novus::NovusApplication
@@ -32,10 +34,15 @@ public:
 
 	void OnKeyDown(novus::IEventDataPtr eventData);
 
+	void InitShader();
+	void InitMesh();
+
 private:
 	novus::Shader* mpMainShader;
 
 	novus::CBPerFrame mPerFrameData;
+
+	novus::MeshRenderer<Vertex> mMeshRenderer;
 };
 
 

@@ -11,33 +11,14 @@
 #define NOVUS_SHADER_H
 
 #include "Application/Common.h"
+#include "Graphics/Shaders/IShader.h"
 
 namespace novus
 {
-namespace ShaderType
-{
-	enum Type
-	{
-		None = -1,
-		Pixel,
-		Vertex,
-		Geometry,
-		Hull,
-		Domain,
-		Compute
-	};
-}
 
 class Shader
 {
 	friend class D3DRenderer;
-
-public:
-	struct ShaderInfo
-	{
-		ShaderType::Type type;
-		const char* entrypoint;
-	};
 
 public:
 	~Shader();

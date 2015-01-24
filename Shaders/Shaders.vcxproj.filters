@@ -1,9 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Lighting">
+      <UniqueIdentifier>{a118703e-3014-41fb-a2a2-6f8d84798851}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{d4fe3187-0e9a-4d9e-b4bb-b97fb66d7b09}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Utils\ConstantBuffers.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\Defines.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\DeferredRendering.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\DeferredShading.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\FullscreenQuad.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\FullscreenTriangle.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\Math.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
+    <FxCompile Include="Lighting\Lights.hlsl">
+      <Filter>Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="Common.hlsl" />
+    <FxCompile Include="GenericShader.hlsl" />
+    <FxCompile Include="GenericShader_PS.hlsl" />
+    <FxCompile Include="GenericShader_VS.hlsl" />
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#ifndef NOVUS_CONSTANT_BUFFERs_H
+#ifndef NOVUS_CONSTANT_BUFFERS_H
 #define NOVUS_CONSTANT_BUFFERS_H
 
 #include "Application/Common.h"

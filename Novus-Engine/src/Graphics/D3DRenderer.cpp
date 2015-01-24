@@ -6,6 +6,8 @@ using novus::D3DRenderer;
 using novus::Shader;
 using novus::Texture;
 using novus::EngineStatics;
+using novus::ShaderInfo;
+using novus::ShaderType::Type;
 
 D3DRenderer::D3DRenderer()
 	:
@@ -34,7 +36,7 @@ D3DRenderer::D3DRenderer()
 	mClearColor[2] = 0.3f;
 	mClearColor[3] = 1.0f;*/
 
-	mClearColor[0] = 1.0f;
+	mClearColor[0] = 0.0f;
 	mClearColor[1] = 0.0f;
 	mClearColor[2] = 0.0f;
 	mClearColor[3] = 1.0f;
@@ -392,7 +394,7 @@ void D3DRenderer::InitDepthStencilStates()
 	mpd3dImmediateContext->OMSetDepthStencilState(mpDepthStencilStates[DepthStencilState::Default], 0);
 }
 
-HRESULT D3DRenderer::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+HRESULT D3DRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, const D3D_SHADER_MACRO* defines, ID3DBlob** ppBlobOut)
 {
 	HRESULT hr = S_OK;
 
@@ -406,7 +408,7 @@ HRESULT D3DRenderer::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoin
 #endif
 
 	ID3DBlob* pErrorBlob;
-	hr = D3DCompileFromFile(szFileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, szEntryPoint, szShaderModel,
+	hr = D3DCompileFromFile(szFileName, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, szEntryPoint, szShaderModel,
 		dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
 	if (FAILED(hr))
 	{
@@ -420,7 +422,12 @@ HRESULT D3DRenderer::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoin
 	return S_OK;
 }
 
-Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize)
+Shader* D3DRenderer::LoadShaderUnmanaged(const WCHAR* filePath,
+										 const ShaderInfo* shaderInfo, 
+										 D3D_PRIMITIVE_TOPOLOGY primitiveTopology,
+										 const D3D11_INPUT_ELEMENT_DESC* vertexDescription,
+										 int vertexDescriptionSize,
+										 const D3D_SHADER_MACRO* defines)
 {
 	char* name = NE_NEW char[MAX_PATH];
 
@@ -445,7 +452,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 		switch (shaderInfo[i].type)
 		{
 		case ShaderType::Vertex:
-			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "vs_5_0", &shaderBlob);
+			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "vs_5_0", defines, &shaderBlob);
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"The FX file cannot be compiled.", L"Error", MB_OK);
@@ -469,7 +476,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 
 			break;
 		case ShaderType::Pixel:
-			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "ps_5_0", &shaderBlob);
+			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "ps_5_0", defines, &shaderBlob);
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"The FX file cannot be compiled.", L"Error", MB_OK);
@@ -486,7 +493,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 			}
 			break;
 		case ShaderType::Geometry:
-			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "gs_5_0", &shaderBlob);
+			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "gs_5_0", defines, &shaderBlob);
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"The FX file cannot be compiled.", L"Error", MB_OK);
@@ -503,7 +510,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 			}
 			break;
 		case ShaderType::Compute:
-			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "cs_5_0", &shaderBlob);
+			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "cs_5_0", defines, &shaderBlob);
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"The FX file cannot be compiled.", L"Error", MB_OK);
@@ -520,7 +527,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 			}
 			break;
 		case ShaderType::Hull:
-			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "hs_5_0", &shaderBlob);
+			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "hs_5_0", defines, &shaderBlob);
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"The FX file cannot be compiled.", L"Error", MB_OK);
@@ -537,7 +544,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 			}
 			break;
 		case ShaderType::Domain:
-			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "ds_5_0", &shaderBlob);
+			hr = CompileShaderFromFile(filePath, shaderInfo[i].entrypoint, "ds_5_0", defines, &shaderBlob);
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"The FX file cannot be compiled.", L"Error", MB_OK);
@@ -561,7 +568,7 @@ Shader* D3DRenderer::LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* sh
 	return newShader;
 }
 
-Shader* D3DRenderer::LoadShader(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize)
+Shader* D3DRenderer::LoadShader(const WCHAR* filePath, const ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, const D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize, const D3D_SHADER_MACRO* defines)
 {
 	char* name = NE_NEW char[MAX_PATH];
 
@@ -573,7 +580,7 @@ Shader* D3DRenderer::LoadShader(WCHAR* filePath, Shader::ShaderInfo* shaderInfo,
 	NE_DELETEARR(name);
 	name = nullptr;
 
-	Shader* newShader = LoadShaderUnmanaged(filePath, shaderInfo, primitiveTopology, vertexDescription, vertexDescriptionSize);
+	Shader* newShader = LoadShaderUnmanaged(filePath, shaderInfo, primitiveTopology, vertexDescription, vertexDescriptionSize, defines);
 
 	mLoadedShaders[nameStr] = newShader;
 

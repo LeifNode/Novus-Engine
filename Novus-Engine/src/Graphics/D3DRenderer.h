@@ -12,6 +12,7 @@
 
 #include "Application/Common.h"
 #include "GBuffer.h"
+#include "Shaders/IShader.h"
 #include "Shader.h"
 #include "ConstantBuffers.h"
 #include "Textures\Texture.h"
@@ -81,8 +82,19 @@ public:
 	void ResetSamplerState();
 	void ResetRenderTarget();
 
-	Shader* LoadShader(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize);
-	Shader* LoadShaderUnmanaged(WCHAR* filePath, Shader::ShaderInfo* shaderInfo, D3D_PRIMITIVE_TOPOLOGY primitiveTopology, D3D11_INPUT_ELEMENT_DESC* vertexDescription, int vertexDescriptionSize);
+	Shader* LoadShader(const WCHAR* filePath,
+					   const ShaderInfo* shaderInfo, 
+					   D3D_PRIMITIVE_TOPOLOGY primitiveTopology, 
+					   const D3D11_INPUT_ELEMENT_DESC* vertexDescription, 
+					   int vertexDescriptionSize, 
+					   const D3D_SHADER_MACRO* defines = NULL);
+
+	Shader* LoadShaderUnmanaged(const WCHAR* filePath, 
+								const ShaderInfo* shaderInfo, 
+								D3D_PRIMITIVE_TOPOLOGY primitiveTopology, 
+								const D3D11_INPUT_ELEMENT_DESC* vertexDescription, 
+								int vertexDescriptionSize, 
+								const D3D_SHADER_MACRO* defines = NULL);
 
 	//void Clear(RenderTarget* target);
 
@@ -100,7 +112,11 @@ public:
 	bool isUsingHMD() const;
 
 private:
-	static HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
+	static HRESULT CompileShaderFromFile(const WCHAR* szFileName, 
+										 LPCSTR szEntryPoint, 
+										 LPCSTR szShaderModel, 
+										 const D3D_SHADER_MACRO* defines, 
+										 ID3DBlob** ppBlobOut);
 
 	void InitDepthStencilStates();
 

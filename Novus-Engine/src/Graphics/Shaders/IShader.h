@@ -10,15 +10,41 @@
 #ifndef NOVUS_ISHADER_H
 #define NOVUS_ISHADER_H
 
+#include <string>
+
 namespace novus
 {
 
 class D3DRenderer;
 
-class IShader
+namespace ShaderType
 {
-	virtual void Bind(D3DRenderer* renderer) = 0;
+	enum Type
+	{
+		None = -1,
+		Pixel,
+		Vertex,
+		Geometry,
+		Hull,
+		Domain,
+		Compute
+	};
+}
+
+struct ShaderInfo
+{
+	ShaderType::Type type;
+	const char* entrypoint;
 };
+
+//class IShader
+//{
+//public:
+//	virtual std::string getShaderPath() const = 0;
+//	virtual ShaderType::Type getShaderType() const = 0;
+//
+//	virtual void Bind(D3DRenderer* renderer) = 0;
+//};
 
 }
 

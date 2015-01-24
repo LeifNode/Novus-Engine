@@ -38,8 +38,6 @@ TestApplication::TestApplication(HINSTANCE instance)
 TestApplication::~TestApplication()
 {
 	UnhookInputEvents();
-
-	NE_DELETE(mpMainShader);
 }
 
 bool TestApplication::Init()
@@ -51,7 +49,39 @@ bool TestApplication::Init()
 
 	HookInputEvents();
 
+	InitShader();
+	InitMesh();
+
 	return true;
+}
+
+void TestApplication::InitShader()
+{
+	ShaderInfo shaderInfo[] = {
+		{ ShaderType::Vertex, "VS" },
+		{ ShaderType::Pixel, "PS" },
+		{ ShaderType::None, NULL }
+	};
+
+	D3D11_INPUT_ELEMENT_DESC vertexDescription[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	mpMainShader = mpRenderer->LoadShader(L"../Shaders/GenericShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vertexDescription, ARRAYSIZE(vertexDescription));
+}
+
+void TestApplication::InitMesh()
+{
+	Mesh mesh;
+
+	GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, mesh);
+
+	mMeshRenderer.Initialize(mesh.Vertices, mesh.Indices, mpRenderer);
 }
 
 void TestApplication::HookInputEvents()
@@ -77,21 +107,37 @@ void TestApplication::OnKeyDown(novus::IEventDataPtr eventData)
 void TestApplication::OnResize()
 {
 	NovusApplication::OnResize();
-
-
 }
 
 void TestApplication::Update(float dt)
 {
-
-
 
 }
 
 void TestApplication::Render()
 {
 	mpRenderer->PreRender();
+	mpRenderer->setShader(mpMainShader);
 
+	CBPerFrame perFrame;
+	perFrame.Projection = XMMatrixPerspectiveFovRH(45.0f, getClientWidth() / (float)getClientHeight(), 0.01f, 10000.0f);
+	perFrame.ProjectionInv = XMMatrixInverse(NULL, perFrame.Projection);
+	perFrame.View = XMMatrixLookAtRH(XMVectorSet(2.0f, 2.0f, 2.0f, 1.0f), XMVectorZero(), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	perFrame.ViewInv = XMMatrixInverse(NULL, perFrame.View);
+	perFrame.ViewProj = perFrame.View * perFrame.Projection;
+	perFrame.ViewProjInv = XMMatrixInverse(NULL, perFrame.ViewProj);
+
+	mpRenderer->setPerFrameBuffer(perFrame);
+
+	CBPerObject perObject;
+
+	perObject.World = XMMatrixIdentity();
+	perObject.WorldInvTranspose = XMMatrixIdentity();
+	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+
+	mpRenderer->setPerObjectBuffer(perObject);
+
+	mMeshRenderer.Render(mpRenderer);
 
 	mpRenderer->PostRender();
 }

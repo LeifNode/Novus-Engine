@@ -51,13 +51,14 @@ Global
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Debug|Win32.ActiveCfg = Debug|Win32
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Debug|Win32.Build.0 = Debug|Win32
-		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Debug|x64.ActiveCfg = Debug|Win32
+		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Debug|x64.ActiveCfg = Debug|x64
+		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Debug|x64.Build.0 = Debug|x64
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|Win32.ActiveCfg = Release|Win32
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|Win32.Build.0 = Release|Win32
-		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|x64.ActiveCfg = Release|Win32
-		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|x64.Build.0 = Release|Win32
+		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|x64.ActiveCfg = Release|x64
+		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
