@@ -172,6 +172,10 @@
     <ClInclude Include="src\Input\KeyboardState.h" />
     <ClInclude Include="src\Input\MouseState.h" />
     <ClInclude Include="src\Math\Math.h" />
+    <ClInclude Include="src\Math\Vector2_t.h" />
+    <ClInclude Include="src\Math\Vector4_t.h" />
+    <ClInclude Include="src\Math\Vector_t.h" />
+    <ClInclude Include="src\Math\Vector3_t.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
     <ClInclude Include="src\Utils\Logger\Logger.h" />
@@ -197,6 +201,11 @@
     <ClCompile Include="src\Utils\Logger\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Math\Vector2_t.inl" />
+    <None Include="src\Math\Vector3_t.inl" />
+    <None Include="src\Math\Vector4_t.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

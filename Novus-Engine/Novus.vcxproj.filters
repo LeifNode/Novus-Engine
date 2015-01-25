@@ -48,6 +48,9 @@
     <Filter Include="Source Files\Graphics\Shaders">
       <UniqueIdentifier>{68b31067-dc8d-4ccb-8954-fa8769fabf36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math\Vector">
+      <UniqueIdentifier>{6e42a956-73fa-4da5-9cd4-6d99402e836c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -125,6 +128,18 @@
     <ClInclude Include="src\Graphics\MeshRenderer.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Math\Vector_t.h">
+      <Filter>Source Files\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vector3_t.h">
+      <Filter>Source Files\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vector2_t.h">
+      <Filter>Source Files\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vector4_t.h">
+      <Filter>Source Files\Math\Vector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -181,5 +196,16 @@
     <ClCompile Include="src\Graphics\Geometry.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Math\Vector3_t.inl">
+      <Filter>Source Files\Math\Vector</Filter>
+    </None>
+    <None Include="src\Math\Vector2_t.inl">
+      <Filter>Source Files\Math\Vector</Filter>
+    </None>
+    <None Include="src\Math\Vector4_t.inl">
+      <Filter>Source Files\Math\Vector</Filter>
+    </None>
   </ItemGroup>
 </Project>

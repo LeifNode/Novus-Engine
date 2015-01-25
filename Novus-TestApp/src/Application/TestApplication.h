@@ -17,6 +17,7 @@
 #include <Graphics/MeshRenderer.h>
 #include <Graphics/Geometry.h>
 #include <Events/EventSystem.h>
+#include <Math/Vector3_t.h>
 
 class TestApplication : public novus::NovusApplication
 {
@@ -38,6 +39,8 @@ public:
 	void InitMesh();
 
 private:
+	novus::math::Vector3 mTestVec;
+
 	novus::Shader* mpMainShader;
 
 	novus::CBPerFrame mPerFrameData;

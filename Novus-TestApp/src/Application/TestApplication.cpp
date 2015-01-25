@@ -6,6 +6,7 @@
 #include <Events/EventSystem.h>
 
 using namespace novus;
+using namespace math;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd){
 	UNREFERENCED_PARAMETER(prevInstance);
@@ -33,6 +34,8 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpMainShader(NULL)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.1";
+
+	mTestVec = Vector3(1.0f);
 }
 
 TestApplication::~TestApplication()
@@ -111,7 +114,9 @@ void TestApplication::OnResize()
 
 void TestApplication::Update(float dt)
 {
+	mTestVec *= 1.0f + dt;
 
+	std::cout << mTestVec.x << ", " << mTestVec.y << ", " << mTestVec.z << std::endl;
 }
 
 void TestApplication::Render()

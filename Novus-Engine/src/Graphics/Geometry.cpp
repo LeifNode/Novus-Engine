@@ -367,7 +367,7 @@ void GeometryGenerator::Subdivide(Mesh& mesh)
 void GeometryGenerator::CreateGeosphere(float radius, UINT numSubdivisions, Mesh& mesh)
 {
 	// Put a cap on the number of subdivisions.
-	numSubdivisions = Math::Min(numSubdivisions, 5u);
+	numSubdivisions = math::Min(numSubdivisions, 5u);
 
 	// Approximate a sphere by tessellating an icosahedron.
 

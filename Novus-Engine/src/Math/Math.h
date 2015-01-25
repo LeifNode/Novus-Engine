@@ -18,10 +18,8 @@
 
 namespace novus
 {
-
-class Math
+namespace math
 {
-public:
 	//0..1
 	static float RandF()
 	{
@@ -60,7 +58,7 @@ public:
 
 	static int MipMapCount(int width, int height);
 
-	
+
 	static const float Pi;
 	static const float TwoPi;
 	static const float PiOver2;
@@ -69,8 +67,8 @@ public:
 
 	static float WrapAngle(float angle)
 	{
-		if (angle < 0.0f || angle > Math::TwoPi)
-			return angle - Math::TwoPi * floorf(angle / Math::TwoPi);
+		if (angle < 0.0f || angle > math::TwoPi)
+			return angle - math::TwoPi * floorf(angle / math::TwoPi);
 		else
 			return angle;
 	}
@@ -88,7 +86,7 @@ public:
 
 		return radians * toDeg;
 	}
-};
+}
 
 }
 
