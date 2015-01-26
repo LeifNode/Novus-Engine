@@ -20,6 +20,12 @@ namespace math
 
 	template <typename T>
 	template <typename B>
+	Vector3_t<T>::Vector3_t(const Vector2_t<B>& v)
+		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(0)
+	{}
+
+	template <typename T>
+	template <typename B>
 	Vector3_t<T>::Vector3_t(const Vector3_t<B>& v)
 		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z))
 	{}
@@ -180,6 +186,30 @@ namespace math
 	}
 
 	template <typename T>
+	Vector3_t<T> operator+ (const T& s, const Vector3_t<T>& v)
+	{
+		return Vector3_t<T>(s + v.x, s + v.y, s + v.z);
+	}
+
+	template <typename T>
+	Vector3_t<T> operator- (const T& s, const Vector3_t<T>& v)
+	{
+		return Vector3_t<T>(s - v.x, s - v.y, s - v.z);
+	}
+
+	template <typename T>
+	Vector3_t<T> operator* (const T& s, const Vector3_t<T>& v)
+	{
+		return Vector3_t<T>(s * v.x, s * v.y, s * v.z);
+	}
+
+	template <typename T>
+	Vector3_t<T> operator/ (const T& s, const Vector3_t<T>& v)
+	{
+		return Vector3_t<T>(s / v.x, s / v.y, s / v.z);
+	}
+
+	template <typename T>
 	Vector3_t<T> operator+ (const Vector3_t<T>& v, const T& s)
 	{
 		return Vector3_t<T>(v.x + s, v.y + s, v.z + s);
@@ -201,6 +231,24 @@ namespace math
 	Vector3_t<T> operator/ (const Vector3_t<T>& v, const T& s)
 	{
 		return Vector3_t<T>(v.x / s, v.y / s, v.z / s);
+	}
+
+	template <typename T>
+	Vector3_t<T> operator- (const Vector3_t<T>& v)
+	{
+		return Vector3_t<T>(-v.x, -v.y, -v.z);
+	}
+
+	template <typename T>
+	bool operator== (const Vector3_t<T>& v1, const Vector3_t<T>& v2)
+	{
+		return (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z);
+	}
+
+	template <typename T>
+	bool operator!= (const Vector3_t<T>& v1, const Vector3_t<T>& v2)
+	{
+		return (v1.x != v2.x || v1.y != v2.y || v1.z != v2.z);
 	}
 }
 }

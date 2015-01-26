@@ -115,8 +115,9 @@ void TestApplication::OnResize()
 void TestApplication::Update(float dt)
 {
 	mTestVec *= 1.0f + dt;
+	mTestVec[0] = 1.0f;
 
-	std::cout << mTestVec.x << ", " << mTestVec.y << ", " << mTestVec.z << std::endl;
+	std::cout << mTestVec[0] << ", " << mTestVec.y << ", " << mTestVec.z << std::endl;
 }
 
 void TestApplication::Render()

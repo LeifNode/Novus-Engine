@@ -51,6 +51,9 @@
     <Filter Include="Source Files\Math\Vector">
       <UniqueIdentifier>{6e42a956-73fa-4da5-9cd4-6d99402e836c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math\Matrix">
+      <UniqueIdentifier>{43d155ae-014e-421a-9b0c-2e1efb81a9a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -139,6 +142,15 @@
     </ClInclude>
     <ClInclude Include="src\Math\Vector4_t.h">
       <Filter>Source Files\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Matrix_t.h">
+      <Filter>Source Files\Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Matrix4x4_t.h">
+      <Filter>Source Files\Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Matrix3x3_t.h">
+      <Filter>Source Files\Math\Matrix</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

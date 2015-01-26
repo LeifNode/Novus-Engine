@@ -92,6 +92,23 @@ namespace math
 	Vector2_t<T> operator* (const Vector2_t<T>& v, const T& s);
 	template <typename T>
 	Vector2_t<T> operator/ (const Vector2_t<T>& v, const T& s);
+
+	template <typename T>
+	Vector2_t<T> operator+ (const T& s, const Vector2_t<T>& v);
+	template <typename T>
+	Vector2_t<T> operator- (const T& s, const Vector2_t<T>& v);
+	template <typename T>
+	Vector2_t<T> operator* (const T& s, const Vector2_t<T>& v);
+	template <typename T>
+	Vector2_t<T> operator/ (const T& s, const Vector2_t<T>& v);
+
+	template <typename T>
+	Vector2_t<T> operator- (const Vector2_t<T>& v);
+
+	template <typename T>
+	bool operator== (const Vector2_t<T>& v1, const Vector2_t<T>& v2);
+	template <typename T>
+	bool operator!= (const Vector2_t<T>& v1, const Vector2_t<T>& v2);
 }
 }
 

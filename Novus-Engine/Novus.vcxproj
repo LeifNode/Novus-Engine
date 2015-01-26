@@ -172,6 +172,9 @@
     <ClInclude Include="src\Input\KeyboardState.h" />
     <ClInclude Include="src\Input\MouseState.h" />
     <ClInclude Include="src\Math\Math.h" />
+    <ClInclude Include="src\Math\Matrix3x3_t.h" />
+    <ClInclude Include="src\Math\Matrix4x4_t.h" />
+    <ClInclude Include="src\Math\Matrix_t.h" />
     <ClInclude Include="src\Math\Vector2_t.h" />
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />

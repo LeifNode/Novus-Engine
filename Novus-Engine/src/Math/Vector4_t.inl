@@ -26,6 +26,18 @@ namespace math
 	//Conversion constructors
 	template <typename T>
 	template <typename B>
+	Vector4_t<T>::Vector4_t(const Vector2_t<B>& v)
+		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(0), w(0)
+	{}
+
+	template <typename T>
+	template <typename B>
+	Vector4_t<T>::Vector4_t(const Vector3_t<B>& v)
+		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)), w(0)
+	{}
+
+	template <typename T>
+	template <typename B>
 	Vector4_t<T>::Vector4_t(const Vector4_t<B>& v)
 		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)), w(static_cast<T>(v.w))
 	{}
@@ -193,6 +205,96 @@ namespace math
 		this->z /= static_cast<T>(s);
 		this->w /= static_cast<T>(s);
 		return *this;
+	}
+
+	template <typename T>
+	Vector4_t<T> operator+ (const Vector4_t<T>& a, const Vector4_t<T>& b)
+	{
+		return Vector4_t<T>(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator- (const Vector4_t<T>& a, const Vector4_t<T>& b)
+	{
+		return Vector4_t<T>(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator* (const Vector4_t<T>& a, const Vector4_t<T>& b)
+	{
+		return Vector4_t<T>(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator/ (const Vector4_t<T>& a, const Vector4_t<T>& b)
+	{
+		return Vector4_t<T>(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator+ (const Vector4_t<T>& v, const T& s)
+	{
+		return Vector4_t<T>(v.x + s, v.y + s, v.z + s, v.w + s);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator- (const Vector4_t<T>& v, const T& s)
+	{
+		return Vector4_t<T>(v.x - s, v.y - s, v.z - s, v.w - s);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator* (const Vector4_t<T>& v, const T& s)
+	{
+		return Vector4_t<T>(v.x * s, v.y * s, v.z * s, v.w * s);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator/ (const Vector4_t<T>& v, const T& s)
+	{
+		return Vector4_t<T>(v.x / s, v.y / s, v.z / s, v.w / s);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator+ (const T& s, const Vector4_t<T>& v)
+	{
+		return Vector4_t<T>(s + v.x, s + v.y, s + v.z, s + v.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator- (const T& s, const Vector4_t<T>& v)
+	{
+		return Vector4_t<T>(s - v.x, s - v.y, s - v.z, s - v.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator* (const T& s, const Vector4_t<T>& v)
+	{
+		return Vector4_t<T>(s * v.x, s * v.y, s * v.z, s * v.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator/ (const T& s, const Vector4_t<T>& v)
+	{
+		return Vector4_t<T>(s / v.x, s / v.y, s / v.z, s / v.w);
+	}
+
+	template <typename T>
+	Vector4_t<T> operator- (const Vector4_t<T>& v)
+	{
+		return Vector4_t<T>(-v.x, -v.y, -v.z, -v.w);
+	}
+
+	template <typename T>
+	bool operator== (const Vector4_t<T>& v1, const Vector4_t<T>& v2)
+	{
+		return (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w);
+	}
+
+	template <typename T>
+	bool operator!= (const Vector4_t<T>& v1, const Vector4_t<T>& v2)
+	{
+		return (v1.x != v2.x || v1.y != v2.y || v1.z != v2.z || v1.w != v2.w);
 	}
 }
 }

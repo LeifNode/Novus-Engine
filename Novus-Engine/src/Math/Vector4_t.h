@@ -37,7 +37,15 @@ namespace math
 
 		//Conversion constructors
 		template <typename B>
+		Vector4_t(const Vector2_t<B>& v);
+
+		template <typename B>
+		Vector4_t(const Vector3_t<B>& v);
+
+		template <typename B>
 		Vector4_t(const Vector4_t<B>& v);
+
+
 
 		template <typename A, typename B, typename C, typename D>
 		Vector4_t(const A& a, const B& b, const C& c, const D& d);
@@ -112,6 +120,23 @@ namespace math
 	Vector4_t<T> operator* (const Vector4_t<T>& v, const T& s);
 	template <typename T>
 	Vector4_t<T> operator/ (const Vector4_t<T>& v, const T& s);
+
+	template <typename T>
+	Vector4_t<T> operator+ (const T& s, const Vector4_t<T>& v);
+	template <typename T>
+	Vector4_t<T> operator- (const T& s, const Vector4_t<T>& v);
+	template <typename T>
+	Vector4_t<T> operator* (const T& s, const Vector4_t<T>& v);
+	template <typename T>
+	Vector4_t<T> operator/ (const T& s, const Vector4_t<T>& v);
+
+	template <typename T>
+	Vector4_t<T> operator- (const Vector4_t<T>& v);
+
+	template <typename T>
+	bool operator== (const Vector4_t<T>& v1, const Vector4_t<T>& v2);
+	template <typename T>
+	bool operator!= (const Vector4_t<T>& v1, const Vector4_t<T>& v2);
 }
 }
 

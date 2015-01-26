@@ -182,6 +182,49 @@ namespace math
 	{
 		return Vector2_t<T>(v.x / s, v.y / s);
 	}
+
+
+	template <typename T>
+	Vector2_t<T> operator+ (const T& s, const Vector2_t<T>& v)
+	{
+		return Vector2_t<T>(s + v.x, s + v.y);
+	}
+
+	template <typename T>
+	Vector2_t<T> operator- (const T& s, const Vector2_t<T>& v)
+	{
+		return Vector2_t<T>(s - v.x, s - v.y);
+	}
+
+	template <typename T>
+	Vector2_t<T> operator* (const T& s, const Vector2_t<T>& v)
+	{
+		return Vector2_t<T>(s * v.x, s * v.y);
+	}
+
+	template <typename T>
+	Vector2_t<T> operator/ (const T& s, const Vector2_t<T>& v)
+	{
+		return Vector2_t<T>(s / v.x, s / v.y);
+	}
+
+	template <typename T>
+	Vector2_t<T> operator- (const Vector2_t<T>& v)
+	{
+		return Vector2_t<T>(-v.x, -v.y);
+	}
+
+	template <typename T>
+	bool operator== (const Vector2_t<T>& v1, const Vector2_t<T>& v2)
+	{
+		return (v1.x == v2.x && v1.y == v2.y);
+	}
+
+	template <typename T>
+	bool operator!= (const Vector2_t<T>& v1, const Vector2_t<T>& v2)
+	{
+		return (v1.x != v2.x || v1.y != v2.y);
+	}
 }
 }
 
