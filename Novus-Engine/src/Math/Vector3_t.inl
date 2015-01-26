@@ -29,7 +29,13 @@ namespace math
 	Vector3_t<T>::Vector3_t(const Vector3_t<B>& v)
 		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z))
 	{}
-	
+
+	template <typename T>
+	template <typename B>
+	Vector3_t<T>::Vector3_t(const Vector4_t<B>& v)
+		: x(v.x), y(v.y), z(v.z)
+	{}
+
 	template <typename T>
 	template <typename A, typename B, typename C>
 	Vector3_t<T>::Vector3_t(const A& a, const B& b, const C& c)
@@ -57,7 +63,7 @@ namespace math
 	template <typename T>
 	T& Vector3_t<T>::operator[] (size_t i)
 	{
-		assert(i <= size());
+		assert(i < size());
 
 		return (&x)[i];
 	}
@@ -65,7 +71,7 @@ namespace math
 	template <typename T>
 	const T& Vector3_t<T>::operator[] (size_t i) const
 	{
-		assert(i <= size());
+		assert(i < size());
 
 		return (&x)[i];
 	}

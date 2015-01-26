@@ -219,5 +219,8 @@
     <None Include="src\Math\Vector4_t.inl">
       <Filter>Source Files\Math\Vector</Filter>
     </None>
+    <None Include="src\Math\Matrix3x3_t.inl">
+      <Filter>Source Files\Math\Matrix</Filter>
+    </None>
   </ItemGroup>
 </Project>

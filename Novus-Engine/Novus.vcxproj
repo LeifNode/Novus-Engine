@@ -206,6 +206,7 @@
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\Math\Matrix3x3_t.inl" />
     <None Include="src\Math\Vector2_t.inl" />
     <None Include="src\Math\Vector3_t.inl" />
     <None Include="src\Math\Vector4_t.inl" />

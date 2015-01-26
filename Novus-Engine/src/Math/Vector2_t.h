@@ -35,7 +35,13 @@ namespace math
 
 		//Conversion constructors
 		template <typename B>
-		Vector2_t(const Vector2_t<B>& v);
+		explicit Vector2_t(const Vector2_t<B>& v);
+
+		template <typename B>
+		explicit Vector2_t(const Vector3_t<B>& v);
+
+		template <typename B>
+		explicit Vector2_t(const Vector4_t<B>& v);
 
 		template <typename A, typename B>
 		Vector2_t(const A& a, const B& b);

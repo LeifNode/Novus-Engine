@@ -93,7 +93,7 @@ namespace math
 	template <typename T>
 	T& Vector4_t<T>::operator[] (size_t i)
 	{
-		assert(i <= size());
+		assert(i < size());
 
 		return (&x)[i];
 	}
@@ -101,7 +101,7 @@ namespace math
 	template <typename T>
 	const T& Vector4_t<T>::operator[] (size_t i) const
 	{
-		assert(i <= size());
+		assert(i < size());
 
 		return (&x)[i];
 	}
