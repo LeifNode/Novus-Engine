@@ -90,6 +90,18 @@ namespace novus
 
 		template <typename U>
 		Matrix3x3_t<T>& operator/= (const U& s);
+
+		static Matrix3x3_t<T> Invert(const Matrix3x3_t<T>& m);
+
+		static Matrix3x3_t<T> Transpose(const Matrix3x3_t<T>& m);
+
+		static Matrix3x3_t<T> Scale(const T& scaleX, const T& scaleY, const T& scaleZ);
+
+		static Matrix3x3_t<T> RotateX(const T& r);
+		static Matrix3x3_t<T> RotateY(const T& r);
+		static Matrix3x3_t<T> RotateZ(const T& r);
+
+		static Matrix3x3_t<T> Translate(const T& x, const T& y);
 	};
 
 	template <typename T>

@@ -15,6 +15,7 @@
 #include "Vector3_t.h"
 #include "Vector4_t.h"
 #include "Matrix3x3_t.h"
+#include "Matrix4x4_t.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX

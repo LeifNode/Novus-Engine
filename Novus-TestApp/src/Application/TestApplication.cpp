@@ -138,6 +138,12 @@ void TestApplication::Update(float dt)
 
 	if (mat2 == mat3)
 		std::cout << "True\n";
+
+	Vector4 vec(0.0f, 0.0f, 0.0f, 1.0f);
+
+	vec = Matrix4::Translate(1.0f, 0.0f, 0.5f) * vec;
+
+	int i = 0;
 }
 
 void TestApplication::Render()

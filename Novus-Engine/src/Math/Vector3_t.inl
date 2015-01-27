@@ -17,6 +17,11 @@ namespace novus
 	{}
 
 	template <typename T>
+	Vector3_t<T>::Vector3_t(const T& a, const T& b, const T& c)
+		: x(a), y(b), z(c)
+	{}
+
+	template <typename T>
 	template <typename B>
 	Vector3_t<T>::Vector3_t(const Vector2_t<B>& v)
 		: x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(0)

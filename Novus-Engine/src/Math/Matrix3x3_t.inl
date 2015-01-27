@@ -42,9 +42,9 @@ namespace novus
 		const T& x2, const T& y2, const T& z2,
 		const T& x3, const T& y3, const T& z3)
 	{
-		this->value = row_type(x1, y1, z1);
-		this->value = row_type(x2, y2, z2);
-		this->value = row_type(x3, y3, z3);
+		this->value[0] = row_type(x1, y1, z1);
+		this->value[1] = row_type(x2, y2, z2);
+		this->value[2] = row_type(x3, y3, z3);
 	}
 
 	//Conversion constructors
@@ -208,18 +208,18 @@ namespace novus
 	Matrix3x3_t<T> operator+ (const Matrix3x3_t<T>& m, const T& s)
 	{
 		return Matrix3x3_t<T>(
-			m1[0] + s,
-			m1[1] + s,
-			m1[2] + s);
+			m[0] + s,
+			m[1] + s,
+			m[2] + s);
 	}
 
 	template<typename T>
 	Matrix3x3_t<T> operator+ (const T& s, const Matrix3x3_t<T>& m)
 	{
 		return Matrix3x3_t<T>(
-			m1[0] + s,
-			m1[1] + s,
-			m1[2] + s);
+			m[0] + s,
+			m[1] + s,
+			m[2] + s);
 	}
 
 	template <typename T>
@@ -235,18 +235,18 @@ namespace novus
 	Matrix3x3_t<T> operator- (const Matrix3x3_t<T>& m, const T& s)
 	{
 		return Matrix3x3_t<T>(
-			m1[0] - s,
-			m1[1] - s,
-			m1[2] - s);
+			m[0] - s,
+			m[1] - s,
+			m[2] - s);
 	}
 
 	template<typename T>
 	Matrix3x3_t<T> operator- (const T& s, const Matrix3x3_t<T>& m)
 	{
 		return Matrix3x3_t<T>(
-			s - m1[0],
-			s - m1[1],
-			s - m1[2]);
+			s - m[0],
+			s - m[1],
+			s - m[2]);
 	}
 
 	template <typename T>
@@ -276,15 +276,15 @@ namespace novus
 
 		result[0][0] = srcA00 * srcB00 + srcA01 * srcB10 + srcA02 * srcB20;
 		result[0][1] = srcA00 * srcB01 + srcA01 * srcB11 + srcA02 * srcB21;
-		result[0][2] = srcA00 * srcB02 + srcA02 * srcB12 + srcA02 * srcB22;
+		result[0][2] = srcA00 * srcB02 + srcA01 * srcB12 + srcA02 * srcB22;
 
 		result[1][0] = srcA10 * srcB00 + srcA11 * srcB10 + srcA12 * srcB20;
 		result[1][1] = srcA10 * srcB01 + srcA11 * srcB11 + srcA12 * srcB21;
-		result[1][2] = srcA10 * srcB02 + srcA12 * srcB12 + srcA12 * srcB22;
+		result[1][2] = srcA10 * srcB02 + srcA11 * srcB12 + srcA12 * srcB22;
 
 		result[2][0] = srcA20 * srcB00 + srcA21 * srcB10 + srcA22 * srcB20;
 		result[2][1] = srcA20 * srcB01 + srcA21 * srcB11 + srcA22 * srcB21;
-		result[2][2] = srcA20 * srcB02 + srcA22 * srcB12 + srcA22 * srcB22;
+		result[2][2] = srcA20 * srcB02 + srcA21 * srcB12 + srcA22 * srcB22;
 
 		return result;
 	}
@@ -293,18 +293,18 @@ namespace novus
 	Matrix3x3_t<T> operator* (const Matrix3x3_t<T>& m, const T& s)
 	{
 		return Matrix3x3_t<T>(
-			m1[0] * s,
-			m1[1] * s,
-			m1[2] * s);
+			m[0] * s,
+			m[1] * s,
+			m[2] * s);
 	}
 
 	template<typename T>
 	Matrix3x3_t<T> operator* (const T& s, const Matrix3x3_t<T>& m)
 	{
 		return Matrix3x3_t<T>(
-			m1[0] * s,
-			m1[1] * s,
-			m1[2] * s);
+			m[0] * s,
+			m[1] * s,
+			m[2] * s);
 	}
 
 	template <typename T>
@@ -335,5 +335,82 @@ namespace novus
 	bool operator!= (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2)
 	{
 		return (m1[0] != m2[0] || m1[1] != m2[1] || m1[2] != m2[2]);
+	}
+
+	template <typename T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::Invert(const Matrix3x3_t<T>& m)
+	{
+		T OneOverDeterminant = static_cast<T>(1) / (
+			+m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
+			- m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+			+ m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]));
+
+		Matrix3x3_t<T> inverse(0);
+
+		inverse[0][0] = +(m[1][1] * m[2][2] - m[2][1] * m[1][2]) * OneOverDeterminant;
+		inverse[1][0] = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * OneOverDeterminant;
+		inverse[2][0] = +(m[1][0] * m[2][1] - m[2][0] * m[1][1]) * OneOverDeterminant;
+		inverse[0][1] = -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * OneOverDeterminant;
+		inverse[1][1] = +(m[0][0] * m[2][2] - m[2][0] * m[0][2]) * OneOverDeterminant;
+		inverse[2][1] = -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * OneOverDeterminant;
+		inverse[0][2] = +(m[0][1] * m[1][2] - m[1][1] * m[0][2]) * OneOverDeterminant;
+		inverse[1][2] = -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * OneOverDeterminant;
+		inverse[2][2] = +(m[0][0] * m[1][1] - m[1][0] * m[0][1]) * OneOverDeterminant;
+
+		return inverse;
+	}
+
+	template <typename T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::Transpose(const Matrix3x3_t<T>& m)
+	{
+		return Matrix3x3_t<T>(
+			m[0][0], m[1][0], m[2][0],
+			m[0][1], m[1][1], m[2][1],
+			m[0][2], m[1][2], m[2][2]);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::Scale(const T& scaleX, const T& scaleY, const T& scaleZ)
+	{
+		return Matrix3x3_t<T>(
+			scaleX, 0, 0,
+			0, scaleY, 0,
+			0, 0, scaleZ);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::RotateX(const T& r)
+	{
+		return Matrix3x3_t<T>(
+			1, 0, 0,
+			0, cos(r), -sin(r),
+			0, sin(r), cos(r));
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::RotateY(const T& r)
+	{
+		return Matrix3x3_t<T>(
+			cos(r), 0, sin(r),
+			0, 1, 0,
+			-sin(r), 0, cos(r));
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::RotateZ(const T& r)
+	{
+		return Matrix3x3_t<T>(
+			cos(r), -sin(r), 0,
+			sin(r), cos(r), 0,
+			0, 0, 1);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::Translate(const T& x, const T& y)
+	{
+		return Matrix3x3_t<T>(
+			1, 0, x,
+			0, 1, y,
+			0, 0, 1);
 	}
 }

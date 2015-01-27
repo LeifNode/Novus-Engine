@@ -92,6 +92,19 @@ namespace novus
 
 		template <typename U>
 		Matrix4x4_t<T>& operator/= (const U& s);
+
+
+		static Matrix4x4_t<T> Invert(const Matrix4x4_t<T>& m);
+
+		static Matrix4x4_t<T> Transpose(const Matrix4x4_t<T>& m);
+
+		static Matrix4x4_t<T> Scale(const T& scaleX, const T& scaleY, const T& scaleZ);
+
+		static Matrix4x4_t<T> RotateX(const T& r);
+		static Matrix4x4_t<T> RotateY(const T& r);
+		static Matrix4x4_t<T> RotateZ(const T& r);
+
+		static Matrix4x4_t<T> Translate(const T& x, const T& y, const T& z);
 	};
 
 	template <typename T>
