@@ -19,10 +19,10 @@ class MallocTracker
 {
 	struct MemAllocation
 	{
-		size_t Size;
-		std::string FileName;
-		std::string FunctionName;
-		int LineNum;
+		size_t size;
+		std::string fileName;
+		std::string functionName;
+		int lineNum;
 	};
 
 public:

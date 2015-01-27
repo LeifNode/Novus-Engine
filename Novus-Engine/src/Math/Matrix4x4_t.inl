@@ -437,7 +437,7 @@ namespace novus
 		Vector4_t<T> SignA(+1, -1, +1, -1);
 		Vector4_t<T> SignB(-1, +1, -1, +1);
 		Matrix4x4_t<T> Inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
-		Inverse = Transpose(Inverse); //Might be beneficial to remove this
+		Inverse = Transpose(Inverse); //Might be beneficial to remove this by writing out the whole constructor
 
 		Vector4_t<T> Dot0(Vector4_t<T>(m[0][0], m[1][0], m[2][0], m[3][0]) * Inverse[0]);
 		T Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);

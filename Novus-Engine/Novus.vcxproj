@@ -68,28 +68,32 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novusd</TargetName>
+    <LibraryPath>$(SolutionDir)3rdParty\lib\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novus</TargetName>
-    <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)3rdParty\lib\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novusd</TargetName>
+    <LibraryPath>$(SolutionDir)3rdParty\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novus</TargetName>
+    <LibraryPath>$(SolutionDir)3rdParty\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -103,6 +107,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>freetyped.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -116,6 +123,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>freetyped.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -133,6 +143,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>freetype.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -150,6 +163,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>freetype.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdParty\FastDelegate.h" />
@@ -179,11 +195,17 @@
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />
     <ClInclude Include="src\Math\Vector3_t.h" />
+    <ClInclude Include="src\Resources\Font\Font.h" />
+    <ClInclude Include="src\Resources\Font\FontManager.h" />
+    <ClInclude Include="src\Resources\IResource.h" />
+    <ClInclude Include="src\Resources\ResourceManager.h" />
+    <ClInclude Include="src\Utils\Containers\Rectangle.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
     <ClInclude Include="src\Utils\Logger\Logger.h" />
     <ClInclude Include="src\Utils\Memory\MallocTracker.h" />
     <ClInclude Include="src\Utils\Memory\Memory.h" />
+    <ClInclude Include="src\Utils\RectangleBinPacker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\EngineStatics.cpp" />
@@ -199,11 +221,14 @@
     <ClCompile Include="src\Input\KeyboardState.cpp" />
     <ClCompile Include="src\Input\MouseState.cpp" />
     <ClCompile Include="src\Math\Math.cpp" />
+    <ClCompile Include="src\Resources\Font\Font.cpp" />
+    <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
     <ClCompile Include="src\Utils\Logger\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
+    <ClCompile Include="src\Utils\RectangleBinPacker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Math\Matrix3x3_t.inl" />

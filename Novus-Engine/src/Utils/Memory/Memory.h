@@ -12,8 +12,6 @@
 
 //#define DEBUG_MEMORY_ALLOC
 
-#include "Application/Common.h"
-
 void * operator new(size_t size, const char* fileName, const char* functionName, int line);
 void * operator new[](size_t size, const char* fileName, const char* functionName, int line);
 

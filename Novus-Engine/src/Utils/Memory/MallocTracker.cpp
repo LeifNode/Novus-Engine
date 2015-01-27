@@ -26,10 +26,10 @@ void MallocTracker::Alloc(void* p, size_t size, const char* fileName, const char
 	//if (free(p))
 
 	MemAllocation memAlloc;
-	memAlloc.Size = size;
-	memAlloc.FileName = fileName;
-	memAlloc.FunctionName = functionName;
-	memAlloc.LineNum = lineNum;
+	memAlloc.size = size;
+	memAlloc.fileName = fileName;
+	memAlloc.functionName = functionName;
+	memAlloc.lineNum = lineNum;
 
 	mAllocations[p] = memAlloc;
 
@@ -42,7 +42,7 @@ bool MallocTracker::FreePtr(void* p)
 
 	if (it != mAllocations.end())
 	{
-		mTotalMemory -= static_cast<unsigned int>(it->second.Size);
+		mTotalMemory -= static_cast<unsigned int>(it->second.size);
 
 		mAllocations.erase(it);
 
@@ -66,7 +66,7 @@ void MallocTracker::DumpTrackedMemory()
 	{
 		std::stringstream debugString;
 
-		debugString << "Size: " << it->second.Size << "B, File: " << it->second.FileName << ", Function: " << it->second.FunctionName << ", Line: " << it->second.LineNum << std::endl;
+		debugString << "Size: " << it->second.size << "B, File: " << it->second.fileName << ", Function: " << it->second.functionName << ", Line: " << it->second.lineNum << std::endl;
 
 		OutputDebugStringA(debugString.str().c_str());
 	}

@@ -10,6 +10,8 @@
 #ifndef TEST_APPLICATION_H
 #define TEST_APPLICATION_H
 
+#define DEBUG_MEMORY_ALLOC
+
 #include <Application/Common.h>
 #include <Application/NovusApplication.h>
 #include <Graphics/Shader.h>

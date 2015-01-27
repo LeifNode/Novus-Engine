@@ -54,6 +54,15 @@
     <Filter Include="Source Files\Math\Matrix">
       <UniqueIdentifier>{43d155ae-014e-421a-9b0c-2e1efb81a9a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{c9bc938c-cbb0-4a24-9afd-3966b80ea171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils\Containers">
+      <UniqueIdentifier>{5c7f86e9-b82a-4548-8dd2-248905b8170a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resources\Font">
+      <UniqueIdentifier>{5c1cd4c2-25e4-4ef7-ba2a-52e8b364ec8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -152,6 +161,24 @@
     <ClInclude Include="src\Math\Matrix3x3_t.h">
       <Filter>Source Files\Math\Matrix</Filter>
     </ClInclude>
+    <ClInclude Include="src\Resources\IResource.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\ResourceManager.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Font\Font.h">
+      <Filter>Source Files\Resources\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\RectangleBinPacker.h">
+      <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Containers\Rectangle.h">
+      <Filter>Source Files\Utils\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Font\FontManager.h">
+      <Filter>Source Files\Resources\Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -207,6 +234,15 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Geometry.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\RectangleBinPacker.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Font\Font.cpp">
+      <Filter>Source Files\Resources\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Font\FontManager.cpp">
+      <Filter>Source Files\Resources\Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

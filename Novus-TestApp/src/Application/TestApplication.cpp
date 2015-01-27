@@ -118,32 +118,7 @@ void TestApplication::OnResize()
 
 void TestApplication::Update(float dt)
 {
-	mTestVec *= 1.0f + dt;
-	mTestVec[0] = 1.0f;
-
-	if (mTestVec == mTestVec)
-		std::cout << "Equal\n";
-
-	std::cout << mTestVec[0] << ", " << mTestVec.y << ", " << mTestVec.z << std::endl;
-
-	Matrix3 mat1(1.0f);
-
-	Matrix3 mat2(1.0f);
-
-	Matrix3 mat3 = mat2;
-
-	mat2 = mat1 * mat2;
-
-	mat2 *= mat1;
-
-	if (mat2 == mat3)
-		std::cout << "True\n";
-
-	Vector4 vec(0.0f, 0.0f, 0.0f, 1.0f);
-
-	vec = Matrix4::Translate(1.0f, 0.0f, 0.5f) * vec;
-
-	int i = 0;
+	
 }
 
 void TestApplication::Render()
