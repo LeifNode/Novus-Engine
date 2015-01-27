@@ -13,6 +13,10 @@
 [Rr]eleases/
 x64/
 x86/
+
+!3rdParty/lib/x86/
+!3rdParty/lib/x64/
+
 build/
 bld/
 [Bb]in/
