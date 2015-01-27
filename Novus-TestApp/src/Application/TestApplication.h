@@ -39,7 +39,12 @@ public:
 	void InitMesh();
 
 private:
-	novus::math::Vector3 mTestVec;
+	float mTestFlt1;
+	float mTestFlt2;
+	double mTestDbl1;
+	double mTestDbl2;
+
+	novus::Vector3 mTestVec;
 
 	novus::Shader* mpMainShader;
 

@@ -2,8 +2,6 @@
 
 namespace novus
 {
-namespace math
-{
 	template <typename T>
 	Vector2_t<T>::Vector2_t()
 		: x(0), y(0)
@@ -237,6 +235,5 @@ namespace math
 	{
 		return (v1.x != v2.x || v1.y != v2.y);
 	}
-}
 }
 

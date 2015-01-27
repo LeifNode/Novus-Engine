@@ -4,18 +4,16 @@
 
 namespace novus
 {
-namespace math
-{
 	template <typename T>
 	Matrix3x3_t<T>::Matrix3x3_t()
 	{
-		this->value[0] = col_type(1, 0, 0);
-		this->value[1] = col_type(0, 1, 0);
-		this->value[2] = col_type(0, 0, 1);
+		this->value[0] = row_type(1, 0, 0);
+		this->value[1] = row_type(0, 1, 0);
+		this->value[2] = row_type(0, 0, 1);
 	}
 
 	template <typename T>
-	Matrix3x3_t<T>::Matrix3x3_t(const Matrix3x3_t<T> m)
+	Matrix3x3_t<T>::Matrix3x3_t(const Matrix3x3_t<T>& m)
 	{
 		this->value[0] = m.value[0];
 		this->value[1] = m.value[1];
@@ -23,7 +21,15 @@ namespace math
 	}
 
 	template <typename T>
-	Matrix3x3_t<T>::Matrix3x3_t(const col_type& v1, const col_type& v2, const col_type& v3)
+	Matrix3x3_t<T>::Matrix3x3_t(const T& s)
+	{
+		this->value[0] = row_type(s, 0, 0);
+		this->value[1] = row_type(0, s, 0);
+		this->value[2] = row_type(0, 0, s);
+	}
+
+	template <typename T>
+	Matrix3x3_t<T>::Matrix3x3_t(const row_type& v1, const row_type& v2, const row_type& v3)
 	{
 		this->value[0] = v1;
 		this->value[1] = v2;
@@ -36,9 +42,9 @@ namespace math
 		const T& x2, const T& y2, const T& z2,
 		const T& x3, const T& y3, const T& z3)
 	{
-		this->value = col_type(x1, y1, z1);
-		this->value = col_type(x2, y2, z2);
-		this->value = col_type(x3, y3, z3);
+		this->value = row_type(x1, y1, z1);
+		this->value = row_type(x2, y2, z2);
+		this->value = row_type(x3, y3, z3);
 	}
 
 	//Conversion constructors
@@ -46,18 +52,18 @@ namespace math
 	template <typename B>
 	Matrix3x3_t<T>::Matrix3x3_t(const Matrix3x3_t<B>& m)
 	{
-		this->value[0] = col_type(m[0]);
-		this->value[1] = col_type(m[1]);
-		this->value[2] = col_type(m[2]);
+		this->value[0] = row_type(m[0]);
+		this->value[1] = row_type(m[1]);
+		this->value[2] = row_type(m[2]);
 	}
 
 	template <typename T>
 	template <typename V1, typename V2, typename V3>
 	Matrix3x3_t<T>::Matrix3x3_t(const Vector3_t<V1>& v1, const Vector3_t<V2>& v2, const Vector3_t<V3>& v3)
 	{
-		this->value[0] = col_type(v1);
-		this->value[1] = col_type(v2);
-		this->value[2] = col_type(v3);
+		this->value[0] = row_type(v1);
+		this->value[1] = row_type(v2);
+		this->value[2] = row_type(v3);
 	}
 
 	template <typename T>
@@ -70,17 +76,17 @@ namespace math
 		 const X2& x2, const Y2& y2, const Z2& z2,
 		 const X3& x3, const Y3& y3, const Z3& z3)
 	{
-		this->value[0] = col_type(static_cast<T>(x1), value_type(y1), value_type(z1));
-		this->value[1] = col_type(static_cast<T>(x2), value_type(y2), value_type(z2));
-		this->value[2] = col_type(static_cast<T>(x3), value_type(y3), value_type(z3));
+		this->value[0] = row_type(static_cast<T>(x1), value_type(y1), value_type(z1));
+		this->value[1] = row_type(static_cast<T>(x2), value_type(y2), value_type(z2));
+		this->value[2] = row_type(static_cast<T>(x3), value_type(y3), value_type(z3));
 	}
 
 	template <typename T>
 	Matrix3x3_t<T>::Matrix3x3_t(const Matrix4x4_t<T>& m)
 	{
-		this->value[0] = col_type(m[0]);
-		this->value[1] = col_type(m[1]);
-		this->value[2] = col_type(m[2]);
+		this->value[0] = row_type(m[0]);
+		this->value[1] = row_type(m[1]);
+		this->value[2] = row_type(m[2]);
 	}
 
 	template <typename T>
@@ -90,7 +96,7 @@ namespace math
 	}
 
 	template <typename T>
-	Matrix3x3_t<T>::col_type& operator[] (size_t i)
+	typename Matrix3x3_t<T>::row_type& Matrix3x3_t<T>::operator[] (size_t i)
 	{
 		assert(i < this->size());
 
@@ -98,7 +104,7 @@ namespace math
 	}
 
 	template <typename T>
-	const Matrix3x3_t<T>::col_type& operator[] (size_t i) const
+	const typename Matrix3x3_t<T>::row_type& Matrix3x3_t<T>::operator[] (size_t i) const
 	{
 		assert(i < this->size());
 
@@ -246,39 +252,41 @@ namespace math
 	template <typename T>
 	Matrix3x3_t<T> operator* (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2)
 	{
-		T const SrcA00 = m1[0][0];
-		T const SrcA01 = m1[0][1];
-		T const SrcA02 = m1[0][2];
-		T const SrcA10 = m1[1][0];
-		T const SrcA11 = m1[1][1];
-		T const SrcA12 = m1[1][2];
-		T const SrcA20 = m1[2][0];
-		T const SrcA21 = m1[2][1];
-		T const SrcA22 = m1[2][2];
+		T const srcA00 = m1[0][0];
+		T const srcA01 = m1[0][1];
+		T const srcA02 = m1[0][2];
+		T const srcA10 = m1[1][0];
+		T const srcA11 = m1[1][1];
+		T const srcA12 = m1[1][2];
+		T const srcA20 = m1[2][0];
+		T const srcA21 = m1[2][1];
+		T const srcA22 = m1[2][2];
 
-		T const SrcB00 = m2[0][0];
-		T const SrcB01 = m2[0][1];
-		T const SrcB02 = m2[0][2];
-		T const SrcB10 = m2[1][0];
-		T const SrcB11 = m2[1][1];
-		T const SrcB12 = m2[1][2];
-		T const SrcB20 = m2[2][0];
-		T const SrcB21 = m2[2][1];
-		T const SrcB22 = m2[2][2];
+		T const srcB00 = m2[0][0];
+		T const srcB01 = m2[0][1];
+		T const srcB02 = m2[0][2];
+		T const srcB10 = m2[1][0];
+		T const srcB11 = m2[1][1];
+		T const srcB12 = m2[1][2];
+		T const srcB20 = m2[2][0];
+		T const srcB21 = m2[2][1];
+		T const srcB22 = m2[2][2];
 
-		//TODO: convert to row-major
-		Matrix3x3_t<T> Result();
-		Result[0][0] = SrcA00 * SrcB00 + SrcA10 * SrcB01 + SrcA20 * SrcB02;
-		Result[0][1] = SrcA01 * SrcB00 + SrcA11 * SrcB01 + SrcA21 * SrcB02;
-		Result[0][2] = SrcA02 * SrcB00 + SrcA12 * SrcB01 + SrcA22 * SrcB02;
-		Result[1][0] = SrcA00 * SrcB10 + SrcA10 * SrcB11 + SrcA20 * SrcB12;
-		Result[1][1] = SrcA01 * SrcB10 + SrcA11 * SrcB11 + SrcA21 * SrcB12;
-		Result[1][2] = SrcA02 * SrcB10 + SrcA12 * SrcB11 + SrcA22 * SrcB12;
-		Result[2][0] = SrcA00 * SrcB20 + SrcA10 * SrcB21 + SrcA20 * SrcB22;
-		Result[2][1] = SrcA01 * SrcB20 + SrcA11 * SrcB21 + SrcA21 * SrcB22;
-		Result[2][2] = SrcA02 * SrcB20 + SrcA12 * SrcB21 + SrcA22 * SrcB22;
+		Matrix3x3_t<T> result;
 
-		return Result;
+		result[0][0] = srcA00 * srcB00 + srcA01 * srcB10 + srcA02 * srcB20;
+		result[0][1] = srcA00 * srcB01 + srcA01 * srcB11 + srcA02 * srcB21;
+		result[0][2] = srcA00 * srcB02 + srcA02 * srcB12 + srcA02 * srcB22;
+
+		result[1][0] = srcA10 * srcB00 + srcA11 * srcB10 + srcA12 * srcB20;
+		result[1][1] = srcA10 * srcB01 + srcA11 * srcB11 + srcA12 * srcB21;
+		result[1][2] = srcA10 * srcB02 + srcA12 * srcB12 + srcA12 * srcB22;
+
+		result[2][0] = srcA20 * srcB00 + srcA21 * srcB10 + srcA22 * srcB20;
+		result[2][1] = srcA20 * srcB01 + srcA21 * srcB11 + srcA22 * srcB21;
+		result[2][2] = srcA20 * srcB02 + srcA22 * srcB12 + srcA22 * srcB22;
+
+		return result;
 	}
 
 	template <typename T>
@@ -300,12 +308,32 @@ namespace math
 	}
 
 	template <typename T>
-	Matrix3x3_t<T>::col_type operator* (const Matrix3x3_t<T>& m, const Matrix3x3_t<T>::row_type& v)
+	typename Matrix3x3_t<T>::row_type operator* (const Matrix3x3_t<T>& m, const typename Matrix3x3_t<T>::col_type& v)
+	{
+		return Matrix3x3_t<T>::row_type(
+			m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z,
+			m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z,
+			m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z);
+	}
+
+	template <typename T>
+	typename Matrix3x3_t<T>::col_type operator* (const typename Matrix3x3_t<T>::row_type& v, const Matrix3x3_t<T>& m)
 	{
 		return Matrix3x3_t<T>::col_type(
-			m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
-			m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
-			m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z);
+			v.x * m[0][0] + v.y * m[1][0] + v.z * m[2][0],
+			v.x * m[0][1] + v.y * m[1][1] + v.z * m[2][1],
+			v.x * m[0][2] + v.y * m[1][2] + v.z * m[2][2]);
 	}
-}
+
+	template <typename T>
+	bool operator== (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2)
+	{
+		return (m1[0] == m2[0] && m1[1] == m2[1] && m1[2] == m2[2]);
+	}
+
+	template <typename T>
+	bool operator!= (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2)
+	{
+		return (m1[0] != m2[0] || m1[1] != m2[1] || m1[2] != m2[2]);
+	}
 }

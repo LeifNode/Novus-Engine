@@ -11,6 +11,10 @@
 #define NOVUS_MATH_H
 
 #include <random>
+#include "Vector2_t.h"
+#include "Vector3_t.h"
+#include "Vector4_t.h"
+#include "Matrix3x3_t.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -18,8 +22,9 @@
 
 namespace novus
 {
-namespace math
+class Math
 {
+public:
 	//0..1
 	static float RandF()
 	{
@@ -67,8 +72,8 @@ namespace math
 
 	static float WrapAngle(float angle)
 	{
-		if (angle < 0.0f || angle > math::TwoPi)
-			return angle - math::TwoPi * floorf(angle / math::TwoPi);
+		if (angle < 0.0f || angle > Math::TwoPi)
+			return angle - Math::TwoPi * floorf(angle / Math::TwoPi);
 		else
 			return angle;
 	}
@@ -86,8 +91,7 @@ namespace math
 
 		return radians * toDeg;
 	}
-}
-
+};
 }
 
 #endif

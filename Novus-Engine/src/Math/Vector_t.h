@@ -12,33 +12,21 @@
 
 namespace novus
 {
-namespace math
-{
 	template <typename T> struct Vector2_t;
 	template <typename T> struct Vector3_t;
 	template <typename T> struct Vector4_t;
 
-	typedef Vector2_t<int>          iVector2;
-	typedef Vector2_t<float>        fVector2;
-	typedef Vector2_t<double>       dVector2;
-	typedef Vector2_t<unsigned int> uVector2;
-	typedef Vector2_t<bool>         bVector2;
-	typedef fVector2                 Vector2;
+	typedef Vector2_t<float>        FVector2;
+	typedef Vector2_t<double>       DVector2;
+	typedef FVector2                 Vector2;
 
-	typedef Vector3_t<int>          iVector3;
-	typedef Vector3_t<float>        fVector3;
-	typedef Vector3_t<double>       dVector3;
-	typedef Vector3_t<unsigned int> uVector3;
-	typedef Vector3_t<bool>         bVector3;
-	typedef fVector3                 Vector3;
+	typedef Vector3_t<float>        FVector3;
+	typedef Vector3_t<double>       DVector3;
+	typedef FVector3                 Vector3;
 
-	typedef Vector4_t<int>          iVector4;
-	typedef Vector4_t<float>        fVector4;
-	typedef Vector4_t<double>       dVector4;
-	typedef Vector4_t<unsigned int> uVector4;
-	typedef Vector4_t<bool>         bVector4;
-	typedef fVector4                 Vector4;
-}
+	typedef Vector4_t<float>        FVector4;
+	typedef Vector4_t<double>       DVector4;
+	typedef FVector4                 Vector4;
 }
 
 #endif

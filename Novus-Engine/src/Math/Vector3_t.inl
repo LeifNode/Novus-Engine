@@ -1,8 +1,6 @@
 
 namespace novus
 {
-namespace math
-{
 	template <typename T>
 	Vector3_t<T>::Vector3_t()
 		: x(0), y(0), z(0)
@@ -57,13 +55,13 @@ namespace math
 	template <typename T>
 	size_t Vector3_t<T>::size() const
 	{
-		return 2;
+		return 3;
 	}
 
 	template <typename T>
 	T& Vector3_t<T>::operator[] (size_t i)
 	{
-		assert(i < size());
+		assert(i < this->size());
 
 		return (&x)[i];
 	}
@@ -71,7 +69,7 @@ namespace math
 	template <typename T>
 	const T& Vector3_t<T>::operator[] (size_t i) const
 	{
-		assert(i < size());
+		assert(i < this->size());
 
 		return (&x)[i];
 	}
@@ -256,6 +254,5 @@ namespace math
 	{
 		return (v1.x != v2.x || v1.y != v2.y || v1.z != v2.z);
 	}
-}
 }
 

@@ -16,8 +16,6 @@
 
 namespace novus
 {
-namespace math
-{
 	template <typename T>
 	struct Vector4_t
 	{
@@ -137,7 +135,6 @@ namespace math
 	bool operator== (const Vector4_t<T>& v1, const Vector4_t<T>& v2);
 	template <typename T>
 	bool operator!= (const Vector4_t<T>& v1, const Vector4_t<T>& v2);
-}
 }
 
 #include "Vector4_t.inl"

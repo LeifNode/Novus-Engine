@@ -17,8 +17,6 @@
 
 namespace novus
 {
-namespace math
-{
 	template <typename T>
 	struct Matrix3x3_t
 	{
@@ -34,8 +32,10 @@ namespace math
 
 		Matrix3x3_t();
 
-		explicit Matrix3x3_t(const Matrix3x3_t<T> m);
-		Matrix3x3_t(const col_type& v1, const col_type& v2, const col_type& v3);
+		Matrix3x3_t(const Matrix3x3_t<T>& m);
+		explicit Matrix3x3_t(const T& s);
+
+		Matrix3x3_t(const row_type& v1, const row_type& v2, const row_type& v3);
 		Matrix3x3_t(
 			const T& x1, const T& y1, const T& z1,
 			const T& x2, const T& y2, const T& z2,
@@ -61,8 +61,8 @@ namespace math
 
 		size_t size() const;
 
-		col_type& operator[] (size_t i);
-		const col_type& operator[] (size_t i) const;
+		row_type& operator[] (size_t i);
+		const row_type& operator[] (size_t i) const;
 
 		template <typename U>
 		Matrix3x3_t<T>& operator= (const Matrix3x3_t<U>& m);
@@ -120,8 +120,16 @@ namespace math
 	Matrix3x3_t<T> operator* (const T& s, const Matrix3x3_t<T>& m);
 
 	template <typename T>
-	Matrix3x3_t<T>::col_type operator* (const Matrix3x3_t<T>& m, const Matrix3x3_t<T>::row_type& v);
-}
+	typename Matrix3x3_t<T>::row_type operator* (const Matrix3x3_t<T>& m, const typename Matrix3x3_t<T>::col_type& v);
+
+	template <typename T>
+	typename Matrix3x3_t<T>::col_type operator* (const typename Matrix3x3_t<T>::row_type& v, const Matrix3x3_t<T>& m);
+
+	template <typename T>
+	bool operator== (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2);
+
+	template <typename T>
+	bool operator!= (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2);
 }
 
 #include "Matrix3x3_t.inl"

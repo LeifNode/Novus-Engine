@@ -1,7 +1,5 @@
 namespace novus
 {
-namespace math
-{
 	template <typename T>
 	Vector4_t<T>::Vector4_t()
 		: x(0), y(0), z(0), w(0)
@@ -87,7 +85,7 @@ namespace math
 	template <typename T>
 	size_t Vector4_t<T>::size() const
 	{
-		return 2;
+		return 4;
 	}
 
 	template <typename T>
@@ -296,5 +294,4 @@ namespace math
 	{
 		return (v1.x != v2.x || v1.y != v2.y || v1.z != v2.z || v1.w != v2.w);
 	}
-}
 }

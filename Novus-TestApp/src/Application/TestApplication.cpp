@@ -4,9 +4,9 @@
 #include <Graphics/D3DRenderer.h>
 #include <Events/Events.h>
 #include <Events/EventSystem.h>
+#include <Math/Math.h>
 
 using namespace novus;
-using namespace math;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd){
 	UNREFERENCED_PARAMETER(prevInstance);
@@ -31,7 +31,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
-	mpMainShader(NULL)
+	mpMainShader(NULL),
+	mTestFlt1(0.0f),
+	mTestFlt2(0.0f),
+	mTestDbl1(0.0),
+	mTestDbl2(0.0)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.1";
 
@@ -121,6 +125,19 @@ void TestApplication::Update(float dt)
 		std::cout << "Equal\n";
 
 	std::cout << mTestVec[0] << ", " << mTestVec.y << ", " << mTestVec.z << std::endl;
+
+	Matrix3 mat1(1.0f);
+
+	Matrix3 mat2(1.0f);
+
+	Matrix3 mat3 = mat2;
+
+	mat2 = mat1 * mat2;
+
+	mat2 *= mat1;
+
+	if (mat2 == mat3)
+		std::cout << "True\n";
 }
 
 void TestApplication::Render()
