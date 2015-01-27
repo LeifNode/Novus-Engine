@@ -23,7 +23,10 @@ Font::~Font()
 	for (int i = 0; i < FontType::COUNT; i++)
 	{
 		if (mFaces[i] != NULL)
-			FT_Done_Face(mFaces[i]);
+		{
+			//FT_Done_Face(mFaces[i]);
+			mFaces[i] = NULL;
+		}
 
 		auto end = mCharacterMaps[i].end();
 		for (auto it = mCharacterMaps[i].begin(); it != end; ++it)
@@ -61,6 +64,8 @@ void Font::Init(int width, int height)
 	mNumMipmaps = textureDesc.MipLevels;
 
 	mpFontTexture = renderer->CreateTexture(&textureDesc);
+
+	mpFontTexture->SetDebugName("[Font]");
 
 	if (mpFontTexture == NULL)
 		std::cout << "Failed to create font texture.\n";

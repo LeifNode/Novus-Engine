@@ -13,7 +13,7 @@
 #include "Utils/RectangleBinPacker.h"
 #include "Graphics/Textures/Texture.h"
 #include "Utils/Containers/Rectangle.h"
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 
 namespace novus

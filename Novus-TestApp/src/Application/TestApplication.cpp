@@ -4,6 +4,8 @@
 #include <Graphics/D3DRenderer.h>
 #include <Events/Events.h>
 #include <Events/EventSystem.h>
+#include <Resources/Font/Font.h>
+#include <Resources/Font/FontManager.h>
 #include <Math/Math.h>
 
 using namespace novus;
@@ -58,6 +60,18 @@ bool TestApplication::Init()
 
 	InitShader();
 	InitMesh();
+
+	novus::Font* verdana = mpFontManager->LoadFont(
+		"verdana",
+		"../Fonts/verdana.ttf",
+		"../Fonts/verdanab.ttf",
+		"../Fonts/verdanai.ttf",
+		"../Fonts/verdanaz.ttf");
+
+	verdana->LoadGlyphs(14, novus::FontType::Normal);
+	verdana->LoadGlyphs(14, novus::FontType::Bold);
+	verdana->LoadGlyphs(14, novus::FontType::Italic);
+	verdana->LoadGlyphs(14, novus::FontType::BoldItalic);
 
 	return true;
 }

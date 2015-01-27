@@ -19,6 +19,7 @@ namespace novus
 class D3DRenderer;
 class InputSystem;
 class EventSystem;
+class FontManager;
 
 class NovusApplication
 {
@@ -54,6 +55,7 @@ protected:
 	D3DRenderer* mpRenderer;
 	InputSystem* mpInputSystem;
 	EventSystem* mpEventSystem;
+	FontManager* mpFontManager;
 
 	std::wstring mMainWndCaptionFull;
 	std::wstring mMainWndCaption;

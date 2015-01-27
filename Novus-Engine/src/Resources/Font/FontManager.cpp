@@ -20,7 +20,7 @@ FontManager::~FontManager()
 	}
 }
 
-void FontManager::Init()
+bool FontManager::Init()
 {
 	memset(&mFTLibrary, 0, sizeof(mFTLibrary));
 	FT_Error error = FT_Init_FreeType(&mFTLibrary);
@@ -28,7 +28,10 @@ void FontManager::Init()
 	if (error)
 	{
 		std::cout << "Failed to initialize freetype.\n";
+		return false;
 	}
+
+	return true;
 }
 
 //void FontManager::initializeSampler()

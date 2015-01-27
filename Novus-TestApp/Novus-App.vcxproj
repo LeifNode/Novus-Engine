@@ -77,28 +77,28 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)Novus-Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Novus-Engine\src;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Novus-Engine\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)Novus-Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Novus-Engine\src;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Novus-Engine\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)Novus-Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Novus-Engine\src;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Novus-Engine\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)Novus-Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Novus-Engine\src;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Novus-Engine\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

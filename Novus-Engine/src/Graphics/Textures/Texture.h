@@ -27,7 +27,8 @@ public:
 
 	ID3D11Texture2D* getD3DTexture() const { return mpTexture; }
 	ID3D11ShaderResourceView* getResourceView() const { return mpResourceView; }
-
+	
+	void SetDebugName(const std::string& name);
 
 private:
 	Texture();

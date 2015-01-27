@@ -15,3 +15,8 @@ Texture::~Texture()
 	ReleaseCOM(mpResourceView);
 	ReleaseCOM(mpTexture);
 }
+
+void Texture::SetDebugName(const std::string& name)
+{
+	mpTexture->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)name.size(), name.c_str());
+}

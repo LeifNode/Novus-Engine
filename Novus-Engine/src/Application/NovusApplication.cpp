@@ -3,6 +3,7 @@
 #include "Graphics/D3DRenderer.h"
 #include "Input/InputSystem.h"
 #include "Events/EventSystem.h"
+#include "Resources/Font/FontManager.h"
 #include "Utils/Memory/MallocTracker.h"
 
 #pragma comment(lib, "d3d11")
@@ -43,16 +44,19 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	mpRenderer = NE_NEW D3DRenderer();
 	mpInputSystem = NE_NEW InputSystem();
 	mpEventSystem = NE_NEW EventSystem();
+	mpFontManager = NE_NEW FontManager();
 
 
 	EngineStatics::mspApplication = this;
 	EngineStatics::mspRenderer = mpRenderer;
 	EngineStatics::mspInputSystem = mpInputSystem;
 	EngineStatics::mspEventSystem = mpEventSystem;
+	EngineStatics::mspFontManager = mpFontManager;
 }
 
 NovusApplication::~NovusApplication()
 {
+	NE_DELETE(mpFontManager);
 	NE_DELETE(mpInputSystem);
 	NE_DELETE(mpEventSystem);
 	NE_DELETE(mpRenderer);
@@ -145,9 +149,10 @@ bool NovusApplication::Init()
 	if (!mpRenderer->Init())
 		return false;
 
+	if (!mpFontManager->Init())
+		return false;
+
 	//LeapManager::getInstance().Initialize();
-	
-	//mpFontManager->Initialize();
 
 	//LineRenderer::Initialize();
 

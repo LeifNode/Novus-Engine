@@ -5,11 +5,13 @@ using novus::D3DRenderer;
 using novus::NovusApplication;
 using novus::InputSystem;
 using novus::EventSystem;
+using novus::FontManager;
 
 D3DRenderer* EngineStatics::mspRenderer = NULL;
 NovusApplication* EngineStatics::mspApplication = NULL;
 InputSystem* EngineStatics::mspInputSystem = NULL;
 EventSystem* EngineStatics::mspEventSystem = NULL;
+FontManager* EngineStatics::mspFontManager = NULL;
 
 NovusApplication* EngineStatics::getApplication()
 {
@@ -29,4 +31,9 @@ InputSystem* EngineStatics::getInputSystem()
 EventSystem* EngineStatics::getEventSystem()
 {
 	return mspEventSystem;
+}
+
+FontManager* EngineStatics::getFontManager()
+{
+	return mspFontManager;
 }

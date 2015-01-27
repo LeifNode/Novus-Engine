@@ -19,6 +19,7 @@ class D3DRenderer;
 class NovusApplication;
 class InputSystem;
 class EventSystem;
+class FontManager;
 
 class EngineStatics
 {
@@ -29,12 +30,14 @@ public:
 	static D3DRenderer* getRenderer();
 	static InputSystem* getInputSystem();
 	static EventSystem* getEventSystem();
+	static FontManager* getFontManager();
 
 private:
 	static NovusApplication* mspApplication;
 	static D3DRenderer* mspRenderer;
 	static InputSystem* mspInputSystem;
 	static EventSystem* mspEventSystem;
+	static FontManager* mspFontManager;
 };
 
 }

@@ -20,7 +20,7 @@ public:
 	FontManager();
 	~FontManager();
 
-	void Init();
+	bool Init();
 
 	Font* LoadFont(const std::string& fontKey,
 		const std::string& fontPath,
