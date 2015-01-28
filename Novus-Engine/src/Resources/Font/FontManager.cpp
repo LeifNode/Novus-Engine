@@ -92,6 +92,7 @@ novus::Font* FontManager::LoadFont(const std::string& fontKey,
 	}
 
 	Font* newFont = NE_NEW Font();
+	//newFont->Init(4096, 4096);
 	newFont->Init(2048, 2048);
 
 	newFont->LoadFont(fontPath, mFTLibrary);

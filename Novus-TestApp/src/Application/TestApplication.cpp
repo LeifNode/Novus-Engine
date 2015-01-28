@@ -68,10 +68,10 @@ bool TestApplication::Init()
 		"../Fonts/verdanai.ttf",
 		"../Fonts/verdanaz.ttf");
 
-	verdana->LoadGlyphs(14, novus::FontType::Normal);
-	verdana->LoadGlyphs(14, novus::FontType::Bold);
-	verdana->LoadGlyphs(14, novus::FontType::Italic);
-	verdana->LoadGlyphs(14, novus::FontType::BoldItalic);
+	verdana->LoadGlyphs(24, novus::FontType::Normal);
+	verdana->LoadGlyphs(24, novus::FontType::Bold);
+	verdana->LoadGlyphs(24, novus::FontType::Italic);
+	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
 	return true;
 }
@@ -147,6 +147,8 @@ void TestApplication::Render()
 	perFrame.ViewInv = XMMatrixInverse(NULL, perFrame.View);
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
 	perFrame.ViewProjInv = XMMatrixInverse(NULL, perFrame.ViewProj);
+
+	Matrix4 rotate = RotateX(10.0f);
 
 	mpRenderer->setPerFrameBuffer(perFrame);
 
