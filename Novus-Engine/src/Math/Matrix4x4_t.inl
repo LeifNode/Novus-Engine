@@ -511,8 +511,53 @@ namespace novus
 	Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up)
 	{
 		const Vector3_t<T> zAxis = Normalize(lookAtPosition - eyePosition);
-		const Vector3_t<T> xAxis;
+		const Vector3_t<T> xAxis = Normalize(Cross(up, zAxis));
+		const Vector3_t<T> yAxis = Cross(zAxis, xAxis);
+
+		return Matrix4x4_t<T>
+			(
+			xAxis.x,                  yAxis.x,                  zAxis.x, 0,
+			xAxis.y,                  yAxis.y,                  zAxis.y, 0,
+			xAxis.z,                  yAxis.z,                  zAxis.z, 0,
+			-Dot(xAxis, eyePosition), -Dot(yAxis, eyePosition), -
+			)
 
 		
+	}
+
+	template <typename T>
+	Matrix4x4_t<T> Perspective()
+	{
+
+		T SinFov = sin(;
+		T CosFov;
+		XMScalarSinCos(&SinFov, &CosFov, 0.5f * FovAngleY);
+
+		float Height = CosFov / SinFov;
+		float Width = Height / AspectHByW;
+		float fRange = FarZ / (NearZ - FarZ);
+
+		XMMATRIX M;
+		M.m[0][0] = Width;
+		M.m[0][1] = 0.0f;
+		M.m[0][2] = 0.0f;
+		M.m[0][3] = 0.0f;
+
+		M.m[1][0] = 0.0f;
+		M.m[1][1] = Height;
+		M.m[1][2] = 0.0f;
+		M.m[1][3] = 0.0f;
+
+		M.m[2][0] = 0.0f;
+		M.m[2][1] = 0.0f;
+		M.m[2][2] = fRange;
+		M.m[2][3] = -1.0f;
+
+		M.m[3][0] = 0.0f;
+		M.m[3][1] = 0.0f;
+		M.m[3][2] = fRange * NearZ;
+		M.m[3][3] = 0.0f;
+		return M;
+
 	}
 }

@@ -279,5 +279,19 @@ namespace novus
 
 		return v / length;
 	}
+
+	template <typename T>
+	T Dot(const Vector3_t<T>& v1, const Vector3_t<T>& v2)
+	{
+		return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	}
+
+	template <typename T>
+	Vector3_t<T> Cross(const Vector3_t<T>& v1, const Vector3_t<T>& v2)
+	{
+		return Vector3_t<T>(v1.y * v2.z - v1.z * v2.y,
+							v1.z * v2.x - v1.x * v2.z,
+							v1.x * v2.y - v1.y * v2.x);
+	}
 }
 

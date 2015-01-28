@@ -240,5 +240,31 @@ namespace novus
 	{
 		return (v1.x != v2.x || v1.y != v2.y);
 	}
+
+	template <typename T>
+	T Length(const Vector2_t<T>& v)
+	{
+		return sqrt(v.x * v.x + v.y * v.y);
+	}
+
+	template <typename T>
+	T LengthSq(const Vector2_t<T>& v)
+	{
+		return v.x * v.x + v.y * v.y;
+	}
+
+	template <typename T>
+	Vector2_t<T> Normalize(const Vector2_t<T>& v)
+	{
+		float length = sqrt(v.x * v.x + v.y * v.y);
+
+		return v / length;
+	}
+
+	template <typename T>
+	T Dot(const Vector2_t<T>& v1, const Vector2_t<T>& v2)
+	{
+		return Vector2_t<T>(v1.x * v2.x + v1.y * v2.y);
+	}
 }
 

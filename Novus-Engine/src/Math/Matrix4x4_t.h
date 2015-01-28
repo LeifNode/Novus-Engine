@@ -158,7 +158,7 @@ namespace novus
 	Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up);
 
 	template <typename T>
-	Matrix4x4_t<T> Perspective();
+	Matrix4x4_t<T> Perspective(T FovAngleY, T AspectHByW, T NearZ, T FarZ);
 	template <typename T>
 	Matrix4x4_t<T> Orthographic();
 }

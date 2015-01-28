@@ -128,6 +128,12 @@ namespace novus
 
 	template <typename T>
 	Vector3_t<T> Normalize(const Vector3_t<T>& v);
+
+	template <typename T>
+	T Dot(const Vector3_t<T>& v1, const Vector3_t<T>& v2);
+
+	template <typename T>
+	Vector3_t<T> Cross(const Vector3_t<T>& v1, const Vector3_t<T>& v2);
 }
 
 #include "Vector3_t.inl"

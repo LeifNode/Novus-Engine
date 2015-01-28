@@ -135,6 +135,18 @@ namespace novus
 	bool operator== (const Vector4_t<T>& v1, const Vector4_t<T>& v2);
 	template <typename T>
 	bool operator!= (const Vector4_t<T>& v1, const Vector4_t<T>& v2);
+
+	template <typename T>
+	T Length(const Vector4_t<T>& v);
+
+	template <typename T>
+	T LengthSq(const Vector4_t<T>& v);
+
+	template <typename T>
+	Vector4_t<T> Normalize(const Vector4_t<T>& v);
+
+	template <typename T>
+	T Dot(const Vector4_t<T>& v1, const Vector4_t<T>& v2);
 }
 
 #include "Vector4_t.inl"
