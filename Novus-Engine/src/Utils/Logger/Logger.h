@@ -11,19 +11,22 @@
 #define NOVUS_LOGGER_H
 
 #include <vector>
+#include <list>
 #include <string>
 
 namespace novus
 {
 
+class ILogSerializer;
+
 namespace LogLevel
 {
 	enum Type
 	{
-		Message,
-		Warning,
-		Error,
-		Critical //Will also make application exit
+		Message = 1,
+		Warning = 2,
+		Error   = 4,
+		Critical = 8 //Will also make application exit
 	};
 }
 
@@ -43,17 +46,29 @@ public:
 
 	void Log(const char* message, const char* tag, LogLevel::Type errorLevel, const char* fileName, int lineNumber);
 
+	void AddSerializer(ILogSerializer* serializer, LogLevel::Type levelMask, const char* tagMask = "");
+	void RemoveSerializer(ILogSerializer* serializer);
+	void RemoveSerializer(ILogSerializer* serializer, LogLevel::Type levelMask, const char* tagMask = "");
+
+private:
+	struct SerializerEntry
+	{
+		ILogSerializer* serializer;
+		LogLevel::Type  levelMask;
+		std::string     tagMask;
+	};
 
 private:
 	Logger() {}
 	~Logger() {}
 
-	void dispatchLogEvent(const LogEntry& entry);
+	void DispatchLogEvent(const LogEntry& entry);
 
 private:
 	static Logger* mspInstance;
 
 	std::vector<LogEntry> mMessages;
+	std::list<SerializerEntry> mSerializers;
 };
 
 }

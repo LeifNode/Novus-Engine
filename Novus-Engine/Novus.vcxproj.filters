@@ -179,6 +179,12 @@
     <ClInclude Include="src\Resources\Font\FontManager.h">
       <Filter>Source Files\Resources\Font</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\Logger\ILogSerializer.h">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Logger\ConsoleLogSerializer.h">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -243,6 +249,9 @@
     </ClCompile>
     <ClCompile Include="src\Resources\Font\FontManager.cpp">
       <Filter>Source Files\Resources\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Logger\ConsoleLogSerializer.cpp">
+      <Filter>Source Files\Utils\Logging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

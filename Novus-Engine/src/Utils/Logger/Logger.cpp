@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "ILogSerializer.h"
 
 using novus::Logger;
 
@@ -22,4 +23,55 @@ void Logger::Log(const char* message, const char* tag, novus::LogLevel::Type err
 	entry.lineNumber = lineNumber;
 
 	mMessages.push_back(entry);
+}
+
+void Logger::AddSerializer(novus::ILogSerializer* serializer, novus::LogLevel::Type levelMask, const char* tagMask)
+{
+	std::string tagString = tagMask;
+
+	for (auto listIt = mSerializers.begin(); listIt != mSerializers.end(); ++listIt)
+	{
+		if ((*listIt).serializer == serializer &&
+			(*listIt).levelMask == levelMask &&
+			(*listIt).tagMask == tagString)
+			return;
+	}
+
+	SerializerEntry entry;
+	entry.serializer = serializer;
+	entry.levelMask = levelMask;
+	entry.tagMask = tagString;
+
+	mSerializers.push_back(entry);
+}
+
+void Logger::RemoveSerializer(novus::ILogSerializer* serializer)
+{
+	mSerializers.remove_if(
+		[serializer](SerializerEntry entry)
+		{
+			return entry.serializer == serializer;
+		});
+}
+
+void Logger::RemoveSerializer(novus::ILogSerializer* serializer, novus::LogLevel::Type levelMask, const char* tagMask)
+{
+	std::string tagString = tagMask;
+
+	mSerializers.remove_if(
+		[serializer, levelMask, &tagString](SerializerEntry entry)
+		{
+			return entry.serializer == serializer &&
+				   entry.levelMask == levelMask &&
+				   entry.tagMask == tagString;
+		});
+}
+
+void Logger::DispatchLogEvent(const LogEntry& entry)
+{
+	for (auto it = mSerializers.begin(); it != mSerializers.end(); ++it)
+	{
+		//if (((*it).levelMask & entry.errorLevel >= 1) && ((*it).tagMask == std::string(entry.tag)))
+			(*it).serializer->Serialize(entry);
+	}
 }

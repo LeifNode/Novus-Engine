@@ -202,6 +202,8 @@
     <ClInclude Include="src\Utils\Containers\Rectangle.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
+    <ClInclude Include="src\Utils\Logger\ConsoleLogSerializer.h" />
+    <ClInclude Include="src\Utils\Logger\ILogSerializer.h" />
     <ClInclude Include="src\Utils\Logger\Logger.h" />
     <ClInclude Include="src\Utils\Memory\MallocTracker.h" />
     <ClInclude Include="src\Utils\Memory\Memory.h" />
@@ -225,6 +227,7 @@
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
+    <ClCompile Include="src\Utils\Logger\ConsoleLogSerializer.cpp" />
     <ClCompile Include="src\Utils\Logger\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
