@@ -155,14 +155,17 @@ namespace novus
 	Matrix4x4_t<T> Translate(const T& x, const T& y, const T& z);
 
 	template <typename T>
+	Matrix4x4_t<T> LookToward(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookDirection, const Vector3_t<T>& up);
+
+	template <typename T>
 	Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up);
 
 	template <typename T>
-	Matrix4x4_t<T> Perspective(T FovAngleY, T AspectHByW, T NearZ, T FarZ);
+	Matrix4x4_t<T> Perspective(T fovAngleY, T aspectHByW, T nearZ, T farZ);
 	template <typename T>
 	Matrix4x4_t<T> Orthographic();
 }
 
-#include "Matrix4x4_t.inl"
+//#include "Matrix4x4_t.inl"
 
 #endif

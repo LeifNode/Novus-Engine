@@ -144,6 +144,6 @@ namespace novus
 	bool operator!= (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2);
 }
 
-#include "Matrix3x3_t.inl"
+//#include "Matrix3x3_t.inl"
 
 #endif

@@ -1,5 +1,12 @@
+#pragma once
+
+#ifndef NOVUS_MATRIX3X3_T_INL
+#define NOVUS_MATRIX3X3_T_INL
+
 #include "Matrix_t.h"
 #include "Vector_t.h"
+#include "Matrix3x3_t.h"
+
 #include <cassert>
 
 namespace novus
@@ -414,3 +421,5 @@ namespace novus
 			0, 0, 1);
 	}
 }
+
+#endif

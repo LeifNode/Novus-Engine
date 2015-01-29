@@ -10,16 +10,17 @@
 #ifndef NOVUS_MATH_H
 #define NOVUS_MATH_H
 
-#include <random>
-#include "Vector2_t.h"
-#include "Vector3_t.h"
-#include "Vector4_t.h"
-#include "Matrix3x3_t.h"
-#include "Matrix4x4_t.h"
-
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+
+#include <random>
+#include "Vector2_t.inl"
+#include "Vector3_t.inl"
+#include "Vector4_t.inl"
+#include "Matrix3x3_t.inl"
+#include "Matrix4x4_t.inl"
+
 
 namespace novus
 {

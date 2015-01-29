@@ -132,7 +132,40 @@ void TestApplication::OnResize()
 
 void TestApplication::Update(float dt)
 {
-	
+	//GameTimer timer1;
+
+	//XMMATRIX test1 = XMMatrixIdentity();
+
+	//timer1.Start();
+
+	//size_t iterCount = 10000000;
+
+	//for (int i = 0; i < iterCount; i++)
+	//{
+	//	test1 = XMMatrixLookAtRH(XMVectorZero(), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), XMVectorSet(0.0f, 1.0f * dt, 0.0f, 0.0f)) * test1;
+
+	//	//test1 = test1 * test1;
+	//}
+
+	//timer1.Tick();
+
+	//std::cout << "Time 1: " << timer1.DeltaTime() << std::endl;
+
+
+	//GameTimer timer2;
+
+	//Matrix4 test2 = Matrix4(1.0f);
+
+	//timer2.Start();
+
+	//for (int i = 0; i < iterCount; i++)
+	//{
+	//	test2 = LookAt(Vector3(0.0f), Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 1.0f * dt, 0.0f)) * test2;
+	//}
+
+	//timer2.Tick();
+
+	//std::cout << "Time 2: " << timer2.DeltaTime() << std::endl;
 }
 
 void TestApplication::Render()
@@ -141,12 +174,12 @@ void TestApplication::Render()
 	mpRenderer->setShader(mpMainShader);
 
 	CBPerFrame perFrame;
-	perFrame.Projection = XMMatrixPerspectiveFovRH(45.0f, getClientWidth() / (float)getClientHeight(), 0.01f, 10000.0f);
-	perFrame.ProjectionInv = XMMatrixInverse(NULL, perFrame.Projection);
-	perFrame.View = XMMatrixLookAtRH(XMVectorSet(2.0f, 2.0f, 2.0f, 1.0f), XMVectorZero(), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	perFrame.ViewInv = XMMatrixInverse(NULL, perFrame.View);
+	perFrame.Projection = Perspective(45.0f, getClientWidth() / (float)getClientHeight(), 0.01f, 10000.0f);
+	perFrame.ProjectionInv = Invert(perFrame.Projection);
+	perFrame.View = LookToward(Vector3(0.0f, 1.0f, 1.0f), Normalize(Vector3(0.0f, 0.0f, 1.0f)), Vector3(0.0f, 1.0f, 0.0f));
+	perFrame.ViewInv = Invert(perFrame.View);
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
-	perFrame.ViewProjInv = XMMatrixInverse(NULL, perFrame.ViewProj);
+	perFrame.ViewProjInv = Invert(perFrame.ViewProj);
 
 	Matrix4 rotate = RotateX(10.0f);
 
@@ -154,8 +187,8 @@ void TestApplication::Render()
 
 	CBPerObject perObject;
 
-	perObject.World = XMMatrixIdentity();
-	perObject.WorldInvTranspose = XMMatrixIdentity();
+	perObject.World = Matrix4(1.0f);
+	perObject.WorldInvTranspose = Matrix4(1.0f);
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 
 	mpRenderer->setPerObjectBuffer(perObject);

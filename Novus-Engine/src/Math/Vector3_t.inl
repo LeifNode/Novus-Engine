@@ -1,3 +1,11 @@
+#pragma once
+
+#ifndef NOVUS_VECTOR3_T_INL
+#define NOVUS_VECTOR3_T_INL
+
+#include <cassert>
+#include "Vector_t.h"
+#include "Vector3_t.h"
 
 namespace novus
 {
@@ -295,3 +303,4 @@ namespace novus
 	}
 }
 
+#endif

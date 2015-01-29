@@ -11,25 +11,26 @@
 #define NOVUS_CONSTANT_BUFFERS_H
 
 #include "Application/Common.h"
+#include "Math/Math.h"
 
 namespace novus
 {
 
 struct CBPerFrame
 {
-	XMMATRIX View;
-	XMMATRIX ViewInv;
-	XMMATRIX Projection;
-	XMMATRIX ProjectionInv;
+	Matrix4 View;
+	Matrix4 ViewInv;
+	Matrix4 Projection;
+	Matrix4 ProjectionInv;
 
-	XMMATRIX ViewProj;
-	XMMATRIX ViewProjInv;
+	Matrix4 ViewProj;
+	Matrix4 ViewProjInv;
 
-	XMFLOAT3 HeadPosition;
+	Vector3 HeadPosition;
 	float pad;
-	XMFLOAT3 EyePosition;
+	Vector3 EyePosition;
 	float pad2;
-	XMFLOAT3 EyeDirection;
+	Vector3 EyeDirection;
 	float pad3;
 
 	//DirectionalLight DirectionalLight;
@@ -39,10 +40,10 @@ struct CBPerFrame
 
 struct CBPerObject
 {
-	XMMATRIX World;
-	XMMATRIX WorldViewProj;
-	XMMATRIX WorldInvTranspose;
-	XMMATRIX TextureTransform;
+	Matrix4 World;
+	Matrix4 WorldViewProj;
+	Matrix4 WorldInvTranspose;
+	Matrix4 TextureTransform;
 	//Material Material;
 };
 

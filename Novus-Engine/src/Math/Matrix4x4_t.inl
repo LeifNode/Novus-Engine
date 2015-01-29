@@ -1,5 +1,11 @@
+#pragma once
+
+#ifndef NOVUS_MATRIX4X4_T_INL
+#define NOVUS_MATRIX4X4_T_INL
+
 #include "Matrix_t.h"
 #include "Vector_t.h"
+#include "Matrix4x4_t.h"
 #include <cassert>
 
 namespace novus
@@ -508,56 +514,72 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up)
+	Matrix4x4_t<T> LookToward(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookDirection, const Vector3_t<T>& up)
 	{
-		const Vector3_t<T> zAxis = Normalize(lookAtPosition - eyePosition);
+		const Vector3_t<T> zAxis = Normalize(lookDirection);
 		const Vector3_t<T> xAxis = Normalize(Cross(up, zAxis));
 		const Vector3_t<T> yAxis = Cross(zAxis, xAxis);
 
 		return Matrix4x4_t<T>
 			(
-			xAxis.x,                  yAxis.x,                  zAxis.x, 0,
-			xAxis.y,                  yAxis.y,                  zAxis.y, 0,
-			xAxis.z,                  yAxis.z,                  zAxis.z, 0,
-			-Dot(xAxis, eyePosition), -Dot(yAxis, eyePosition), -
-			)
-
-		
+			xAxis.x, yAxis.x, zAxis.x, 0,
+			xAxis.y, yAxis.y, zAxis.y, 0,
+			xAxis.z, yAxis.z, zAxis.z, 0,
+			-Dot(xAxis, eyePosition), -Dot(yAxis, eyePosition), -Dot(zAxis, eyePosition), 1);
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> Perspective()
+	//Right handed look at matrix
+	Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up)
 	{
+		const Vector3_t<T> zAxis = Normalize(eyePosition - lookAtPosition);
+		const Vector3_t<T> xAxis = Normalize(Cross(up, zAxis));
+		const Vector3_t<T> yAxis = Cross(zAxis, xAxis);
 
-		T SinFov = sin(;
-		T CosFov;
-		XMScalarSinCos(&SinFov, &CosFov, 0.5f * FovAngleY);
+		return Matrix4x4_t<T>
+			(
+			xAxis.x, yAxis.x, zAxis.x, 0,
+			xAxis.y, yAxis.y, zAxis.y, 0,
+			xAxis.z, yAxis.z, zAxis.z, 0,
+			-Dot(xAxis, eyePosition), -Dot(yAxis, eyePosition), -Dot(zAxis, eyePosition), 1);
+	}
 
-		float Height = CosFov / SinFov;
-		float Width = Height / AspectHByW;
-		float fRange = FarZ / (NearZ - FarZ);
+	
+	template <typename T>
+	//Right handed perspective projection matrix
+	Matrix4x4_t<T> Perspective(T fovAngleY, T aspectHByW, T nearZ, T farZ)
+	{
+		//From DirectXMath library
+		T sinFov = sin(fovAngleY * static_cast<T>(0.5));
+		T cosFov = cos(fovAngleY * static_cast<T>(0.5));
 
-		XMMATRIX M;
-		M.m[0][0] = Width;
-		M.m[0][1] = 0.0f;
-		M.m[0][2] = 0.0f;
-		M.m[0][3] = 0.0f;
+		float height = cosFov / sinFov;
+		float width = height / aspectHByW;
+		float fRange = farZ / (nearZ - farZ);
 
-		M.m[1][0] = 0.0f;
-		M.m[1][1] = Height;
-		M.m[1][2] = 0.0f;
-		M.m[1][3] = 0.0f;
+		Matrix4x4_t<T> M;
+		M[0][0] = width;
+		M[0][1] = 0.0f;
+		M[0][2] = 0.0f;
+		M[0][3] = 0.0f;
 
-		M.m[2][0] = 0.0f;
-		M.m[2][1] = 0.0f;
-		M.m[2][2] = fRange;
-		M.m[2][3] = -1.0f;
+		M[1][0] = 0.0f;
+		M[1][1] = height;
+		M[1][2] = 0.0f;
+		M[1][3] = 0.0f;
 
-		M.m[3][0] = 0.0f;
-		M.m[3][1] = 0.0f;
-		M.m[3][2] = fRange * NearZ;
-		M.m[3][3] = 0.0f;
+		M[2][0] = 0.0f;
+		M[2][1] = 0.0f;
+		M[2][2] = fRange;
+		M[2][3] = -1.0f;
+
+		M[3][0] = 0.0f;
+		M[3][1] = 0.0f;
+		M[3][2] = fRange * nearZ;
+		M[3][3] = 0.0f;
+
 		return M;
-
 	}
 }
+
+#endif

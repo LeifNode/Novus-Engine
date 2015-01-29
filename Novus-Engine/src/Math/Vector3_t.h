@@ -136,6 +136,6 @@ namespace novus
 	Vector3_t<T> Cross(const Vector3_t<T>& v1, const Vector3_t<T>& v2);
 }
 
-#include "Vector3_t.inl"
+//#include "Vector3_t.inl"
 
 #endif

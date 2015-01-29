@@ -149,6 +149,6 @@ namespace novus
 	T Dot(const Vector4_t<T>& v1, const Vector4_t<T>& v2);
 }
 
-#include "Vector4_t.inl"
+//#include "Vector4_t.inl"
 
 #endif

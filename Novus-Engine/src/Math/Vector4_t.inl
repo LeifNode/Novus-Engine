@@ -1,3 +1,12 @@
+#pragma once
+
+#ifndef NOVUS_VECTOR4_T_INL
+#define NOVUS_VECTOR4_T_INL
+
+#include <cassert>
+#include "Vector_t.h"
+#include "Vector4_t.h"
+
 namespace novus
 {
 	template <typename T>
@@ -321,3 +330,5 @@ namespace novus
 		return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 	}
 }
+
+#endif
