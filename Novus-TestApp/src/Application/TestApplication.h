@@ -46,11 +46,6 @@ public:
 	void InitMesh();
 
 private:
-	float mTestFlt1;
-	float mTestFlt2;
-	double mTestDbl1;
-	double mTestDbl2;
-
 	novus::Camera* mpCamera;
 
 	novus::Shader* mpMainShader;

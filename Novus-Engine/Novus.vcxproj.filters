@@ -63,6 +63,9 @@
     <Filter Include="Source Files\Resources\Font">
       <UniqueIdentifier>{5c1cd4c2-25e4-4ef7-ba2a-52e8b364ec8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics\PostProcess">
+      <UniqueIdentifier>{92933f6f-a8dc-4c2b-bde1-64f0c64577f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">

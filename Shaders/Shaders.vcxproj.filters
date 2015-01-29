@@ -7,18 +7,18 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{d4fe3187-0e9a-4d9e-b4bb-b97fb66d7b09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Deferred">
+      <UniqueIdentifier>{102516e0-9927-4ebe-bc4b-a9fe9824b95f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Debug">
+      <UniqueIdentifier>{7d2ce934-2456-4485-b490-6a8836ea2a5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Utils\ConstantBuffers.hlsl">
       <Filter>Utils</Filter>
     </FxCompile>
     <FxCompile Include="Utils\Defines.hlsl">
-      <Filter>Utils</Filter>
-    </FxCompile>
-    <FxCompile Include="Utils\DeferredRendering.hlsl">
-      <Filter>Utils</Filter>
-    </FxCompile>
-    <FxCompile Include="Utils\DeferredShading.hlsl">
       <Filter>Utils</Filter>
     </FxCompile>
     <FxCompile Include="Utils\FullscreenQuad.hlsl">
@@ -37,5 +37,14 @@
     <FxCompile Include="GenericShader.hlsl" />
     <FxCompile Include="GenericShader_PS.hlsl" />
     <FxCompile Include="GenericShader_VS.hlsl" />
+    <FxCompile Include="Deferred\DeferredShading.hlsl">
+      <Filter>Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Deferred\DeferredRendering.hlsl">
+      <Filter>Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\Debug\DebugGBuffer.hlsl">
+      <Filter>Utils\Debug</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -34,11 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
-	mpMainShader(NULL),
-	mTestFlt1(0.0f),
-	mTestFlt2(0.0f),
-	mTestDbl1(0.0),
-	mTestDbl2(0.0)
+	mpMainShader(NULL)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.1";
 

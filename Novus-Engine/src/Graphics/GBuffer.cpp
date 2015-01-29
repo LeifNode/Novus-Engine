@@ -185,7 +185,7 @@ void GBuffer::OnResize(int width, int height)
 	std::cout << "GBuffer render targets initialized.\n";
 }
 
-void GBuffer::bindRenderTargets()
+void GBuffer::BindRenderTargets()
 {
 	D3DRenderer* renderer = EngineStatics::getRenderer();
 
@@ -202,7 +202,7 @@ void GBuffer::bindRenderTargets()
 	renderer->context()->OMSetRenderTargets(4, renderTargets, mpDepthStencilTargetView);
 }
 
-void GBuffer::bindTextures()
+void GBuffer::BindTextures()
 {
 	D3DRenderer* renderer = EngineStatics::getRenderer();
 
@@ -217,12 +217,12 @@ void GBuffer::bindTextures()
 	renderer->setTextureResources(texArray, 0, 5);
 }
 
-void GBuffer::bindSampler()
+void GBuffer::BindSampler()
 {
 	EngineStatics::getRenderer()->setSampler(0, mpSamplerState);
 }
 
-void GBuffer::clearRenderTargets()
+void GBuffer::ClearRenderTargets()
 {
 	float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 

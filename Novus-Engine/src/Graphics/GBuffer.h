@@ -23,11 +23,11 @@ public:
 	GBuffer();
 	~GBuffer();
 
-	void bindRenderTargets();
-	void bindTextures();
-	void bindSampler();
+	void BindRenderTargets();
+	void BindTextures();
+	void BindSampler();
 
-	void clearRenderTargets();
+	void ClearRenderTargets();
 
 private:
 	void Initialize(int width, int height);

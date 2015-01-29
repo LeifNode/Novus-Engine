@@ -9,5 +9,8 @@
 #define MATH_HLSL
 
 static const float PI = 3.14159265f;
+static const float PIOVER2 = PI / 2.0f;
+static const float PIOVER4 = PI / 4.0f;
+
 
 #endif

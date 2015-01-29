@@ -10,8 +10,8 @@
 
 #include "Utils/Defines.hlsl"
 #include "Utils/ConstantBuffers.hlsl"
-#include "Utils/DeferredRendering.hlsl"
 #include "Utils/Math.hlsl"
+#include "Deferred/DeferredRendering.hlsl"
 
 #ifdef DEFERRED_RENDERER
 #if DEFERRED_RENDERER == 1

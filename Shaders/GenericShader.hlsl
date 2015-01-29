@@ -50,7 +50,12 @@ PS_INPUT VS(VS_INPUT vin)
 }
 
 
-float4 PS(PS_INPUT pin) : SV_Target
+//float4 PS(PS_INPUT pin) : SV_Target
+//{
+//	return float4(1.0f, 1.0f, 1.0f, 1.0f) * dot(normalize(float3(1.0f, 1.0f, 1.0f)), pin.Normal);
+//}
+
+PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f) * dot(normalize(float3(1.0f, 1.0f, 1.0f)), pin.Normal);
+	return PackGBuffer(float4(1.0f, 1.0f, 1.0f, 1.0f), pin.Normal, float3(1.0f, 0.0f, 0.0f), 0.5f, float3(0.0f, 0.0f, 0.0f));
 }

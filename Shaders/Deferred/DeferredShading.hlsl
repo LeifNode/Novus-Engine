@@ -15,22 +15,21 @@
 
 Texture2D<float4> DiffuseTexture   : register(t0);
 Texture2D<float3> NormalTexture    : register(t1);
-Texture2D<float> RoughnessTexture  : register(t2);
-Texture2D<float4> EmissiveTexture  : register(t3);
+Texture2D<float4> SpecularTexture  : register(t2);//rgb specular color, a roughness
+Texture2D<float4> EmissiveTexture  : register(t3);//a is unused at the moment
 Texture2D<float> DepthTexture      : register(t4);
 
 SamplerState PointSampler          : register(s0);
 
 struct SURFACE_DATA
 {
-	float Depth;
-	float LinearDepth;
 	float4 Diffuse;
 	float3 Normal;
-	float3 Specular;
-	float SpecPow;
+	float3 SpecularColor;
+	float Roughness;
 	float3 Emissive;
-	float EmissiveMultiplier;
+	float Depth;
+	float LinearDepth;
 };
 
 float ConvertZToLinearDepth(float depth)
@@ -70,16 +69,14 @@ SURFACE_DATA UnpackGBuffer(float2 UV)
 {
 	SURFACE_DATA Out;
 
-	Out.Depth = DepthTexture.Sample(PointSampler, UV).x;
+	Out.Depth = DepthTexture.Sample(PointSampler, UV).r;
 	Out.LinearDepth = ConvertZToLinearDepth(Out.Depth);
 	Out.Diffuse = DiffuseTexture.Sample(PointSampler, UV);
-	Out.Normal = normalize(NormalTexture.Sample(PointSampler, UV).xyz * 2.0 - 1.0);
+	Out.Normal = normalize(NormalTexture.Sample(PointSampler, UV).rgb * 2.0 - 1.0);
 	float4 spec = SpecularTexture.Sample(PointSampler, UV);
-		Out.Specular = spec.xyz;
-	Out.SpecPow = spec.w * SPECULAR_POW_RANGE_MAX + SPECULAR_POW_RANGE_MIN;
-	float4 emissive = EmissiveTexture.Sample(PointSampler, UV);
-		Out.Emissive = emissive.xyz;
-	Out.EmissiveMultiplier = emissive.z * EMISSIVE_RANGE_MAX + EMISSIVE_RANGE_MIN;
+	Out.SpecularColor = spec.rgb;
+	Out.Roughness = spec.a;
+	Out.Emissive = EmissiveTexture.Sample(PointSampler, UV).rgb;
 
 	return Out;
 }
