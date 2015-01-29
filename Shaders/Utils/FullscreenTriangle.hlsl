@@ -20,15 +20,25 @@
 //	texOut.y = 1.0 - (float)(vertexId % 2) * 2.0;
 //}
 
-void GetTriangleVertex(uint vertexId, out float4 posOut, out float2 texOut)
+struct TRIANGLE_OUT
 {
-	posOut.x = (float)(vertexId % 2) * 4.0 - 1.0;
-	posOut.y = (float)(vertexId / 2) * 4.0 - 1.0;
-	posOut.z = 0.0;
-	posOut.w = 1.0;
+	float4 PostionH;
+	float2 TexCoord;
+};
 
-	texOut.x = (float)(vertexId % 2) * 2.0;
-	texOut.y = 1.0 - (float)(vertexId / 2) * 2.0;
+TRIANGLE_OUT FullscreenTriangle(uint vertexId)
+{
+	TRIANGLE_OUT triangleOut;
+
+	triangleOut.PostionH.x = (float)(vertexId % 2) * 4.0 - 1.0;
+	triangleOut.PostionH.y = (float)(vertexId / 2) * 4.0 - 1.0;
+	triangleOut.PostionH.z = 0.0;
+	triangleOut.PostionH.w = 1.0;
+
+	triangleOut.TexCoord.x = (float)(vertexId % 2) * 2.0;
+	triangleOut.TexCoord.y = 1.0 - (float)(vertexId / 2) * 2.0;
+
+	return triangleOut;
 }
 
 #endif

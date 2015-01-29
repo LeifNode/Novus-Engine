@@ -13,13 +13,13 @@
 #include "ConstantBuffers.hlsl"
 #include "Defines.hlsl"
 
-Texture2D<float4> DiffuseTexture  : register(t0);
-Texture2D<float3> NormalTexture   : register(t1);
-Texture2D<float4> SpecularTexture : register(t2);
-Texture2D<float4> EmissiveTexture : register(t3);
-Texture2D<float> DepthTexture     : register(t4);
+Texture2D<float4> DiffuseTexture   : register(t0);
+Texture2D<float3> NormalTexture    : register(t1);
+Texture2D<float> RoughnessTexture  : register(t2);
+Texture2D<float4> EmissiveTexture  : register(t3);
+Texture2D<float> DepthTexture      : register(t4);
 
-SamplerState PointSampler         : register(s0);
+SamplerState PointSampler          : register(s0);
 
 struct SURFACE_DATA
 {

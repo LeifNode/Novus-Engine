@@ -8,8 +8,16 @@
 #ifndef FULLSCREEN_QUAD_HLSL
 #define FULLSCREEN_QUAD_HLSL
 
-void GetQuadVertex(uint vertexId, out float4 posOut, out float2 texOut)
+struct QUAD_OUT
 {
+	float4 PositionH;
+	float2 TexCoord;
+};
+
+QUAD_OUT FullscreenQuad(uint vertexId)
+{
+	QUAD_OUT quadOut;
+
 	const float4 quadPositions[4] =
 	{
 		float4(-1.0, -1.0, 0.0, 1.0),
@@ -26,8 +34,10 @@ void GetQuadVertex(uint vertexId, out float4 posOut, out float2 texOut)
 		float2(1.0, 0.0),
 	};
 
-	posOut = quadPositions[vertexId];
-	texOut = quadTexCoords[vertexId];
+	quadOut.Position = quadPositions[vertexId];
+	quadOut.TexCoord = quadTexCoords[vertexId];
+
+	return quadOut;
 }
 
 #endif
