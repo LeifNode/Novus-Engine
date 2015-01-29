@@ -21,6 +21,11 @@
 #include <Events/EventSystem.h>
 #include <Math/Vector3_t.h>
 
+namespace novus
+{
+	class Camera;
+}
+
 class TestApplication : public novus::NovusApplication
 {
 public:
@@ -46,7 +51,7 @@ private:
 	double mTestDbl1;
 	double mTestDbl2;
 
-	novus::Vector3 mTestVec;
+	novus::Camera* mpCamera;
 
 	novus::Shader* mpMainShader;
 

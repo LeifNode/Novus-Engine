@@ -91,7 +91,7 @@ namespace novus
 		template <typename U>
 		Matrix3x3_t<T>& operator/= (const U& s);
 
-		static Matrix3x3_t<T> Invert(const Matrix3x3_t<T>& m);
+		static Matrix3x3_t<T> Inverse(const Matrix3x3_t<T>& m);
 
 		static Matrix3x3_t<T> Transpose(const Matrix3x3_t<T>& m);
 

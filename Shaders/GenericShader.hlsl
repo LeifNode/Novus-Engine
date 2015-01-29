@@ -52,5 +52,5 @@ PS_INPUT VS(VS_INPUT vin)
 
 float4 PS(PS_INPUT pin) : SV_Target
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	return float4(1.0f, 1.0f, 1.0f, 1.0f) * dot(normalize(float3(1.0f, 1.0f, 1.0f)), pin.Normal);
 }

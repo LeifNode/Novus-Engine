@@ -185,6 +185,9 @@
     <ClInclude Include="src\Utils\Logger\ConsoleLogSerializer.h">
       <Filter>Source Files\Utils\Logging</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Camera.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -252,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="src\Utils\Logger\ConsoleLogSerializer.cpp">
       <Filter>Source Files\Utils\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Camera.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

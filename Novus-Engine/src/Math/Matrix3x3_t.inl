@@ -345,7 +345,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix3x3_t<T> Matrix3x3_t<T>::Invert(const Matrix3x3_t<T>& m)
+	Matrix3x3_t<T> Matrix3x3_t<T>::Inverse(const Matrix3x3_t<T>& m)
 	{
 		T OneOverDeterminant = static_cast<T>(1) / (
 			+m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])

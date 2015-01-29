@@ -395,7 +395,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> Invert(const Matrix4x4_t<T>& m)
+	Matrix4x4_t<T> Matrix4x4_t<T>::Inverse(const Matrix4x4_t<T>& m)
 	{
 		//Using GLM's implementation of Cramer's rule adapted for row-major matrices
 
@@ -454,7 +454,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> Transpose(const Matrix4x4_t<T>& m)
+	Matrix4x4_t<T> Matrix4x4_t<T>::Transpose(const Matrix4x4_t<T>& m)
 	{
 		return Matrix4x4_t<T>(
 			m[0][0], m[1][0], m[2][0], m[3][0],
@@ -464,7 +464,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> Scale(const T& scaleX, const T& scaleY, const T& scaleZ)
+	Matrix4x4_t<T> Matrix4x4_t<T>::Scale(const T& scaleX, const T& scaleY, const T& scaleZ)
 	{
 		return Matrix4x4_t<T>(
 			scaleX, 0, 0, 0,
@@ -474,7 +474,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> RotateX(const T& r)
+	Matrix4x4_t<T> Matrix4x4_t<T>::RotateX(const T& r)
 	{
 		return Matrix4x4_t<T>(
 			1, 0, 0, 0,
@@ -484,7 +484,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> RotateY(const T& r)
+	Matrix4x4_t<T> Matrix4x4_t<T>::RotateY(const T& r)
 	{
 		return Matrix4x4_t<T>(
 			cos(r), 0, sin(r), 0,
@@ -494,7 +494,7 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> RotateZ(const T& r)
+	Matrix4x4_t<T> Matrix4x4_t<T>::RotateZ(const T& r)
 	{
 		return Matrix4x4_t<T>(
 			cos(r), -sin(r), 0, 0,
@@ -504,19 +504,19 @@ namespace novus
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> Translate(const T& x, const T& y, const T& z)
+	Matrix4x4_t<T> Matrix4x4_t<T>::Translate(const T& x, const T& y, const T& z)
 	{
 		return Matrix4x4_t<T>(
-			1, 0, 0, x,
-			0, 1, 0, y,
-			0, 0, 1, z,
-			0, 0, 0, 1);
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			x, y, z, 1);
 	}
 
 	template <typename T>
-	Matrix4x4_t<T> LookToward(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookDirection, const Vector3_t<T>& up)
+	Matrix4x4_t<T> Matrix4x4_t<T>::LookToward(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookDirection, const Vector3_t<T>& up)
 	{
-		const Vector3_t<T> zAxis = Normalize(lookDirection);
+		const Vector3_t<T> zAxis = Normalize(-lookDirection);
 		const Vector3_t<T> xAxis = Normalize(Cross(up, zAxis));
 		const Vector3_t<T> yAxis = Cross(zAxis, xAxis);
 
@@ -530,7 +530,7 @@ namespace novus
 
 	template <typename T>
 	//Right handed look at matrix
-	Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up)
+	Matrix4x4_t<T> Matrix4x4_t<T>::LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up)
 	{
 		const Vector3_t<T> zAxis = Normalize(eyePosition - lookAtPosition);
 		const Vector3_t<T> xAxis = Normalize(Cross(up, zAxis));
@@ -547,7 +547,7 @@ namespace novus
 	
 	template <typename T>
 	//Right handed perspective projection matrix
-	Matrix4x4_t<T> Perspective(T fovAngleY, T aspectHByW, T nearZ, T farZ)
+	Matrix4x4_t<T> Matrix4x4_t<T>::Perspective(T fovAngleY, T aspectHByW, T nearZ, T farZ)
 	{
 		//From DirectXMath library
 		T sinFov = sin(fovAngleY * static_cast<T>(0.5));

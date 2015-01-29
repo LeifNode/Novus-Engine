@@ -7,6 +7,7 @@
 #include <Resources/Font/Font.h>
 #include <Resources/Font/FontManager.h>
 #include <Math/Math.h>
+#include <Graphics/Camera.h>
 
 using namespace novus;
 
@@ -41,12 +42,14 @@ TestApplication::TestApplication(HINSTANCE instance)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.1";
 
-	mTestVec = Vector3(1.0f);
+	mpCamera = NE_NEW Camera();
+	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
 }
 
 TestApplication::~TestApplication()
 {
 	UnhookInputEvents();
+	NE_DELETE(mpCamera);
 }
 
 bool TestApplication::Init()
@@ -128,44 +131,13 @@ void TestApplication::OnKeyDown(novus::IEventDataPtr eventData)
 void TestApplication::OnResize()
 {
 	NovusApplication::OnResize();
+
+	mpCamera->OnResize(getClientWidth(), getClientHeight());
 }
 
 void TestApplication::Update(float dt)
 {
-	//GameTimer timer1;
-
-	//XMMATRIX test1 = XMMatrixIdentity();
-
-	//timer1.Start();
-
-	//size_t iterCount = 10000000;
-
-	//for (int i = 0; i < iterCount; i++)
-	//{
-	//	test1 = XMMatrixLookAtRH(XMVectorZero(), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), XMVectorSet(0.0f, 1.0f * dt, 0.0f, 0.0f)) * test1;
-
-	//	//test1 = test1 * test1;
-	//}
-
-	//timer1.Tick();
-
-	//std::cout << "Time 1: " << timer1.DeltaTime() << std::endl;
-
-
-	//GameTimer timer2;
-
-	//Matrix4 test2 = Matrix4(1.0f);
-
-	//timer2.Start();
-
-	//for (int i = 0; i < iterCount; i++)
-	//{
-	//	test2 = LookAt(Vector3(0.0f), Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 1.0f * dt, 0.0f)) * test2;
-	//}
-
-	//timer2.Tick();
-
-	//std::cout << "Time 2: " << timer2.DeltaTime() << std::endl;
+	mpCamera->Update(dt);
 }
 
 void TestApplication::Render()
@@ -174,26 +146,33 @@ void TestApplication::Render()
 	mpRenderer->setShader(mpMainShader);
 
 	CBPerFrame perFrame;
-	perFrame.Projection = Perspective(45.0f, getClientWidth() / (float)getClientHeight(), 0.01f, 10000.0f);
-	perFrame.ProjectionInv = Invert(perFrame.Projection);
-	perFrame.View = LookToward(Vector3(0.0f, 1.0f, 1.0f), Normalize(Vector3(0.0f, 0.0f, 1.0f)), Vector3(0.0f, 1.0f, 0.0f));
-	perFrame.ViewInv = Invert(perFrame.View);
+	perFrame.Projection = mpCamera->getProj();
+	perFrame.ProjectionInv = Matrix4::Inverse(perFrame.Projection);
+	perFrame.View = mpCamera->getView();
+	perFrame.ViewInv = Matrix4::Inverse(perFrame.View);
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
-	perFrame.ViewProjInv = Invert(perFrame.ViewProj);
-
-	Matrix4 rotate = RotateX(10.0f);
+	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
 
 	mpRenderer->setPerFrameBuffer(perFrame);
 
 	CBPerObject perObject;
 
-	perObject.World = Matrix4(1.0f);
-	perObject.WorldInvTranspose = Matrix4(1.0f);
-	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	for (int x = -10; x < 10; x++)
+	{
+		for (int y = -10; y < 10; y++)
+		{
+			for (int z = -10; z < 10; z++)
+			{
+				perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 
-	mpRenderer->setPerObjectBuffer(perObject);
+				mpRenderer->setPerObjectBuffer(perObject);
 
-	mMeshRenderer.Render(mpRenderer);
-
+				mMeshRenderer.Render(mpRenderer);
+			}
+		}
+	}
+	
 	mpRenderer->PostRender();
 }

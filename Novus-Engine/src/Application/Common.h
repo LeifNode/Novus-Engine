@@ -48,6 +48,8 @@
 #include "Math/Vector_t.h"
 #include "Utils/Memory/Memory.h"
 
+#include "3rdParty/FastDelegate.h"
+
 using namespace DirectX;
 
 using std::shared_ptr;
