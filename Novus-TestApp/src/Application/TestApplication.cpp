@@ -101,7 +101,7 @@ void TestApplication::InitMesh()
 
 	GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, mesh);
 
-	mMeshRenderer.Initialize(mesh.Vertices, mesh.Indices, mpRenderer);
+	mMeshRenderer.Init(mesh.Vertices, mesh.Indices, mpRenderer);
 }
 
 void TestApplication::HookInputEvents()

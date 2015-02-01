@@ -75,27 +75,27 @@ private:
 
 #ifndef NE_LOG
 #define NE_LOG(message, tag, errorLevel) \
-	(Logger::getInstance().Log(message, tag, errorLevel, __FILE__, __LINE__))
+	(novus::Logger::getInstance()->Log(message, tag, errorLevel, __FILE__, __LINE__))
 #endif
 
 #ifndef NE_MESSAGE
 #define NE_MESSAGE(message, tag) \
-	(Logger::getInstance().Log(message, tag, novus::LogLevel::Message, __FILE__, __LINE__))
+	(novus::Logger::getInstance()->Log(message, tag, novus::LogLevel::Message, __FILE__, __LINE__))
 #endif
 
 #ifndef NE_WARN
 #define NE_WARN(message, tag) \
-	(Logger::getInstance().Log(message, tag, novus::LogLevel::Warning, __FILE__, __LINE__))
+	(novus::Logger::getInstance()->Log(message, tag, novus::LogLevel::Warning, __FILE__, __LINE__))
 #endif
 
 #ifndef NE_ERROR
 #define NE_ERROR(message, tag) \
-	(Logger::getInstance().Log(message, tag, novus::LogLevel::Error, __FILE__, __LINE__))
+	(novus::Logger::getInstance()->Log(message, tag, novus::LogLevel::Error, __FILE__, __LINE__))
 #endif
 
 #ifndef NE_CRITICAL
 #define NE_CRITICAL(message, tag) \
-	(Logger::getInstance().Log(message, tag, novus::LogLevel::Critical, __FILE__, __LINE__))
+	(novus::Logger::getInstance()->Log(message, tag, novus::LogLevel::Critical, __FILE__, __LINE__))
 #endif
 
 #endif

@@ -57,14 +57,17 @@
     <Filter Include="Source Files\Resources">
       <UniqueIdentifier>{c9bc938c-cbb0-4a24-9afd-3966b80ea171}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utils\Containers">
-      <UniqueIdentifier>{5c7f86e9-b82a-4548-8dd2-248905b8170a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resources\Font">
       <UniqueIdentifier>{5c1cd4c2-25e4-4ef7-ba2a-52e8b364ec8b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Graphics\PostProcess">
       <UniqueIdentifier>{92933f6f-a8dc-4c2b-bde1-64f0c64577f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils\Objects">
+      <UniqueIdentifier>{a25c2b82-6a27-4bd4-b9ca-c3394cad22fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils\Primitives">
+      <UniqueIdentifier>{5c7f86e9-b82a-4548-8dd2-248905b8170a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -106,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="src\Graphics\Textures\Texture.h">
       <Filter>Source Files\Graphics\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Logger\Logger.h">
-      <Filter>Source Files\Utils\Logging</Filter>
     </ClInclude>
     <ClInclude Include="src\Input\KeyboardState.h">
       <Filter>Source Files\Input</Filter>
@@ -176,20 +176,38 @@
     <ClInclude Include="src\Utils\RectangleBinPacker.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Containers\Rectangle.h">
-      <Filter>Source Files\Utils\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Resources\Font\FontManager.h">
       <Filter>Source Files\Resources\Font</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Logger\ILogSerializer.h">
-      <Filter>Source Files\Utils\Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Logger\ConsoleLogSerializer.h">
-      <Filter>Source Files\Utils\Logging</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Camera.h">
       <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Actor.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\World.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\ActorComponent.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Objects\Type.h">
+      <Filter>Source Files\Utils\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\MatrixStack.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Logging\ConsoleLogSerializer.h">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Logging\ILogSerializer.h">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Logging\Logger.h">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\Rectangle.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -223,9 +241,6 @@
     <ClCompile Include="src\Graphics\Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Logger\Logger.cpp">
-      <Filter>Source Files\Utils\Logging</Filter>
-    </ClCompile>
     <ClCompile Include="src\Input\KeyboardState.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
@@ -256,11 +271,17 @@
     <ClCompile Include="src\Resources\Font\FontManager.cpp">
       <Filter>Source Files\Resources\Font</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Logger\ConsoleLogSerializer.cpp">
-      <Filter>Source Files\Utils\Logging</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\MatrixStack.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Logging\Logger.cpp">
+      <Filter>Source Files\Utils\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Logging\ConsoleLogSerializer.cpp">
+      <Filter>Source Files\Utils\Logging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

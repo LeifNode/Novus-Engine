@@ -30,7 +30,7 @@ public:
 	void ClearRenderTargets();
 
 private:
-	void Initialize(int width, int height);
+	void Init(int width, int height);
 	void DeInit();
 
 	void OnResize(int width, int height);

@@ -33,7 +33,7 @@ GBuffer::~GBuffer()
 	DeInit();
 }
 
-void GBuffer::Initialize(int width, int height)
+void GBuffer::Init(int width, int height)
 {
 	//OnResize(width, height);
 
@@ -190,6 +190,8 @@ void GBuffer::BindRenderTargets()
 	D3DRenderer* renderer = EngineStatics::getRenderer();
 
 	renderer->UnbindTextureResources(); //Avoid having render targets bound as input textures
+
+	renderer->setViewport(0, 0, mWidth, mHeight);
 
 	ID3D11RenderTargetView* renderTargets[4] =
 	{

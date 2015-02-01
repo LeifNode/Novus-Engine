@@ -173,6 +173,9 @@
     <ClInclude Include="src\Application\Common.h" />
     <ClInclude Include="src\Application\NovusApplication.h" />
     <ClInclude Include="src\Application\EngineStatics.h" />
+    <ClInclude Include="src\Core\Actor.h" />
+    <ClInclude Include="src\Core\ActorComponent.h" />
+    <ClInclude Include="src\Core\World.h" />
     <ClInclude Include="src\Events\Events.h" />
     <ClInclude Include="src\Events\EventSystem.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
@@ -191,6 +194,7 @@
     <ClInclude Include="src\Math\Math.h" />
     <ClInclude Include="src\Math\Matrix3x3_t.h" />
     <ClInclude Include="src\Math\Matrix4x4_t.h" />
+    <ClInclude Include="src\Math\MatrixStack.h" />
     <ClInclude Include="src\Math\Matrix_t.h" />
     <ClInclude Include="src\Math\Vector2_t.h" />
     <ClInclude Include="src\Math\Vector4_t.h" />
@@ -200,14 +204,15 @@
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
     <ClInclude Include="src\Resources\ResourceManager.h" />
-    <ClInclude Include="src\Utils\Containers\Rectangle.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
-    <ClInclude Include="src\Utils\Logger\ConsoleLogSerializer.h" />
-    <ClInclude Include="src\Utils\Logger\ILogSerializer.h" />
-    <ClInclude Include="src\Utils\Logger\Logger.h" />
+    <ClInclude Include="src\Utils\Logging\ConsoleLogSerializer.h" />
+    <ClInclude Include="src\Utils\Logging\ILogSerializer.h" />
+    <ClInclude Include="src\Utils\Logging\Logger.h" />
     <ClInclude Include="src\Utils\Memory\MallocTracker.h" />
     <ClInclude Include="src\Utils\Memory\Memory.h" />
+    <ClInclude Include="src\Utils\Objects\Type.h" />
+    <ClInclude Include="src\Utils\Primitives\Rectangle.h" />
     <ClInclude Include="src\Utils\RectangleBinPacker.h" />
   </ItemGroup>
   <ItemGroup>
@@ -225,12 +230,13 @@
     <ClCompile Include="src\Input\KeyboardState.cpp" />
     <ClCompile Include="src\Input\MouseState.cpp" />
     <ClCompile Include="src\Math\Math.cpp" />
+    <ClCompile Include="src\Math\MatrixStack.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
-    <ClCompile Include="src\Utils\Logger\ConsoleLogSerializer.cpp" />
-    <ClCompile Include="src\Utils\Logger\Logger.cpp" />
+    <ClCompile Include="src\Utils\Logging\ConsoleLogSerializer.cpp" />
+    <ClCompile Include="src\Utils\Logging\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
     <ClCompile Include="src\Utils\RectangleBinPacker.cpp" />

@@ -163,7 +163,7 @@ void D3DRenderer::OnResize()
 
 	// Set the viewport transform.
 
-	setViewport(width, height, 0, 0);
+	setViewport(0, 0, width, height);
 
 	//mpOVRManager->OnResize();
 
@@ -346,7 +346,7 @@ bool D3DRenderer::Init()
 	mpd3dDevice->CreateSamplerState(&sampDesc, &mpSamplerState);
 
 	mpGBuffer = NE_NEW GBuffer();
-	mpGBuffer->Initialize(EngineStatics::getApplication()->getClientWidth(), EngineStatics::getApplication()->getClientHeight());
+	mpGBuffer->Init(EngineStatics::getApplication()->getClientWidth(), EngineStatics::getApplication()->getClientHeight());
 
 	//mpDeferredRenderer = NE_NEW DeferredRenderer();
 	//mpDeferredRenderer->Initialize();
@@ -846,7 +846,7 @@ void D3DRenderer::setDepthStencilState(novus::DepthStencilState::Type state)
 	mpd3dImmediateContext->OMSetDepthStencilState(mpDepthStencilStates[state], 0);
 }
 
-void D3DRenderer::setViewport(int width, int height, int x, int y)
+void D3DRenderer::setViewport(int x, int y, int width, int height)
 {
 	mScreenViewport.TopLeftX = (float)x;
 	mScreenViewport.TopLeftY = (float)y;

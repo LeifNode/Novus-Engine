@@ -13,6 +13,8 @@
 #define NOVUS_MATRIX4X4_T_H
 
 #include "Matrix_t.h"
+#include "Vector_t.h"
+#include "Vector4_t.h"
 
 namespace novus
 {

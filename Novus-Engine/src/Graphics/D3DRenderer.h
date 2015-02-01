@@ -68,7 +68,7 @@ public:
 	void setBlendState(bool blendingEnabled);
 	void setDepthStencilState(DepthStencilState::Type state);
 
-	void setViewport(int width, int height, int x, int y);
+	void setViewport(int x, int y, int width, int height);
 
 	const CBPerFrame* getPerFrameBuffer() const { return &mPerFrameData; }
 

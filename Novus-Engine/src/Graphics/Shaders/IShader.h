@@ -37,14 +37,13 @@ struct ShaderInfo
 	const char* entrypoint;
 };
 
-//class IShader
-//{
-//public:
-//	virtual std::string getShaderPath() const = 0;
-//	virtual ShaderType::Type getShaderType() const = 0;
-//
-//	virtual void Bind(D3DRenderer* renderer) = 0;
-//};
+class IShader
+{
+public:
+	virtual ShaderType::Type getShaderType() const = 0;
+
+	virtual void Bind(D3DRenderer* renderer) = 0;
+};
 
 }
 
