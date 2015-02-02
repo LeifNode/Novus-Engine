@@ -8,8 +8,6 @@
 #ifndef CONSTANT_BUFFERS_HLSL
 #define CONSTANT_BUFFERS_HLSL
 
-//#include "LightingHelper.hlsl"
-
 cbuffer cbPerFrame : register(b0)
 {
 	float4x4 gView;
@@ -21,7 +19,7 @@ cbuffer cbPerFrame : register(b0)
 	float4x4 gViewProjInv;
 
 	uint2 gScreenDimensions;
-	uint2 gpad;
+	float2 gClipNearFar;
 
 	float3 gHeadPosition;
 	float gpad1;
@@ -29,10 +27,6 @@ cbuffer cbPerFrame : register(b0)
 	float gpad2;
 	float3 gEyeDirection;
 	float gpad3;
-
-	//DirectionalLight gDirectionalLight;
-	//PointLight gPointLight;
-	//SpotLight gSpotLight;
 };
 
 cbuffer cbPerObject : register(b1)

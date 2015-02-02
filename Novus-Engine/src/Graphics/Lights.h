@@ -5,17 +5,26 @@
 // http://opensource.org/licenses/MIT)
 //================================================================
 
-#ifndef DEFINES_HLSL
-#define DEFINES_HLSL
+#pragma once
 
-#ifndef DEFERRED_RENDERER
-#define DEFERRED_RENDERER 1
+#ifndef NOVUS_LIGHTS_H
+#define NOVUS_LIGHTS_H
+
+#include "Math/Math.h"
+
+namespace novus
+{
+struct PointLight
+{
+	Vector4 Color;
+
+	Vector3 Position;
+	float Range;
+
+	float Intensity;
+	float Radius; 
+	Vector3 pad;
+};
+}
+
 #endif
-
-#define MAX_LIGHTS 1028
-
-#define COMPUTE_SHADER_TILE_GROUP_DIM 16
-
-#define COMPUTE_SHADER_TILE_GROUP_SIZE (COMPUTE_SHADER_TILE_GROUP_DIM * COMPUTE_SHADER_TILE_GROUP_DIM)
-
-#endif //!defined(DEFINES_HLSL)

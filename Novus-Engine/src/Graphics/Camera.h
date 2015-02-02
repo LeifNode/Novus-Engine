@@ -34,6 +34,9 @@ public:
 
 	float getVelocity() const { return mVelocity; }
 
+	float getNear() const { return mNear; }
+	float getFar() const { return mFar; }
+
 	void OnResize(int width, int height);
 
 	void Update(float dt);

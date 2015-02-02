@@ -24,7 +24,7 @@ struct PointLight
 	float Range;
 
 	float Intensity;
-	float Radius; //For area lighting
+	float Radius;
 	float2 pad;
 };
 

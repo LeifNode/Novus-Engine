@@ -27,7 +27,7 @@ struct CBPerFrame
 	Matrix4 ViewProjInv;
 
 	Vector2_t<unsigned int> ScreenResolution;
-	Vector2_t<unsigned int> pad;
+	Vector2 ClipNearFar;
 
 	Vector3 HeadPosition;
 	float pad1;

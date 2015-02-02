@@ -46,5 +46,8 @@
     <FxCompile Include="Utils\Debug\DebugGBuffer.hlsl">
       <Filter>Utils\Debug</Filter>
     </FxCompile>
+    <FxCompile Include="Deferred\ComputeTiledDeferred.hlsl">
+      <Filter>Deferred</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -145,6 +145,10 @@ void TestApplication::Render()
 	mpRenderer->setShader(mpMainShader);
 
 	CBPerFrame perFrame;
+	perFrame.ScreenResolution = Vector2_t<unsigned int>(
+		static_cast<unsigned int>(getClientWidth()), 
+		static_cast<unsigned int>(getClientHeight()));
+	perFrame.ClipNearFar = Vector2(mpCamera->getNear(), mpCamera->getFar());
 	perFrame.Projection = mpCamera->getProj();
 	perFrame.ProjectionInv = Matrix4::Inverse(perFrame.Projection);
 	perFrame.View = mpCamera->getView();
@@ -162,7 +166,10 @@ void TestApplication::Render()
 		{
 			for (int z = -10; z < 10; z++)
 			{
-				perObject.World = Quaternion::ToMatrix(mCurrentRotation) * Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+				perObject.World = Quaternion::ToMatrix(mCurrentRotation) * 
+								  Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
+								  Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+
 				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 

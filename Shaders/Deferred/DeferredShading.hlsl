@@ -10,8 +10,9 @@
 #ifndef DEFERRED_SHADING_HLSL
 #define DEFERRED_SHADING_HLSL
 
-#include "ConstantBuffers.hlsl"
 #include "Defines.hlsl"
+#include "ConstantBuffers.hlsl"
+#include "Lights.hlsl"
 
 Texture2D<float4> DiffuseTexture   : register(t0);
 Texture2D<float3> NormalTexture    : register(t1);
@@ -21,15 +22,16 @@ Texture2D<float> DepthTexture      : register(t4);
 
 SamplerState PointSampler          : register(s0);
 
+StructuredBuffer<PointLight> gPointLights : register(t5);
+
 struct SURFACE_DATA
 {
+	float3 ViewPosition;
 	float4 Diffuse;
 	float3 Normal;
 	float3 SpecularColor;
 	float Roughness;
 	float3 Emissive;
-	float Depth;
-	float LinearDepth;
 };
 
 float ConvertZToLinearDepth(float depth)
@@ -38,17 +40,16 @@ float ConvertZToLinearDepth(float depth)
 	return linearDepth;
 }
 
-//float3 GetWorldPos(float2 posClip, float depth)
-//{
-//	float4 position;
-//	float linearDepth = ConvertZToLinearDepth(depth);
-//
-//	position.xy = posClip.xy * float2(1.0 / gProjection[0][0], 1.0 / gProjection[1][1]) * linearDepth;
-//	position.z = linearDepth;
-//	position.w = 1.0;
-//
-//	return mul(gViewInv, position).xyz;
-//}
+float3 GetViewPos(float2 posClip, float viewSpaceZ)
+{
+	float3 position;
+	//float linearDepth = ConvertZToLinearDepth(depth);
+
+	position.xy = posClip.xy * float2(1.0 / gProjection[0][0], 1.0 / gProjection[1][1]) * viewSpaceZ;
+	position.z = viewSpaceZ;
+
+	return position;
+}
 
 float3 GetWorldPos(float2 posClip, float depth)
 {
@@ -65,18 +66,36 @@ float3 GetWorldPos(float2 posClip, float depth)
 	return position.xyz / position.w;
 }
 
-SURFACE_DATA UnpackGBuffer(float2 UV)
+//SURFACE_DATA UnpackGBuffer(float2 UV)
+//{
+//	SURFACE_DATA Out;
+//
+//	Out.Depth = DepthTexture.Sample(PointSampler, UV).r;
+//	Out.Diffuse = DiffuseTexture.Sample(PointSampler, UV);
+//	Out.Normal = normalize(NormalTexture.Sample(PointSampler, UV).rgb * 2.0 - 1.0);
+//	float4 spec = SpecularTexture.Sample(PointSampler, UV);
+//	Out.SpecularColor = spec.rgb;
+//	Out.Roughness = spec.a;
+//	Out.Emissive = EmissiveTexture.Sample(PointSampler, UV).rgb;
+//
+//	return Out;
+//}
+
+SURFACE_DATA UnpackGBufferViewport(uint viewportPosition)
 {
 	SURFACE_DATA Out;
 
-	Out.Depth = DepthTexture.Sample(PointSampler, UV).r;
-	Out.LinearDepth = ConvertZToLinearDepth(Out.Depth);
-	Out.Diffuse = DiffuseTexture.Sample(PointSampler, UV);
-	Out.Normal = normalize(NormalTexture.Sample(PointSampler, UV).rgb * 2.0 - 1.0);
-	float4 spec = SpecularTexture.Sample(PointSampler, UV);
+	
+	Out.Diffuse = DiffuseTexture.Load(viewportPosition);
+	Out.Normal = NormalTexture.Load(viewportPosition).rgb * 2.0 - 1.0);
+	float4 spec = SpecularTexture.Load(viewportPosition);
 	Out.SpecularColor = spec.rgb;
 	Out.Roughness = spec.a;
-	Out.Emissive = EmissiveTexture.Sample(PointSampler, UV).rgb;
+	Out.Emissive = EmissiveTexture.Load(viewportPosition).rgb;
+
+
+
+	float zBuffer = DepthTexture.Load(PointSampler, UV).r;
 
 	return Out;
 }
