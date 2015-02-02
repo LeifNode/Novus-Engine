@@ -464,6 +464,16 @@ namespace novus
 	}
 
 	template <typename T>
+	Matrix4x4_t<T> Matrix4x4_t<T>::Scale(const Vector3_t<T>& scale)
+	{
+		return Matrix4x4_t<T>(
+			scale.x, 0, 0, 0,
+			0, scale.y, 0, 0,
+			0, 0, scale.z, 0,
+			0, 0, 0, 1);
+	}
+
+	template <typename T>
 	Matrix4x4_t<T> Matrix4x4_t<T>::Scale(const T& scaleX, const T& scaleY, const T& scaleZ)
 	{
 		return Matrix4x4_t<T>(
@@ -501,6 +511,16 @@ namespace novus
 			sin(r), cos(r), 0, 0,
 			0, 0, 1, 0,
 			0, 0, 0, 1);
+	}
+
+	template <typename T>
+	Matrix4x4_t<T> Matrix4x4_t<T>::Translate(const Vector3_t<T>& translation)
+	{
+		return Matrix4x4_t<T>(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			translation.z, translation.y, translation.z, 1);
 	}
 
 	template <typename T>

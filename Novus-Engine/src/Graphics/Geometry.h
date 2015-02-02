@@ -21,28 +21,31 @@
 #include "Application/Common.h"
 #include "Math/Math.h"
 
+namespace novus
+{
+
 struct Vertex
 {
-	XMFLOAT3 Position;
-	XMFLOAT3 Normal;
-	XMFLOAT3 Tangent;
-	XMFLOAT3 Bitangent;
-	XMFLOAT2 TexCoord;
+	Vector3 Position;
+	Vector3 Normal;
+	Vector3 Tangent;
+	Vector3 Bitangent;
+	Vector2 TexCoord;
 
 	Vertex(){ ZeroMemory(this, sizeof(this)); }
 
-	Vertex(const XMFLOAT3& position, const XMFLOAT3& normal)
+	Vertex(const Vector3& position, const Vector3& normal)
 		:Position(position),
 		Normal(normal)
 	{}
 
-	Vertex(const XMFLOAT3& position, const XMFLOAT3& normal, const XMFLOAT2& texCoord)
+	Vertex(const Vector3& position, const Vector3& normal, const Vector2& texCoord)
 		:Position(position),
 		Normal(normal),
 		TexCoord(texCoord)
 	{}
 
-	Vertex(const XMFLOAT3& position, const XMFLOAT3& normal, const XMFLOAT2& texCoord, const XMFLOAT3& tangent, const XMFLOAT3& bitangent)
+	Vertex(const Vector3& position, const Vector3& normal, const Vector2& texCoord, const Vector3& tangent, const Vector3& bitangent)
 		:Position(position),
 		Normal(normal),
 		TexCoord(texCoord),
@@ -64,15 +67,15 @@ struct Vertex
 struct SimpleVertex
 {
 	SimpleVertex(){}
-	SimpleVertex(const XMFLOAT3& p, const XMFLOAT3& n)
+	SimpleVertex(const Vector3& p, const Vector3& n)
 		:Position(p), Normal(n){}
 	SimpleVertex(
 		float px, float py, float pz,
 		float nx, float ny, float nz)
 		: Position(px, py, pz), Normal(nx, ny, nz){}
 
-	XMFLOAT3 Position;
-	XMFLOAT3 Normal;
+	Vector3 Position;
+	Vector3 Normal;
 };
 
 struct Mesh
@@ -154,4 +157,5 @@ private:
 	static void BuildCylinderBottomCap(float bottomRadius, float topRadius, float height, UINT sliceCount, UINT stackCount, Mesh& mesh);
 };
 
+}
 #endif

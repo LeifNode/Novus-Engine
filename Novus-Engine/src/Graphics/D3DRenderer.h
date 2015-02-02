@@ -15,10 +15,13 @@
 #include "Shaders/IShader.h"
 #include "Shader.h"
 #include "ConstantBuffers.h"
-#include "Textures\Texture.h"
+#include "Textures/Texture.h"
+#include "Math/MatrixStack.h"
 
 namespace novus
 {
+
+class Transform;
 
 namespace DepthStencilState
 {
@@ -102,7 +105,7 @@ public:
 	void PostRender();
 	void RenderDeferredLighting();
 
-	void PushTransform(Transform& transform);
+	void PushTransform(const Transform& transform);
 	void PopTransform();
 	Matrix4 GetTopTransform() const;
 	Matrix4 GetTopTransformInverse() const;
@@ -159,7 +162,7 @@ private:
 
 	std::map<std::string, Shader*> mLoadedShaders;
 
-	//MatrixStack mMatrixStack;
+	MatrixStack mMatrixStack;
 };
 
 }

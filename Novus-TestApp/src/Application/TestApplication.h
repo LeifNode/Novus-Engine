@@ -54,7 +54,7 @@ private:
 
 	novus::CBPerFrame mPerFrameData;
 
-	novus::MeshRenderer<Vertex> mMeshRenderer;
+	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
 };
 
 

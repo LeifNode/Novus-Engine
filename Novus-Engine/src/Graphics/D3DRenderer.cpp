@@ -1,6 +1,7 @@
 #include "Graphics/D3DRenderer.h"
 #include "Application/EngineStatics.h"
 #include "Application/NovusApplication.h"
+#include "Math/Transform.h"
 
 namespace novus
 {
@@ -986,25 +987,25 @@ void D3DRenderer::RenderDeferredLighting()
 	//mpDeferredRenderer->Render(this);
 }
 
-//void D3DRenderer::pushTransform(Transform& transform)
-//{
-//	mMatrixStack.push(transform.getTransform());
-//}
-//
-//void D3DRenderer::popTransform()
-//{
-//	mMatrixStack.pop();
-//}
-//
-//XMMATRIX D3DRenderer::getTopTransform() const
-//{
-//	return mMatrixStack.getTop();
-//}
-//
-//XMMATRIX D3DRenderer::getTopTransformInverse() const
-//{
-//	return mMatrixStack.getTopInverse();
-//}
+void D3DRenderer::PushTransform(const Transform& transform)
+{
+	mMatrixStack.Push(transform.GetTransform());
+}
+
+void D3DRenderer::PopTransform()
+{
+	mMatrixStack.Pop();
+}
+
+Matrix4 D3DRenderer::GetTopTransform() const
+{
+	return mMatrixStack.getTop();
+}
+
+Matrix4 D3DRenderer::GetTopTransformInverse() const
+{
+	return mMatrixStack.getTopInverse();
+}
 
 bool D3DRenderer::isUsingHMD() const
 {

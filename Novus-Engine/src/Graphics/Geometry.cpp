@@ -16,40 +16,40 @@ void GeometryGenerator::CreateBox(float width, float height, float depth, Mesh& 
 	float d2 = 0.5f*depth;
 
 	// Fill in the front face vertex data.
-	v[0] = Vertex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 1.0f));
-	v[1] = Vertex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f));
-	v[2] = Vertex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 0.0f));
-	v[3] = Vertex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 1.0f));
+	v[0] = Vertex(Vector3(-w2, -h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(0.0f, 1.0f));
+	v[1] = Vertex(Vector3(-w2, +h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(0.0f, 0.0f));
+	v[2] = Vertex(Vector3(+w2, +h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(1.0f, 0.0f));
+	v[3] = Vertex(Vector3(+w2, -h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(1.0f, 1.0f));
 
 	// Fill in the back face vertex data.
-	v[4] = Vertex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f));
-	v[5] = Vertex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f));
-	v[6] = Vertex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f));
-	v[7] = Vertex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f));
+	v[4] = Vertex(Vector3(-w2, -h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(1.0f, 1.0f));
+	v[5] = Vertex(Vector3(+w2, -h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(0.0f, 1.0f));
+	v[6] = Vertex(Vector3(+w2, +h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(0.0f, 0.0f));
+	v[7] = Vertex(Vector3(-w2, +h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(1.0f, 0.0f));
 
 	// Fill in the top face vertex data.
-	v[8] = Vertex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[9] = Vertex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[10] = Vertex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
-	v[11] = Vertex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
+	v[8] = Vertex(Vector3(-w2, +h2, -d2), Vector3(0.0f, 1.0f, 0.0f), Vector2(0.0f, 1.0f));
+	v[9] = Vertex(Vector3(-w2, +h2, +d2), Vector3(0.0f, 1.0f, 0.0f), Vector2(0.0f, 0.0f));
+	v[10] = Vertex(Vector3(+w2, +h2, +d2), Vector3(0.0f, 1.0f, 0.0f), Vector2(1.0f, 0.0f));
+	v[11] = Vertex(Vector3(+w2, +h2, -d2), Vector3(0.0f, 1.0f, 0.0f), Vector2(1.0f, 1.0f));
 
 	// Fill in the bottom face vertex data.
-	v[12] = Vertex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
-	v[13] = Vertex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[14] = Vertex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[15] = Vertex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
+	v[12] = Vertex(Vector3(-w2, -h2, -d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f));
+	v[13] = Vertex(Vector3(+w2, -h2, -d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f));
+	v[14] = Vertex(Vector3(+w2, -h2, +d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f));
+	v[15] = Vertex(Vector3(-w2, -h2, +d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f));
 
 	// Fill in the left face vertex data.
-	v[16] = Vertex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[17] = Vertex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[18] = Vertex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
-	v[19] = Vertex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
+	v[16] = Vertex(Vector3(-w2, -h2, +d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(0.0f, 1.0f));
+	v[17] = Vertex(Vector3(-w2, +h2, +d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f));
+	v[18] = Vertex(Vector3(-w2, +h2, -d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(1.0f, 0.0f));
+	v[19] = Vertex(Vector3(-w2, -h2, -d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(1.0f, 1.0f));
 
 	// Fill in the right face vertex data.
-	v[20] = Vertex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[21] = Vertex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[22] = Vertex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
-	v[23] = Vertex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
+	v[20] = Vertex(Vector3(+w2, -h2, -d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(0.0f, 1.0f));
+	v[21] = Vertex(Vector3(+w2, +h2, -d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f));
+	v[22] = Vertex(Vector3(+w2, +h2, +d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(1.0f, 0.0f));
+	v[23] = Vertex(Vector3(+w2, -h2, +d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(1.0f, 1.0f));
 
 	mesh.Vertices.assign(&v[0], &v[24]);
 
@@ -181,13 +181,13 @@ void GeometryGenerator::CreateSphere(float radius, UINT sliceCount, UINT stackCo
 	// Poles: note that there will be texture coordinate distortion as there is
 	// not a unique point on the texture map to assign to the pole when mapping
 	// a rectangular texture onto a sphere.
-	Vertex topVertex(XMFLOAT3(0.0f, +radius, 0.0f), XMFLOAT3(0.0f, +1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	Vertex bottomVertex(XMFLOAT3(0.0f, -radius, 0.0f), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
+	Vertex topVertex(Vector3(0.0f, +radius, 0.0f), Vector3(0.0f, +1.0f, 0.0f), Vector2(0.0f, 0.0f));
+	Vertex bottomVertex(Vector3(0.0f, -radius, 0.0f), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f));
 
 	mesh.Vertices.push_back(topVertex);
 
-	float phiStep = XM_PI / stackCount;
-	float thetaStep = 2.0f*XM_PI / sliceCount;
+	float phiStep = Math::Pi / stackCount;
+	float thetaStep = 2.0f*Math::Pi / sliceCount;
 
 	// Compute vertices for each stack ring (do not count the poles as rings).
 	for (UINT i = 1; i <= stackCount - 1; ++i)
@@ -215,17 +215,14 @@ void GeometryGenerator::CreateSphere(float radius, UINT sliceCount, UINT stackCo
 			v.Bitangent.y = radius*-sinf(phi);
 			v.Bitangent.z = +radius*sinf(phi)*cosf(theta);
 
-			XMVECTOR T = XMLoadFloat3(&v.Tangent);
-			XMStoreFloat3(&v.Tangent, XMVector3Normalize(T));
+			v.Tangent = Normalize(v.Tangent);
 
-			T = XMLoadFloat3(&v.Bitangent);
-			XMStoreFloat3(&v.Bitangent, XMVector3Normalize(T));
+			v.Bitangent = Normalize(v.Bitangent);
 
-			XMVECTOR p = XMLoadFloat3(&v.Position);
-			XMStoreFloat3(&v.Normal, XMVector3Normalize(p));
+			v.Position = Normalize(v.Position);
 
-			v.TexCoord.x = theta / XM_2PI;
-			v.TexCoord.y = phi / XM_PI;
+			v.TexCoord.x = theta / Math::TwoPi;
+			v.TexCoord.y = phi / Math::Pi;
 
 			mesh.Vertices.push_back(v);
 		}
@@ -321,17 +318,17 @@ void GeometryGenerator::Subdivide(Mesh& mesh)
 		// For subdivision, we just care about the position component.  We derive the other
 		// vertex components in CreateGeosphere.
 
-		m0.Position = XMFLOAT3(
+		m0.Position = Vector3(
 			0.5f*(v0.Position.x + v1.Position.x),
 			0.5f*(v0.Position.y + v1.Position.y),
 			0.5f*(v0.Position.z + v1.Position.z));
 
-		m1.Position = XMFLOAT3(
+		m1.Position = Vector3(
 			0.5f*(v1.Position.x + v2.Position.x),
 			0.5f*(v1.Position.y + v2.Position.y),
 			0.5f*(v1.Position.z + v2.Position.z));
 
-		m2.Position = XMFLOAT3(
+		m2.Position = Vector3(
 			0.5f*(v0.Position.x + v2.Position.x),
 			0.5f*(v0.Position.y + v2.Position.y),
 			0.5f*(v0.Position.z + v2.Position.z));
@@ -375,14 +372,14 @@ void GeometryGenerator::CreateGeosphere(float radius, UINT numSubdivisions, Mesh
 	const float X = 0.525731f;
 	const float Z = 0.850651f;
 
-	XMFLOAT3 pos[12] =
+	Vector3 pos[12] =
 	{
-		XMFLOAT3(-X, 0.0f, Z), XMFLOAT3(X, 0.0f, Z),
-		XMFLOAT3(-X, 0.0f, -Z), XMFLOAT3(X, 0.0f, -Z),
-		XMFLOAT3(0.0f, Z, X), XMFLOAT3(0.0f, Z, -X),
-		XMFLOAT3(0.0f, -Z, X), XMFLOAT3(0.0f, -Z, -X),
-		XMFLOAT3(Z, X, 0.0f), XMFLOAT3(-Z, X, 0.0f),
-		XMFLOAT3(Z, -X, 0.0f), XMFLOAT3(-Z, -X, 0.0f)
+		Vector3(-X, 0.0f, Z), Vector3(X, 0.0f, Z),
+		Vector3(-X, 0.0f, -Z), Vector3(X, 0.0f, -Z),
+		Vector3(0.0f, Z, X), Vector3(0.0f, Z, -X),
+		Vector3(0.0f, -Z, X), Vector3(0.0f, -Z, -X),
+		Vector3(Z, X, 0.0f), Vector3(-Z, X, 0.0f),
+		Vector3(Z, -X, 0.0f), Vector3(-Z, -X, 0.0f)
 	};
 
 	DWORD k[60] =
@@ -409,13 +406,13 @@ void GeometryGenerator::CreateGeosphere(float radius, UINT numSubdivisions, Mesh
 	for (UINT i = 0; i < mesh.Vertices.size(); ++i)
 	{
 		// Project onto unit sphere.
-		XMVECTOR n = XMVector3Normalize(XMLoadFloat3(&mesh.Vertices[i].Position));
+		Vector3 n = Normalize(mesh.Vertices[i].Position);
 
 		// Project onto sphere.
-		XMVECTOR p = radius*n;
+		Vector3 p = radius*n;
 
-		XMStoreFloat3(&mesh.Vertices[i].Position, p);
-		XMStoreFloat3(&mesh.Vertices[i].Normal, n);
+		mesh.Vertices[i].Position = p;
+		mesh.Vertices[i].Normal = n;
 
 		// Derive texture coordinates from spherical coordinates.
 		float theta = atan2(
@@ -424,8 +421,8 @@ void GeometryGenerator::CreateGeosphere(float radius, UINT numSubdivisions, Mesh
 
 		float phi = acosf(mesh.Vertices[i].Position.y / radius);
 
-		mesh.Vertices[i].TexCoord.x = theta / XM_2PI;
-		mesh.Vertices[i].TexCoord.y = phi / XM_PI;
+		mesh.Vertices[i].TexCoord.x = theta / Math::TwoPi;
+		mesh.Vertices[i].TexCoord.y = phi / Math::Pi;
 
 		// Partial derivative of P with respect to theta
 		mesh.Vertices[i].Tangent.x = -radius*sinf(phi)*sinf(theta);
@@ -436,11 +433,9 @@ void GeometryGenerator::CreateGeosphere(float radius, UINT numSubdivisions, Mesh
 		mesh.Vertices[i].Bitangent.y = radius*-sinf(phi);
 		mesh.Vertices[i].Bitangent.z = +radius*sinf(phi)*cosf(theta);
 
-		XMVECTOR T = XMLoadFloat3(&mesh.Vertices[i].Tangent);
-		XMStoreFloat3(&mesh.Vertices[i].Tangent, XMVector3Normalize(T));
+		mesh.Vertices[i].Tangent = Normalize(mesh.Vertices[i].Tangent);
 
-		T = XMLoadFloat3(&mesh.Vertices[i].Bitangent);
-		XMStoreFloat3(&mesh.Vertices[i].Bitangent, XMVector3Normalize(T));
+		mesh.Vertices[i].Bitangent = Normalize(mesh.Vertices[i].Bitangent);
 	}
 }
 
@@ -467,7 +462,7 @@ void GeometryGenerator::CreateCylinder(float bottomRadius, float topRadius, floa
 		float r = bottomRadius + i*radiusStep;
 
 		// vertices of ring
-		float dTheta = 2.0f*XM_PI / sliceCount;
+		float dTheta = Math::TwoPi / sliceCount;
 		for (UINT j = 0; j <= sliceCount; ++j)
 		{
 			Vertex vertex;
@@ -475,7 +470,7 @@ void GeometryGenerator::CreateCylinder(float bottomRadius, float topRadius, floa
 			float c = cosf(j*dTheta);
 			float s = sinf(j*dTheta);
 
-			vertex.Position = XMFLOAT3(r*c, y, r*s);
+			vertex.Position = Vector3(r*c, y, r*s);
 
 			vertex.TexCoord.x = (float)j / sliceCount;
 			vertex.TexCoord.y = 1.0f - (float)i / stackCount;
@@ -500,15 +495,12 @@ void GeometryGenerator::CreateCylinder(float bottomRadius, float topRadius, floa
 			//  dz/dv = (r0-r1)*sin(t)
 
 			// This is unit length.
-			vertex.Tangent = XMFLOAT3(-s, 0.0f, c);
+			vertex.Tangent = Vector3(-s, 0.0f, c);
 
 			float dr = bottomRadius - topRadius;
-			XMFLOAT3 bitangent(dr*c, -height, dr*s);
+			Vector3 bitangent(dr*c, -height, dr*s);
 
-			XMVECTOR T = XMLoadFloat3(&vertex.Tangent);
-			XMVECTOR B = XMLoadFloat3(&bitangent);
-			XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
-			XMStoreFloat3(&vertex.Normal, N);
+			vertex.Normal = Normalize(Cross(vertex.Tangent, bitangent));
 
 			mesh.Vertices.push_back(vertex);
 		}
@@ -543,7 +535,7 @@ void GeometryGenerator::BuildCylinderTopCap(float bottomRadius, float topRadius,
 	UINT baseIndex = (UINT)mesh.Vertices.size();
 
 	float y = 0.5f*height;
-	float dTheta = 2.0f*XM_PI / sliceCount;
+	float dTheta = Math::TwoPi / sliceCount;
 
 	// Duplicate cap ring vertices because the texture coordinates and normals differ.
 	for (UINT i = 0; i <= sliceCount; ++i)
@@ -584,7 +576,7 @@ void GeometryGenerator::BuildCylinderBottomCap(float bottomRadius, float topRadi
 	float y = -0.5f*height;
 
 	// vertices of ring
-	float dTheta = 2.0f*XM_PI / sliceCount;
+	float dTheta = Math::TwoPi / sliceCount;
 	for (UINT i = 0; i <= sliceCount; ++i)
 	{
 		float x = bottomRadius*cosf(i*dTheta);
@@ -638,10 +630,10 @@ void GeometryGenerator::CreateGrid(float width, float depth, UINT m, UINT n, Mes
 		{
 			float x = -halfWidth + j*dx;
 
-			mesh.Vertices[i*n + j].Position = XMFLOAT3(x, 0.0f, z);
-			mesh.Vertices[i*n + j].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-			mesh.Vertices[i*n + j].Tangent = XMFLOAT3(1.0f, 0.0f, 0.0f);
-			mesh.Vertices[i*n + j].Bitangent = XMFLOAT3(0.0f, 1.0f, 0.0f);
+			mesh.Vertices[i*n + j].Position = Vector3(x, 0.0f, z);
+			mesh.Vertices[i*n + j].Normal = Vector3(0.0f, 1.0f, 0.0f);
+			mesh.Vertices[i*n + j].Tangent = Vector3(1.0f, 0.0f, 0.0f);
+			mesh.Vertices[i*n + j].Bitangent = Vector3(0.0f, 1.0f, 0.0f);
 
 			// Stretch texture over grid.
 			mesh.Vertices[i*n + j].TexCoord.x = j*du;

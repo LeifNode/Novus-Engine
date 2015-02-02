@@ -19,15 +19,16 @@ namespace novus
 {
 class Transform
 {
+public:
 	Transform();
 	~Transform();
 
 	void Rotate(const Quaternion& rotationQuaternion);
 
-	Quaternion GetRotation() const;
-	void SetRotation(const Quaternion& rotation);// { mTransformDirty = true; mRotationQuat = rotation; }
+	const Quaternion& GetRotation() const;
+	void SetRotation(const Quaternion& rotation);
 
-	Vector3 GetScale() const;// { return mScaling; }
+	const Vector3& GetScale() const;
 
 	void Scale(float scale);
 	void Scale(float x, float y, float z);
@@ -39,25 +40,24 @@ class Transform
 
 	void Translate(const Vector3& offset);
 
-	void SetPosition(const Vector3& translation);// { mTranslation = translation; }
-	Vector3 GetPosition() const;// { return mTranslation; }
+	void SetPosition(const Vector3& position);
+	const Vector3& GetPosition() const;
 
-	Matrix4 GetTransform() const;
+	const Matrix4& GetTransform() const;
 
-	void reset();
+	void Reset();
 
 private:
 	void MarkDirty();
 
 private:
 	mutable bool mTransformDirty;
-	mutable bool mInverseDirty;
 
-	Matrix4    mTransform;
+	mutable Matrix4 mTransform;
 
 	Quaternion mRotation;
 	Vector3    mScale;
-	Vector3    mTranslation;
+	Vector3    mPosition;
 };
 }
 
