@@ -24,6 +24,11 @@ GBuffer::GBuffer()
 	mpNormalTargetView(NULL),
 	mpRoughnessTargetView(NULL),
 	mpEmissiveTargetView(NULL),
+	mpDepthStencilUAV(NULL),
+	mpDiffuseUAV(NULL),
+	mpNormalUAV(NULL),
+	mpRoughnessUAV(NULL),
+	mpEmissiveUAV(NULL),
 	mpDepthStencilState(NULL),
 	mpSamplerState(NULL)
 {
@@ -32,6 +37,9 @@ GBuffer::GBuffer()
 GBuffer::~GBuffer()
 {
 	DeInit();
+
+	ReleaseCOM(mpDepthStencilState);
+	ReleaseCOM(mpSamplerState);
 }
 
 void GBuffer::Init(int width, int height)
@@ -76,14 +84,17 @@ void GBuffer::DeInit()
 	ReleaseCOM(mpRoughnessResourceView);
 	ReleaseCOM(mpEmissiveResourceView);
 
+	ReleaseCOM(mpDepthStencilUAV);
+	ReleaseCOM(mpDiffuseUAV);
+	ReleaseCOM(mpNormalUAV);
+	ReleaseCOM(mpRoughnessUAV);
+	ReleaseCOM(mpEmissiveUAV);
+
 	ReleaseCOM(mpDiffuseTexture);
 	ReleaseCOM(mpDepthStencilTexture);
 	ReleaseCOM(mpNormalTexture);
 	ReleaseCOM(mpRoughnessTexture);
 	ReleaseCOM(mpEmissiveTexture);
-
-	ReleaseCOM(mpDepthStencilState);
-	ReleaseCOM(mpSamplerState);
 }
 
 void GBuffer::OnResize(int width, int height)
@@ -91,23 +102,7 @@ void GBuffer::OnResize(int width, int height)
 	if (width <= 0 || height <= 0 || (width == mWidth && height == mHeight)) //Don't need to resize
 		return;
 
-	ReleaseCOM(mpDiffuseTargetView);
-	ReleaseCOM(mpDepthStencilTargetView);
-	ReleaseCOM(mpNormalTargetView);
-	ReleaseCOM(mpRoughnessTargetView);
-	ReleaseCOM(mpEmissiveTargetView);
-
-	ReleaseCOM(mpDiffuseResourceView);
-	ReleaseCOM(mpDepthStencilResourceView);
-	ReleaseCOM(mpNormalResourceView);
-	ReleaseCOM(mpRoughnessResourceView);
-	ReleaseCOM(mpEmissiveResourceView);
-
-	ReleaseCOM(mpDiffuseTexture);
-	ReleaseCOM(mpDepthStencilTexture);
-	ReleaseCOM(mpNormalTexture);
-	ReleaseCOM(mpRoughnessTexture);
-	ReleaseCOM(mpEmissiveTexture);
+	DeInit();
 
 	D3DRenderer* renderer = EngineStatics::getRenderer();
 

@@ -20,8 +20,11 @@ cbuffer cbPerFrame : register(b0)
 	float4x4 gViewProj;
 	float4x4 gViewProjInv;
 
+	uint2 gScreenDimensions;
+	uint2 gpad;
+
 	float3 gHeadPosition;
-	float gpad;
+	float gpad1;
 	float3 gEyePosition;
 	float gpad2;
 	float3 gEyeDirection;

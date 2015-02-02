@@ -99,9 +99,9 @@ void TestApplication::InitMesh()
 {
 	Mesh mesh;
 
-	GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, mesh);
+	GeometryGenerator::CreateGeosphere(1.0f, 2, mesh);
 
-	mMeshRenderer.Init(mesh.Vertices, mesh.Indices, mpRenderer);
+	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
 
 void TestApplication::HookInputEvents()

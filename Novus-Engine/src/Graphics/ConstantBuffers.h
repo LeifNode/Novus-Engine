@@ -26,8 +26,11 @@ struct CBPerFrame
 	Matrix4 ViewProj;
 	Matrix4 ViewProjInv;
 
+	Vector2_t<unsigned int> ScreenResolution;
+	Vector2_t<unsigned int> pad;
+
 	Vector3 HeadPosition;
-	float pad;
+	float pad1;
 	Vector3 EyePosition;
 	float pad2;
 	Vector3 EyeDirection;

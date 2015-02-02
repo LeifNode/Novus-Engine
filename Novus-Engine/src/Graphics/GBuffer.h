@@ -44,7 +44,6 @@ private:
 	ID3D11Texture2D* mpRoughnessTexture;
 	ID3D11Texture2D* mpEmissiveTexture;
 
-
 	ID3D11ShaderResourceView* mpDiffuseResourceView;
 	ID3D11ShaderResourceView* mpDepthStencilResourceView;
 	ID3D11ShaderResourceView* mpNormalResourceView;
@@ -56,6 +55,12 @@ private:
 	ID3D11RenderTargetView* mpNormalTargetView;
 	ID3D11RenderTargetView* mpRoughnessTargetView;
 	ID3D11RenderTargetView* mpEmissiveTargetView;
+
+	ID3D11UnorderedAccessView* mpDepthStencilUAV;
+	ID3D11UnorderedAccessView* mpDiffuseUAV;
+	ID3D11UnorderedAccessView* mpNormalUAV;
+	ID3D11UnorderedAccessView* mpRoughnessUAV;
+	ID3D11UnorderedAccessView* mpEmissiveUAV;
 
 	ID3D11DepthStencilState* mpDepthStencilState;
 	ID3D11SamplerState* mpSamplerState;

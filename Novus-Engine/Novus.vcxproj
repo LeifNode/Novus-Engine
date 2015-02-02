@@ -181,12 +181,14 @@
     <ClInclude Include="src\Graphics\Camera.h" />
     <ClInclude Include="src\Graphics\ConstantBuffers.h" />
     <ClInclude Include="src\Graphics\D3DRenderer.h" />
+    <ClInclude Include="src\Graphics\Debug\GBufferRenderer.h" />
     <ClInclude Include="src\Graphics\GBuffer.h" />
     <ClInclude Include="src\Graphics\Geometry.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Shaders\IShader.h" />
     <ClInclude Include="src\Graphics\Shaders\VertexShader.h" />
+    <ClInclude Include="src\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Graphics\Textures\Texture.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
     <ClInclude Include="src\Input\KeyboardState.h" />

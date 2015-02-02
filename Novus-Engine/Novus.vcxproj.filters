@@ -69,6 +69,9 @@
     <Filter Include="Source Files\Utils\Primitives">
       <UniqueIdentifier>{5c7f86e9-b82a-4548-8dd2-248905b8170a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics\Debug">
+      <UniqueIdentifier>{2935de53-9f11-4874-945b-d48680c7584f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -217,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="src\Math\Transform.h">
       <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Debug\GBufferRenderer.h">
+      <Filter>Source Files\Graphics\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\StructuredBuffer.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

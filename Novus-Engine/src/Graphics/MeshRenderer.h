@@ -21,7 +21,7 @@ public:
 	MeshRenderer();
 	~MeshRenderer();
 
-	void Init(std::vector<T>& vertices, std::vector<UINT>& indices, D3DRenderer* renderer);
+	void Init(D3DRenderer* renderer, std::vector<T>& vertices, std::vector<UINT>& indices);
 
 	void Render(D3DRenderer* renderer);
 
@@ -50,7 +50,7 @@ MeshRenderer<T>::~MeshRenderer()
 }
 
 template <class T>
-void MeshRenderer<T>::Init(std::vector<T>& vertices, std::vector<UINT>& indices, D3DRenderer* renderer)
+void MeshRenderer<T>::Init(D3DRenderer* renderer, std::vector<T>& vertices, std::vector<UINT>& indices)
 {
 	ReleaseCOM(mpVB);
 	ReleaseCOM(mpIB);
