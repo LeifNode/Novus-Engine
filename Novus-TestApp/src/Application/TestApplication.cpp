@@ -134,6 +134,9 @@ void TestApplication::OnResize()
 void TestApplication::Update(float dt)
 {
 	mpCamera->Update(dt);
+
+	mCurrentRotation = Quaternion::AxisAngle(Normalize(Vector3(1.0f, 1.0f, 1.0f)), dt) * mCurrentRotation;
+	mCurrentRotation = Quaternion::Normalize(mCurrentRotation);
 }
 
 void TestApplication::Render()
@@ -159,7 +162,7 @@ void TestApplication::Render()
 		{
 			for (int z = -10; z < 10; z++)
 			{
-				perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+				perObject.World = Quaternion::ToMatrix(mCurrentRotation) * Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
 				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 

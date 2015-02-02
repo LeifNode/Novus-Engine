@@ -44,8 +44,7 @@
 
 #include "Utils/dxerr.h"
 
-#include "Math/Matrix_t.h"
-#include "Math/Vector_t.h"
+#include "Math/Math.h"
 #include "Utils/Memory/Memory.h"
 
 #include "3rdParty/FastDelegate.h"

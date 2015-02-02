@@ -19,7 +19,7 @@
 #include <Graphics/MeshRenderer.h>
 #include <Graphics/Geometry.h>
 #include <Events/EventSystem.h>
-#include <Math/Vector3_t.h>
+#include <Math/Math.h>
 
 namespace novus
 {
@@ -46,6 +46,8 @@ public:
 	void InitMesh();
 
 private:
+	novus::Quaternion mCurrentRotation;
+
 	novus::Camera* mpCamera;
 
 	novus::Shader* mpMainShader;

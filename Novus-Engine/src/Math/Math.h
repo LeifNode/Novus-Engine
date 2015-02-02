@@ -20,6 +20,7 @@
 #include "Vector4_t.inl"
 #include "Matrix3x3_t.inl"
 #include "Matrix4x4_t.inl"
+#include "Quaternion_t.inl"
 
 
 namespace novus

@@ -196,6 +196,7 @@
     <ClInclude Include="src\Math\Matrix4x4_t.h" />
     <ClInclude Include="src\Math\MatrixStack.h" />
     <ClInclude Include="src\Math\Matrix_t.h" />
+    <ClInclude Include="src\Math\Quaternion_t.h" />
     <ClInclude Include="src\Math\Vector2_t.h" />
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="src\Utils\Objects\Type.h" />
     <ClInclude Include="src\Utils\Primitives\Rectangle.h" />
     <ClInclude Include="src\Utils\RectangleBinPacker.h" />
+    <ClInclude Include="src\Utils\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\EngineStatics.cpp" />
@@ -240,10 +242,12 @@
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
     <ClCompile Include="src\Utils\RectangleBinPacker.cpp" />
+    <ClCompile Include="src\Utils\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Math\Matrix3x3_t.inl" />
     <None Include="src\Math\Matrix4x4_t.inl" />
+    <None Include="src\Math\Quaternion_t.inl" />
     <None Include="src\Math\Vector2_t.inl" />
     <None Include="src\Math\Vector3_t.inl" />
     <None Include="src\Math\Vector4_t.inl" />

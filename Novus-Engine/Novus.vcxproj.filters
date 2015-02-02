@@ -209,6 +209,12 @@
     <ClInclude Include="src\Utils\Primitives\Rectangle.h">
       <Filter>Source Files\Utils\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\StringUtils.h">
+      <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Quaternion_t.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -283,6 +289,9 @@
     <ClCompile Include="src\Utils\Logging\ConsoleLogSerializer.cpp">
       <Filter>Source Files\Utils\Logging</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\StringUtils.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Math\Vector3_t.inl">
@@ -299,6 +308,9 @@
     </None>
     <None Include="src\Math\Matrix4x4_t.inl">
       <Filter>Source Files\Math\Matrix</Filter>
+    </None>
+    <None Include="src\Math\Quaternion_t.inl">
+      <Filter>Source Files\Math</Filter>
     </None>
   </ItemGroup>
 </Project>
