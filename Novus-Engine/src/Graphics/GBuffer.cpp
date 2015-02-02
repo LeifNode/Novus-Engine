@@ -2,7 +2,8 @@
 #include "D3DRenderer.h"
 #include "Application/EngineStatics.h"
 
-using novus::GBuffer;
+namespace novus
+{
 
 GBuffer::GBuffer()
 	:
@@ -237,3 +238,5 @@ void GBuffer::ClearRenderTargets()
 	context->ClearRenderTargetView(mpRoughnessTargetView, clearColor);
 	context->ClearRenderTargetView(mpEmissiveTargetView, clearColor);
 }
+
+}//namespace novus

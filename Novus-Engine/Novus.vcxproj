@@ -197,6 +197,7 @@
     <ClInclude Include="src\Math\MatrixStack.h" />
     <ClInclude Include="src\Math\Matrix_t.h" />
     <ClInclude Include="src\Math\Quaternion_t.h" />
+    <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Math\Vector2_t.h" />
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="src\Input\MouseState.cpp" />
     <ClCompile Include="src\Math\Math.cpp" />
     <ClCompile Include="src\Math\MatrixStack.cpp" />
+    <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />

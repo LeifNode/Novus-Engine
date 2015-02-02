@@ -1,12 +1,12 @@
 #include "MatrixStack.h"
 #include "Utils/Logging/Logger.h"
 
-using novus::MatrixStack;
-using novus::Matrix4;
+namespace novus
+{
 
 MatrixStack::MatrixStack()
-:mMatrixStack(),
-mTopInverseDirty(true)
+	:mMatrixStack(),
+	mTopInverseDirty(true)
 {
 	mMatrixStack.push_back(Matrix4(1.0f));
 }
@@ -47,3 +47,5 @@ const Matrix4& MatrixStack::getTopInverse() const
 
 	return mTopInverse;
 }
+
+}//namespace novus

@@ -1,10 +1,8 @@
 #include "EventSystem.h"
 #include "Utils/Memory/Memory.h"
 
-using novus::EventSystem;
-using novus::EventType;
-using novus::EventListenerDelegate;
-using novus::IEventDataPtr;
+namespace novus
+{
 
 EventSystem::EventSystem()
 {}
@@ -122,3 +120,5 @@ bool EventSystem::Update(unsigned long maxMillis)
 
 	return true;
 }
+
+}//namespace novus

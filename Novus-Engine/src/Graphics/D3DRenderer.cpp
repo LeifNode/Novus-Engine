@@ -2,12 +2,8 @@
 #include "Application/EngineStatics.h"
 #include "Application/NovusApplication.h"
 
-using novus::D3DRenderer;
-using novus::Shader;
-using novus::Texture;
-using novus::EngineStatics;
-using novus::ShaderInfo;
-using novus::ShaderType::Type;
+namespace novus
+{
 
 D3DRenderer::D3DRenderer()
 	:
@@ -423,11 +419,11 @@ HRESULT D3DRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEnt
 }
 
 Shader* D3DRenderer::LoadShaderUnmanaged(const WCHAR* filePath,
-										 const ShaderInfo* shaderInfo, 
-										 D3D_PRIMITIVE_TOPOLOGY primitiveTopology,
-										 const D3D11_INPUT_ELEMENT_DESC* vertexDescription,
-										 int vertexDescriptionSize,
-										 const D3D_SHADER_MACRO* defines)
+	const ShaderInfo* shaderInfo,
+	D3D_PRIMITIVE_TOPOLOGY primitiveTopology,
+	const D3D11_INPUT_ELEMENT_DESC* vertexDescription,
+	int vertexDescriptionSize,
+	const D3D_SHADER_MACRO* defines)
 {
 	char* name = NE_NEW char[MAX_PATH];
 
@@ -704,7 +700,7 @@ void D3DRenderer::setConstantBuffer(int index, ID3D11Buffer* buffer)
 	}
 }
 
-void D3DRenderer::setPerFrameBuffer(novus::CBPerFrame& buffer)
+void D3DRenderer::setPerFrameBuffer(CBPerFrame& buffer)
 {
 	///TODO: use map with discard flag instead of UpdateSubresource
 	mpd3dImmediateContext->UpdateSubresource(mpPerFrameBuffer, 0, NULL, &buffer, 0, 0);
@@ -712,7 +708,7 @@ void D3DRenderer::setPerFrameBuffer(novus::CBPerFrame& buffer)
 	mPerFrameData = buffer;
 }
 
-void D3DRenderer::setPerObjectBuffer(novus::CBPerObject& buffer)
+void D3DRenderer::setPerObjectBuffer(CBPerObject& buffer)
 {
 	///TODO: use map with discard flag instead of UpdateSubresource
 	mpd3dImmediateContext->UpdateSubresource(mpPerObjectBuffer, 0, NULL, &buffer, 0, 0);
@@ -841,7 +837,7 @@ void D3DRenderer::setBlendState(bool blendingEnabled)
 		context()->OMSetBlendState(mpBlendStateOpaque, blendFactor, sampleMask);
 }
 
-void D3DRenderer::setDepthStencilState(novus::DepthStencilState::Type state)
+void D3DRenderer::setDepthStencilState(DepthStencilState::Type state)
 {
 	mpd3dImmediateContext->OMSetDepthStencilState(mpDepthStencilStates[state], 0);
 }
@@ -965,10 +961,10 @@ void D3DRenderer::PreRender()
 
 	/*if (isUsingHMD())
 	{
-		mpOVRManager->UpdateTrackingState();
-		mpOVRManager->BeginFrame();
+	mpOVRManager->UpdateTrackingState();
+	mpOVRManager->BeginFrame();
 	}
-*/
+	*/
 	//mGBuffer->clearRenderTargets();
 	//mGBuffer->bindRenderTargets();
 }
@@ -980,7 +976,7 @@ void D3DRenderer::PostRender()
 	//if (isUsingHMD())
 	//	mpOVRManager->PostRender();
 	//else
-		mpSwapChain->Present(0, 0);
+	mpSwapChain->Present(0, 0);
 }
 
 void D3DRenderer::RenderDeferredLighting()
@@ -1016,3 +1012,5 @@ bool D3DRenderer::isUsingHMD() const
 
 	return false;
 }
+
+}//namespace novus

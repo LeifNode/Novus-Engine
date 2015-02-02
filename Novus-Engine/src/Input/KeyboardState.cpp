@@ -1,6 +1,7 @@
 #include "KeyboardState.h"
 
-using novus::KeyboardState;
+namespace novus
+{
 
 KeyboardState::KeyboardState()
 {
@@ -31,3 +32,5 @@ void KeyboardState::ReleaseKey(novus::KeyboardKey::Type key)
 	//mKeys[key / 8] &= ~(1 << (key % 8));
 	mKeys[key] = false;
 }
+
+}//namespace novus

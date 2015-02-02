@@ -2,7 +2,8 @@
 //#include "Logger.h"
 #include <sstream>
 
-using novus::MallocTracker;
+namespace novus
+{
 
 MallocTracker* MallocTracker::mpInstance = NULL;
 
@@ -71,3 +72,5 @@ void MallocTracker::DumpTrackedMemory()
 		OutputDebugStringA(debugString.str().c_str());
 	}
 }
+
+}//namespace novus

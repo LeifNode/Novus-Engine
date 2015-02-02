@@ -2,7 +2,8 @@
 #include "Graphics/D3DRenderer.h"
 #include "Application/Common.h"
 
-using novus::FontManager;
+namespace novus
+{
 
 FontManager::FontManager()
 {}
@@ -78,7 +79,7 @@ bool FontManager::Init()
 //	mpTextRenderShader = gpApplication->getRenderer()->loadShader(L"Shaders/text.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_POINTLIST, vertexDescription, ARRAYSIZE(vertexDescription));
 //}
 
-novus::Font* FontManager::LoadFont(const std::string& fontKey,
+Font* FontManager::LoadFont(const std::string& fontKey,
 	const std::string& fontPath,
 	const std::string& fontPathBold,
 	const std::string& fontPathItalic,
@@ -98,18 +99,18 @@ novus::Font* FontManager::LoadFont(const std::string& fontKey,
 	newFont->LoadFont(fontPath, mFTLibrary);
 
 	if (fontPathBold != "")
-		newFont->LoadFont(fontPathBold, mFTLibrary, novus::FontType::Bold);
+		newFont->LoadFont(fontPathBold, mFTLibrary, FontType::Bold);
 	if (fontPathItalic != "")
-		newFont->LoadFont(fontPathItalic, mFTLibrary, novus::FontType::Italic);
+		newFont->LoadFont(fontPathItalic, mFTLibrary, FontType::Italic);
 	if (fontPathBoldItalic != "")
-		newFont->LoadFont(fontPathBoldItalic, mFTLibrary, novus::FontType::BoldItalic);
+		newFont->LoadFont(fontPathBoldItalic, mFTLibrary, FontType::BoldItalic);
 
 	mFontMap.insert(std::make_pair(fontKey, newFont));
 
 	return newFont;
 }
 
-novus::Font* FontManager::GetFont(const std::string& key)
+Font* FontManager::GetFont(const std::string& key)
 {
 	auto it = mFontMap.find(key);
 
@@ -118,3 +119,5 @@ novus::Font* FontManager::GetFont(const std::string& key)
 
 	return NULL;
 }
+
+}//namespace novus

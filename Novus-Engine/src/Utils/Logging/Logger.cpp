@@ -1,7 +1,8 @@
 #include "Logger.h"
 #include "ILogSerializer.h"
 
-using novus::Logger;
+namespace novus
+{
 
 Logger* Logger::mspInstance = NULL;
 
@@ -13,7 +14,7 @@ Logger* Logger::getInstance()
 	return mspInstance;
 }
 
-void Logger::Log(const char* message, const char* tag, novus::LogLevel::Type errorLevel, const char* fileName, int lineNumber)
+void Logger::Log(const char* message, const char* tag, LogLevel::Type errorLevel, const char* fileName, int lineNumber)
 {
 	LogEntry entry;
 	entry.message = message;
@@ -25,7 +26,7 @@ void Logger::Log(const char* message, const char* tag, novus::LogLevel::Type err
 	mMessages.push_back(entry);
 }
 
-void Logger::AddSerializer(novus::ILogSerializer* serializer, novus::LogLevel::Type levelMask, const char* tagMask)
+void Logger::AddSerializer(ILogSerializer* serializer, LogLevel::Type levelMask, const char* tagMask)
 {
 	std::string tagString = tagMask;
 
@@ -45,26 +46,26 @@ void Logger::AddSerializer(novus::ILogSerializer* serializer, novus::LogLevel::T
 	mSerializers.push_back(entry);
 }
 
-void Logger::RemoveSerializer(novus::ILogSerializer* serializer)
+void Logger::RemoveSerializer(ILogSerializer* serializer)
 {
 	mSerializers.remove_if(
 		[serializer](SerializerEntry entry)
-		{
-			return entry.serializer == serializer;
-		});
+	{
+		return entry.serializer == serializer;
+	});
 }
 
-void Logger::RemoveSerializer(novus::ILogSerializer* serializer, novus::LogLevel::Type levelMask, const char* tagMask)
+void Logger::RemoveSerializer(ILogSerializer* serializer, LogLevel::Type levelMask, const char* tagMask)
 {
 	std::string tagString = tagMask;
 
 	mSerializers.remove_if(
 		[serializer, levelMask, &tagString](SerializerEntry entry)
-		{
-			return entry.serializer == serializer &&
-				   entry.levelMask == levelMask &&
-				   entry.tagMask == tagString;
-		});
+	{
+		return entry.serializer == serializer &&
+			entry.levelMask == levelMask &&
+			entry.tagMask == tagString;
+	});
 }
 
 void Logger::DispatchLogEvent(const LogEntry& entry)
@@ -72,6 +73,8 @@ void Logger::DispatchLogEvent(const LogEntry& entry)
 	for (auto it = mSerializers.begin(); it != mSerializers.end(); ++it)
 	{
 		//if (((*it).levelMask & entry.errorLevel >= 1) && ((*it).tagMask == std::string(entry.tag)))
-			(*it).serializer->Serialize(entry);
+		(*it).serializer->Serialize(entry);
 	}
+}
+
 }

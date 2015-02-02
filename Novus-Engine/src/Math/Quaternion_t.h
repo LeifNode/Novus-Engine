@@ -33,6 +33,8 @@ struct Quaternion_t
 	template <typename B>
 	Quaternion_t(const Vector4_t<B>& v);
 
+	Quaternion_t<T>& operator= (const Quaternion_t<T>& q);
+
 	static T Magnitude(const Quaternion_t<T>& q);
 	static Quaternion_t<T> Normalize(const Quaternion_t<T>& q);
 

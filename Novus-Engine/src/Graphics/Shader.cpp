@@ -1,6 +1,7 @@
 #include "Shader.h"
 
-using novus::Shader;
+namespace novus
+{
 
 Shader::Shader(const std::string& name)
 	:
@@ -24,4 +25,6 @@ Shader::~Shader()
 	ReleaseCOM(mpComputeShader);
 	ReleaseCOM(mpHullShader);
 	ReleaseCOM(mpDomainShader);
+}
+
 }

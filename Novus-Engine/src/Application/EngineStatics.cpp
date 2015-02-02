@@ -1,11 +1,7 @@
 #include "EngineStatics.h"
 
-using novus::EngineStatics;
-using novus::D3DRenderer;
-using novus::NovusApplication;
-using novus::InputSystem;
-using novus::EventSystem;
-using novus::FontManager;
+namespace novus
+{
 
 D3DRenderer* EngineStatics::mspRenderer = NULL;
 NovusApplication* EngineStatics::mspApplication = NULL;
@@ -37,3 +33,5 @@ FontManager* EngineStatics::getFontManager()
 {
 	return mspFontManager;
 }
+
+}//namespace novus

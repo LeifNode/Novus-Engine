@@ -3,11 +3,11 @@
 #include "Graphics/D3DRenderer.h"
 #include "Application/EngineStatics.h"
 
-using novus::Font;
-using namespace novus::FontType;
+namespace novus
+{
 
 Font::Font()
-:mpFontTexture(NULL)
+	:mpFontTexture(NULL)
 {
 	mHorizontalOffset = 2;
 	mNumMipmaps = 0;
@@ -71,7 +71,7 @@ void Font::Init(int width, int height)
 		std::cout << "Failed to create font texture.\n";
 }
 
-void Font::LoadFont(const std::string& path, FT_Library& library, novus::FontType::Type type)
+void Font::LoadFont(const std::string& path, FT_Library& library, FontType::Type type)
 {
 	if (mFaces[type])
 		FT_Done_Face(mFaces[type]);
@@ -90,12 +90,12 @@ void Font::LoadFont(const std::string& path, FT_Library& library, novus::FontTyp
 	mFontPaths[type] = path;
 }
 
-bool Font::LoadCharacter(int charCode, int pointSize, novus::FontType::Type type)
+bool Font::LoadCharacter(int charCode, int pointSize, FontType::Type type)
 {
 	if (mFaces[type] == NULL)
 	{
 		std::cout << "Font type not loaded defaulting to normal font\n";
-		type = novus::FontType::Normal;
+		type = FontType::Normal;
 	}
 
 	if (mCharacterMaps[type].find(std::make_pair(charCode, pointSize)) != mCharacterMaps[type].end())
@@ -166,7 +166,7 @@ bool Font::LoadCharacter(int charCode, int pointSize, novus::FontType::Type type
 	return true;
 }
 
-bool Font::LoadGlyphs(int pointSize, novus::FontType::Type type)
+bool Font::LoadGlyphs(int pointSize, FontType::Type type)
 {
 	for (int i = 32; i < 127; i++)
 	{
@@ -179,12 +179,12 @@ bool Font::LoadGlyphs(int pointSize, novus::FontType::Type type)
 	return true;
 }
 
-novus::Rectangle Font::MeasureString(const std::string& str, int pointSize, novus::FontType::Type type)
+Rectangle Font::MeasureString(const std::string& str, int pointSize, FontType::Type type)
 {
 	return MeasureString(str, pointSize, type, 0, Rectangle());
 }
 
-novus::Rectangle Font::MeasureString(const std::string& str, int pointSize, novus::FontType::Type type, int verticalOffset, const novus::Rectangle& bounds)
+Rectangle Font::MeasureString(const std::string& str, int pointSize, FontType::Type type, int verticalOffset, const Rectangle& bounds)
 {
 	Rectangle totalSize;
 
@@ -218,7 +218,7 @@ novus::Rectangle Font::MeasureString(const std::string& str, int pointSize, novu
 	return totalSize;
 }
 
-const Font::Glyph* Font::getCharacter(int charCode, int pointSize, novus::FontType::Type type)
+const Font::Glyph* Font::getCharacter(int charCode, int pointSize, FontType::Type type)
 {
 	auto it = mCharacterMaps[type].find(std::make_pair(charCode, pointSize));
 
@@ -227,3 +227,5 @@ const Font::Glyph* Font::getCharacter(int charCode, int pointSize, novus::FontTy
 
 	return NULL;
 }
+
+}//namespace novus

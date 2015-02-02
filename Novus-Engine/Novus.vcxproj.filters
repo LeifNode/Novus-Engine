@@ -215,6 +215,9 @@
     <ClInclude Include="src\Math\Quaternion_t.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="src\Math\Transform.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -291,6 +294,9 @@
     </ClCompile>
     <ClCompile Include="src\Utils\StringUtils.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Transform.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

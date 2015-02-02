@@ -9,9 +9,8 @@
 #include "Utils/Memory/Memory.h"
 #include "Application/EngineStatics.h"
 
-using novus::InputSystem;
-using novus::KeyboardState;
-using novus::MouseState;
+namespace novus
+{
 
 InputSystem::InputSystem()
 {
@@ -64,7 +63,7 @@ bool InputSystem::ProcessWindowsMessage(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		break;
 	case WM_RBUTTONUP:
 		mMouseState.mRight = false;
-		EnqueueEvent(IEventDataPtr(new EventData_MouseUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam),  MouseButton::Right)));
+		EnqueueEvent(IEventDataPtr(new EventData_MouseUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), MouseButton::Right)));
 		break;
 	case WM_XBUTTONDOWN:
 		if (GET_XBUTTON_WPARAM(wParam) == 1)
@@ -108,7 +107,9 @@ bool InputSystem::ProcessWindowsMessage(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	return true;
 }
 
-void InputSystem::EnqueueEvent(novus::IEventDataPtr ev)
+void InputSystem::EnqueueEvent(IEventDataPtr ev)
 {
 	EngineStatics::getEventSystem()->QueueEvent(ev);
 }
+
+}//namespace novus

@@ -1,6 +1,7 @@
 #include "Geometry.h"
 
-using namespace novus;
+namespace novus
+{
 
 void GeometryGenerator::CreateBox(float width, float height, float depth, Mesh& mesh)
 {
@@ -297,11 +298,11 @@ void GeometryGenerator::Subdivide(Mesh& mesh)
 	//       v1
 	//       *
 	//      / \
-		//     /   \
-		//  m0*-----*m1
+			//     /   \
+			//  m0*-----*m1
 	//   / \   / \
-		//  /   \ /   \
-		// *-----*-----*
+			//  /   \ /   \
+			// *-----*-----*
 	// v0    m2     v2
 
 	UINT numTris = (UINT)inputCopy.Indices.size() / 3;
@@ -715,3 +716,5 @@ void GeometryGenerator::CreateFullscreenQuad(Mesh& mesh)
 	mesh.Indices[4] = 2;
 	mesh.Indices[5] = 3;
 }
+
+}//namespace novus

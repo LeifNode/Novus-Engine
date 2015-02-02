@@ -1,6 +1,7 @@
 #include "MouseState.h"
 
-using novus::MouseState;
+namespace novus
+{
 
 MouseState::MouseState()
 	:mX(0),
@@ -13,3 +14,5 @@ MouseState::MouseState()
 
 MouseState::~MouseState()
 {}
+
+}//namespace novus

@@ -2,11 +2,8 @@
 #include "Application/EngineStatics.h"
 #include "Input/InputSystem.h"
 
-using novus::Camera;
-using novus::Matrix4;
-using novus::Vector3;
-using novus::Vector4;
-using novus::KeyboardKey::Type;
+namespace novus
+{
 
 Camera::Camera()
 	:mPosition(0.0f, 1.66f, 0.0f),
@@ -51,9 +48,9 @@ void Camera::setPosition(const Vector3& p)
 	mPosition = p;
 }
 
-void Camera::OnMouseMove(novus::IEventDataPtr eventData)
+void Camera::OnMouseMove(IEventDataPtr eventData)
 {
-	auto dataPtr = static_pointer_cast<novus::EventData_MouseMove>(eventData);
+	auto dataPtr = static_pointer_cast<EventData_MouseMove>(eventData);
 
 	if (mReadingMouse)
 	{
@@ -67,9 +64,9 @@ void Camera::OnMouseMove(novus::IEventDataPtr eventData)
 		/*XMVECTOR rotationQuat;
 
 		if (gpApplication->getRenderer()->isUsingHMD())
-			rotationQuat = XMQuaternionRotationAxis(XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)), dx);
+		rotationQuat = XMQuaternionRotationAxis(XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)), dx);
 		else
-			rotationQuat = XMQuaternionMultiply(XMQuaternionRotationAxis(XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)), dx), XMQuaternionRotationAxis(right, dy));
+		rotationQuat = XMQuaternionMultiply(XMQuaternionRotationAxis(XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)), dx), XMQuaternionRotationAxis(right, dy));
 
 		mRotation = XMQuaternionNormalize(XMQuaternionMultiply(mRotation, rotationQuat));
 
@@ -84,7 +81,7 @@ void Camera::OnMouseMove(novus::IEventDataPtr eventData)
 
 void Camera::OnMouseDown(novus::IEventDataPtr eventData)
 {
-	auto dataPtr = static_pointer_cast<novus::EventData_MouseDown>(eventData);
+	auto dataPtr = static_pointer_cast<EventData_MouseDown>(eventData);
 
 	if (dataPtr->getButton() == MouseButton::Left)
 		mReadingMouse = true;
@@ -94,7 +91,7 @@ void Camera::OnMouseDown(novus::IEventDataPtr eventData)
 
 void Camera::OnMouseUp(novus::IEventDataPtr eventData)
 {
-	auto dataPtr = static_pointer_cast<novus::EventData_MouseUp>(eventData);
+	auto dataPtr = static_pointer_cast<EventData_MouseUp>(eventData);
 
 	if (dataPtr->getButton() == MouseButton::Left)
 		mReadingMouse = false;
@@ -112,7 +109,7 @@ void Camera::Update(float dt)
 
 void Camera::UpdatePosition(float dt)
 {
-	novus::InputSystem* inputSystem = novus::EngineStatics::getInputSystem();
+	InputSystem* inputSystem = EngineStatics::getInputSystem();
 	//HydraManager* hydra = inputSystem->getHydra();
 
 	Vector3 forwardOffset = mDirection * mVelocity * dt;
@@ -155,3 +152,5 @@ void Camera::UpdatePosition(float dt)
 		}
 	}
 }
+
+}//namespace novus

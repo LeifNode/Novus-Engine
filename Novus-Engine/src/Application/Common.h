@@ -28,7 +28,6 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <DirectXMath.h>
 #include <memory>
 #include <cassert>
 #include <ctime>
@@ -48,8 +47,6 @@
 #include "Utils/Memory/Memory.h"
 
 #include "3rdParty/FastDelegate.h"
-
-using namespace DirectX;
 
 using std::shared_ptr;
 using std::weak_ptr;

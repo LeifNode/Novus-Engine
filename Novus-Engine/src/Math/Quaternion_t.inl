@@ -27,6 +27,16 @@ namespace novus
 	{}
 
 	template <typename T>
+	Quaternion_t<T>& Quaternion_t<T>::operator= (const Quaternion_t<T>& q)
+	{
+		this->x = q.x;
+		this->y = q.y;
+		this->z = q.z;
+		this->w = q.w;
+		return *this;
+	}
+
+	template <typename T>
 	Quaternion_t<T> operator- (const Quaternion_t<T>& q)
 	{
 		return Quaternion_t<T>(-q.x, -q.y, -q.z, -q.w);

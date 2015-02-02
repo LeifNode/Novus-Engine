@@ -2,7 +2,8 @@
 #include "Memory/Memory.h"
 #include <Windows.h>
 
-using novus::RectangleBinPacker;
+namespace novus
+{
 
 RectangleBinPacker::Node::Node()
 {
@@ -138,3 +139,5 @@ float RectangleBinPacker::getFillPercent()
 {
 	return getFilledArea() * 100.0f / (float)(mBaseWidth * mBaseHeight);
 }
+
+}//namespace novus

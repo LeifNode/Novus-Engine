@@ -10,9 +10,10 @@
 #pragma comment(lib, "d3dcompiler")
 #pragma comment(lib, "dxguid")
 
-using novus::NovusApplication;
-
 novus::NovusApplication* gpApplication = NULL;
+
+namespace novus
+{
 
 namespace
 {
@@ -20,10 +21,10 @@ namespace
 }
 
 LRESULT CALLBACK
-MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	return gNovusApp->MsgProc(hwnd, msg, wParam, lParam);
-}
+		return gNovusApp->MsgProc(hwnd, msg, wParam, lParam);
+	}
 
 NovusApplication::NovusApplication(HINSTANCE hInstance)
 	:
@@ -377,3 +378,5 @@ void NovusApplication::CalculateFrameStats()
 		timeElapsed += 1.0f;
 	}
 }
+
+}//namespace novus

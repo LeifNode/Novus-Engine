@@ -102,10 +102,10 @@ public:
 	void PostRender();
 	void RenderDeferredLighting();
 
-	//void pushTransform(Transform& transform);
-	//void popTransform();
-	//XMMATRIX getTopTransform() const;
-	//XMMATRIX getTopTransformInverse() const;
+	void PushTransform(Transform& transform);
+	void PopTransform();
+	Matrix4 GetTopTransform() const;
+	Matrix4 GetTopTransformInverse() const;
 
 	GBuffer* getGBuffer() const { return mpGBuffer; }
 	//OVRManager* getHMD() const { return mpOVRManager; }

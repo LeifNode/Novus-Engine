@@ -1,7 +1,8 @@
 #include "Memory.h"
 #include "MallocTracker.h"
 
-using novus::MallocTracker;
+namespace novus
+{
 
 void* operator new(size_t size, const char* fileName, const char* functionName, int line)
 {
@@ -39,3 +40,5 @@ void allocTracker_free(void * p, const char* fileName, const char* functionName,
 {
 	MallocTracker::getInstance()->FreePtr(p);
 }
+
+}//namespace novus

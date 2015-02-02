@@ -1,6 +1,7 @@
 #include "Math.h"
 
-using namespace novus;
+namespace novus
+{
 
 const float Math::Infinity = FLT_MAX;
 const float Math::Pi = 3.1415926535f;
@@ -21,3 +22,5 @@ int Math::MipMapCount(int width, int height)
 
 	return mipmaps;
 }
+
+}//namespace novus
