@@ -34,7 +34,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
-	mpMainShader(NULL)
+	mpMainShader(NULL),
+	mpTiledDeferredShader(NULL)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.1";
 
@@ -93,6 +94,13 @@ void TestApplication::InitShader()
 	};
 
 	mpMainShader = mpRenderer->LoadShader(L"../Shaders/GenericShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vertexDescription, ARRAYSIZE(vertexDescription));
+
+	ShaderInfo deferredShaderInfo[] = {
+		{ ShaderType::Compute, "ComputeShaderTileCS" },
+		{ ShaderType::None, NULL }
+	};
+
+	mpTiledDeferredShader = mpRenderer->LoadShader(L"../Shaders/Deferred/ComputeTiledDeferred.hlsl", deferredShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
 }
 
 void TestApplication::InitMesh()
@@ -179,6 +187,8 @@ void TestApplication::Render()
 			}
 		}
 	}
+
+	mpRenderer->RenderDeferredShading();
 	
 	mpRenderer->PostRender();
 }

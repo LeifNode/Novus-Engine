@@ -15,23 +15,35 @@
 namespace novus
 {
 
-class Texture
+class Texture2D
 {
 	friend class D3DRenderer;
 
 public:
-	~Texture();
+	Texture2D();
+	~Texture2D();
+
+	void Init(D3DRenderer* renderer, 
+		      int width, 
+			  int height,
+			  DXGI_FORMAT format,
+			  int mipCount = 1,
+			  UINT bindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+	void DeInit();
 
 	int getWidth() const { return mWidth; }
 	int getHeight() const { return mHeight; }
 
-	ID3D11Texture2D* getD3DTexture() const { return mpTexture; }
+	ID3D11Texture2D* getTexture() const { return mpTexture; }
 	ID3D11ShaderResourceView* getResourceView() const { return mpResourceView; }
+	ID3D11RenderTargetView* getRenderTargetView() const { return mpRenderTargetView; }
+	ID3D11UnorderedAccessView* getUnordedAccessView() const { return mpUnorderedAccessView; }
 	
-	void SetDebugName(const std::string& name);
+	void setDebugName(const std::string& name);
 
 private:
-	Texture();
+	Texture2D(const Texture2D&);
+	Texture2D& operator=(const Texture2D&);
 
 private:
 	int mWidth;
@@ -39,6 +51,8 @@ private:
 
 	ID3D11Texture2D* mpTexture;
 	ID3D11ShaderResourceView* mpResourceView;
+	ID3D11RenderTargetView* mpRenderTargetView;
+	ID3D11UnorderedAccessView* mpUnorderedAccessView;
 };
 
 }

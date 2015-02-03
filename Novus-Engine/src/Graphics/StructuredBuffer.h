@@ -38,6 +38,10 @@ public:
 	ID3D11UnorderedAccessView* getUAV() const { return mpBufferUAV; }
 
 private:
+	StructuredBuffer(const StructuredBuffer<T>&);
+	StructuredBuffer<T>& operator= (const StructuredBuffer<T>&);
+
+private:
 	int mSize;
 
 	ID3D11Buffer* mpBuffer;

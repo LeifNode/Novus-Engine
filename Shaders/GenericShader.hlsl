@@ -57,5 +57,5 @@ PS_INPUT VS(VS_INPUT vin)
 
 PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
-	return PackGBuffer(float4(1.0f, 1.0f, 1.0f, 1.0f), pin.Normal, float3(1.0f, 0.0f, 0.0f), 0.5f, float3(0.0f, 0.0f, 0.0f));
+	return PackGBuffer(float4(1.0f, 1.0f, 1.0f, 1.0f), normalize(pin.Normal), float3(1.0f, 0.0f, 0.0f), 0.5f, float3(0.0f, 0.0f, 0.0f));
 }

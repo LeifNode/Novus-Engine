@@ -39,6 +39,9 @@ private:
 	MallocTracker();
 	~MallocTracker() {}
 
+	MallocTracker(const MallocTracker&);
+	MallocTracker& operator= (const MallocTracker&);
+
 private:
 	static MallocTracker* mpInstance;
 

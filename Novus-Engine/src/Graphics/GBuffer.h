@@ -30,6 +30,9 @@ public:
 	void ClearRenderTargets();
 
 private:
+	GBuffer(const GBuffer&);
+	GBuffer& operator= (const GBuffer&);
+
 	void Init(int width, int height);
 	void DeInit();
 

@@ -10,15 +10,17 @@
 #ifndef DEFERRED_SHADING_HLSL
 #define DEFERRED_SHADING_HLSL
 
-#include "Defines.hlsl"
-#include "ConstantBuffers.hlsl"
-#include "Lights.hlsl"
+#include "Utils/Defines.hlsl"
+#include "Utils/ConstantBuffers.hlsl"
+#include "Lighting/Lights.hlsl"
 
 Texture2D<float4> DiffuseTexture   : register(t0);
 Texture2D<float3> NormalTexture    : register(t1);
 Texture2D<float4> SpecularTexture  : register(t2);//rgb specular color, a roughness
 Texture2D<float4> EmissiveTexture  : register(t3);//a is unused at the moment
 Texture2D<float> DepthTexture      : register(t4);
+
+RWTexture2D<float4> OutputTexture  : register(u0);
 
 SamplerState PointSampler          : register(s0);
 
@@ -81,21 +83,29 @@ float3 GetWorldPos(float2 posClip, float depth)
 //	return Out;
 //}
 
-SURFACE_DATA UnpackGBufferViewport(uint viewportPosition)
+SURFACE_DATA UnpackGBufferViewport(uint2 viewportPosition)
 {
 	SURFACE_DATA Out;
 
 	
-	Out.Diffuse = DiffuseTexture.Load(viewportPosition);
-	Out.Normal = NormalTexture.Load(viewportPosition).rgb * 2.0 - 1.0);
-	float4 spec = SpecularTexture.Load(viewportPosition);
+	Out.Diffuse = DiffuseTexture.Load(uint3(viewportPosition, 0));
+	Out.Normal = NormalTexture.Load(uint3(viewportPosition, 0)).rgb * 2.0 - 1.0;
+	float4 spec = SpecularTexture.Load(uint3(viewportPosition, 0));
 	Out.SpecularColor = spec.rgb;
 	Out.Roughness = spec.a;
-	Out.Emissive = EmissiveTexture.Load(viewportPosition).rgb;
+	Out.Emissive = EmissiveTexture.Load(uint3(viewportPosition, 0)).rgb;
 
+	float2 GBufferDim;
+	DiffuseTexture.GetDimensions(GBufferDim.x, GBufferDim.y);
 
+	//Calcluate screen space position
+	float2 ScreenPixelOffset = float2(2.0f, -2.0f) / GBufferDim;
+	float2 ScreenPosition = (float2(viewportPosition.xy) + 0.5f) * ScreenPixelOffset.xy + float2(-1.0f, 1.0f);
 
-	float zBuffer = DepthTexture.Load(PointSampler, UV).r;
+	float zBuffer = DepthTexture.Load(uint3(viewportPosition, 0)).r;
+	float ViewSpaceZ = ConvertZToLinearDepth(zBuffer);
+
+	Out.ViewPosition = GetViewPos(ScreenPosition, ViewSpaceZ);
 
 	return Out;
 }

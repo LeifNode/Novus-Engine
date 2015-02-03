@@ -206,6 +206,8 @@ void GeometryGenerator::CreateSphere(float radius, UINT sliceCount, UINT stackCo
 			v.Position.y = radius*cosf(phi);
 			v.Position.z = radius*sinf(phi)*sinf(theta);
 
+			v.Normal = Normalize(v.Position);
+
 			// Partial derivative of P with respect to theta
 			v.Tangent.x = -radius*sinf(phi)*sinf(theta);
 			v.Tangent.y = 0.0f;

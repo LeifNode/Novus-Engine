@@ -15,13 +15,14 @@
 #include "Shaders/IShader.h"
 #include "Shader.h"
 #include "ConstantBuffers.h"
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 #include "Math/MatrixStack.h"
 
 namespace novus
 {
 
 class Transform;
+class D3DLocalInclude;
 
 namespace DepthStencilState
 {
@@ -50,8 +51,8 @@ public:
 	ID3D11RenderTargetView* renderTarget() const { return mpRenderTarget; }
 	IDXGISwapChain* swapChain() const { return mpSwapChain; }
 
-	void setTextureResource(int index, Texture*);
-	void setTextureResources(Texture** texArray, int startSlot, unsigned count);
+	void setTextureResource(int index, Texture2D*);
+	void setTextureResources(Texture2D** texArray, int startSlot, unsigned count);
 	void setTextureResources(ID3D11ShaderResourceView** texArray, int startSlot, unsigned count);
 	void setSampler(int index, ID3D11SamplerState* samplerState);
 	void setConstantBuffer(int index, ID3D11Buffer*);
@@ -61,10 +62,10 @@ public:
 
 	void UnbindTextureResources();
 
-	//Texture* CreateTexture(UINT format, int width, int height);
-	Texture* CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, DXGI_FORMAT resViewFmt = DXGI_FORMAT_UNKNOWN);
+	//Texture2D* CreateTexture(UINT format, int width, int height);
+	Texture2D* CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, DXGI_FORMAT resViewFmt = DXGI_FORMAT_UNKNOWN);
 	bool CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, ID3D11Texture2D** textureOut, ID3D11ShaderResourceView** resourceOut, DXGI_FORMAT resViewFmt = DXGI_FORMAT_UNKNOWN);
-	//Texture* CreateTexture(int width, int height, DXGI_FORMAT colorFormat, )
+	//Texture2D* CreateTexture(int width, int height, DXGI_FORMAT colorFormat, )
 	//RenderTarget* CreateRenderTarget(int width, int height, bool useDepthBuffer = true);
 	//void setRenderTarget(RenderTarget* target);
 
@@ -103,7 +104,7 @@ public:
 
 	void PreRender();
 	void PostRender();
-	void RenderDeferredLighting();
+	void RenderDeferredShading();
 
 	void PushTransform(const Transform& transform);
 	void PopTransform();
@@ -115,11 +116,11 @@ public:
 	bool isUsingHMD() const;
 
 private:
-	static HRESULT CompileShaderFromFile(const WCHAR* szFileName, 
-										 LPCSTR szEntryPoint, 
-										 LPCSTR szShaderModel, 
-										 const D3D_SHADER_MACRO* defines, 
-										 ID3DBlob** ppBlobOut);
+	HRESULT CompileShaderFromFile(const WCHAR* szFileName, 
+								  LPCSTR szEntryPoint, 
+								  LPCSTR szShaderModel, 
+								  const D3D_SHADER_MACRO* defines, 
+								  ID3DBlob** ppBlobOut);
 
 	void InitDepthStencilStates();
 
@@ -128,9 +129,12 @@ private:
 	bool mUseHMD;
 
 	GBuffer* mpGBuffer;
+	Texture2D* mpHDRRenderTarget;
 	//DeferredRenderer* mpDeferredRenderer;
 
 	UINT m4xMsaaQuality;
+
+	D3DLocalInclude* mpIncludeDir;
 
 	ID3D11Device* mpd3dDevice;
 	ID3D11DeviceContext* mpd3dImmediateContext;

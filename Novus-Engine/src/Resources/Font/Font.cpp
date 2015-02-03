@@ -65,7 +65,7 @@ void Font::Init(int width, int height)
 
 	mpFontTexture = renderer->CreateTexture(&textureDesc);
 
-	mpFontTexture->SetDebugName("[Font]");
+	mpFontTexture->setDebugName("[Font]");
 
 	if (mpFontTexture == NULL)
 		std::cout << "Failed to create font texture.\n";
@@ -140,7 +140,7 @@ bool Font::LoadCharacter(int charCode, int pointSize, FontType::Type type)
 		box.back = 1;
 
 		if (width > 0 && height > 0)
-			renderer->context()->UpdateSubresource(mpFontTexture->getD3DTexture(), D3D11CalcSubresource(0, 0, mNumMipmaps), &box, bitmap->buffer, bitmap->pitch, 0);
+			renderer->context()->UpdateSubresource(mpFontTexture->getTexture(), D3D11CalcSubresource(0, 0, mNumMipmaps), &box, bitmap->buffer, bitmap->pitch, 0);
 
 		//Cache to map
 		Glyph* newGlyph = NE_NEW Glyph;

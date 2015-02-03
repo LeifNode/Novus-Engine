@@ -18,12 +18,13 @@ struct PointLight
 {
 	Vector4 Color;
 
-	Vector3 Position;
+	Vector3 PositionView;
 	float Range;
 
 	float Intensity;
-	float Radius; 
-	Vector3 pad;
+	float Radius;
+	float FalloffPow;
+	float pad;
 };
 }
 

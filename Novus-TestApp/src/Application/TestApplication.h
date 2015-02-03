@@ -51,6 +51,7 @@ private:
 	novus::Camera* mpCamera;
 
 	novus::Shader* mpMainShader;
+	novus::Shader* mpTiledDeferredShader;
 
 	novus::CBPerFrame mPerFrameData;
 

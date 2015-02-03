@@ -36,6 +36,8 @@ public:
 private:
 	InputSystem();
 	~InputSystem();
+	InputSystem(const InputSystem&);
+	InputSystem& operator= (const InputSystem&);
 
 	bool ProcessWindowsMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 

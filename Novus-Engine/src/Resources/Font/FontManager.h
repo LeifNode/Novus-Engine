@@ -31,6 +31,9 @@ public:
 	Font* GetFont(const std::string& key);
 
 private:
+	FontManager(const FontManager&);
+	FontManager& operator= (const FontManager&);
+
 	//void initializeSampler();
 	//void initializeShader();
 

@@ -2,7 +2,6 @@
 #include "Application/EngineStatics.h"
 #include "Application/NovusApplication.h"
 #include "Math/Transform.h"
-#include "Shaders/D3DLocalInclude.h"
 
 namespace novus
 {
@@ -12,7 +11,6 @@ D3DRenderer::D3DRenderer()
 	md3dDriverType(D3D_DRIVER_TYPE_HARDWARE),
 	mEnable4xMsaa(false),
 	m4xMsaaQuality(16),
-	mpIncludeDir(NULL),
 
 	mpd3dDevice(NULL),
 	mpd3dImmediateContext(NULL),
@@ -85,7 +83,6 @@ D3DRenderer::~D3DRenderer()
 		ReleaseCOM(mpd3dDebug);
 	}
 
-	NE_DELETE(mpIncludeDir);
 	ReleaseCOM(mpd3dImmediateContext);
 	ReleaseCOM(mpd3dDevice);
 }
@@ -177,8 +174,6 @@ void D3DRenderer::OnResize()
 
 bool D3DRenderer::Init()
 {
-	mpIncludeDir = new D3DLocalInclude("../Shaders");
-
 	// Create the device and device context.
 
 	UINT createDeviceFlags = 0;
@@ -416,9 +411,8 @@ HRESULT D3DRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEnt
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-
 	ID3DBlob* pErrorBlob;
-	hr = D3DCompileFromFile(szFileName, defines, mpIncludeDir, szEntryPoint, szShaderModel,
+	hr = D3DCompileFromFile(szFileName, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, szEntryPoint, szShaderModel,
 		dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
 	if (FAILED(hr))
 	{
@@ -993,7 +987,7 @@ void D3DRenderer::PostRender()
 	mpSwapChain->Present(0, 0);
 }
 
-void D3DRenderer::RenderDeferredShading()
+void D3DRenderer::RenderDeferredLighting()
 {
 	mpd3dImmediateContext->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 

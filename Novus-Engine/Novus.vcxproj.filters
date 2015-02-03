@@ -110,9 +110,6 @@
     <ClInclude Include="src\Graphics\ConstantBuffers.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Textures\Texture.h">
-      <Filter>Source Files\Graphics\Textures</Filter>
-    </ClInclude>
     <ClInclude Include="src\Input\KeyboardState.h">
       <Filter>Source Files\Input</Filter>
     </ClInclude>
@@ -230,6 +227,12 @@
     <ClInclude Include="src\Graphics\Lights.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Textures\Texture2D.h">
+      <Filter>Source Files\Graphics\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shaders\D3DLocalInclude.h">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -255,9 +258,6 @@
     </ClCompile>
     <ClCompile Include="src\Application\EngineStatics.cpp">
       <Filter>Source Files\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Textures\Texture.cpp">
-      <Filter>Source Files\Graphics\Textures</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
@@ -309,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="src\Math\Transform.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Textures\Texture2D.cpp">
+      <Filter>Source Files\Graphics\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp">
+      <Filter>Source Files\Graphics\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

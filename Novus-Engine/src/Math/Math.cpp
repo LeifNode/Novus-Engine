@@ -13,7 +13,7 @@ int Math::MipMapCount(int width, int height)
 {
 	int mipmaps = 0;
 
-	while (width > 1 && height > 1)
+	while (width >= 1 && height >= 1)
 	{
 		mipmaps++;
 		width /= 2;

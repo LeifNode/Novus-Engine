@@ -61,6 +61,9 @@ private:
 private:
 	Logger() {}
 	~Logger() {}
+	Logger(const Logger&);
+
+	Logger& operator= (const Logger&);
 
 	void DispatchLogEvent(const LogEntry& entry);
 

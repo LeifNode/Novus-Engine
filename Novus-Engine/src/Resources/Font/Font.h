@@ -11,7 +11,7 @@
 #define NOVUS_FONT_H
 
 #include "Utils/RectangleBinPacker.h"
-#include "Graphics/Textures/Texture.h"
+#include "Graphics/Textures/Texture2D.h"
 #include "Utils/Primitives/Rectangle.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -62,11 +62,14 @@ public:
 	bool LoadGlyphs(int pointSize, FontType::Type type = FontType::Normal);
 
 	float getUsedSpace() { return mBinPacker.getFillPercent(); }
-	Texture* getFontTexture() const { return mpFontTexture; }
+	Texture2D* getFontTexture() const { return mpFontTexture; }
 
 private:
 	Font();
 	~Font();
+
+	Font(const Font&);
+	Font& operator= (const Font&);
 
 	void Init(int width, int height);
 	void LoadFont(const std::string& path, FT_Library& library, FontType::Type type = FontType::Normal);
@@ -82,7 +85,7 @@ private:
 	int mHorizontalOffset; //Used to avoid characters with short widths from overlapping
 	std::string mFontPaths[FontType::COUNT];
 
-	Texture* mpFontTexture;
+	Texture2D* mpFontTexture;
 };
 
 }

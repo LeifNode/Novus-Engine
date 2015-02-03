@@ -26,6 +26,10 @@ public:
 	void Render(D3DRenderer* renderer);
 
 private:
+	MeshRenderer(const MeshRenderer&);
+	MeshRenderer<T>& operator= (const MeshRenderer<T>&);
+
+private:
 	ID3D11Buffer* mpVB;
 	ID3D11Buffer* mpIB;
 

@@ -34,6 +34,8 @@ public:
 
 private:
 	Shader(const std::string& name);
+	Shader(const Shader&);
+	Shader& operator= (const Shader&);
 
 	//void bind(D3DRenderer* renderer);
 

@@ -20,12 +20,13 @@ struct PointLight
 {
 	float4 Color;
 
-	float3 Position;
+	float3 PositionView;
 	float Range;
 
 	float Intensity;
 	float Radius;
-	float2 pad;
+	float FalloffPow;
+	float pad;
 };
 
 struct SpotLight
