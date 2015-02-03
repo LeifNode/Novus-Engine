@@ -27,7 +27,7 @@ MassAggregatePhysicsSystem::~MassAggregatePhysicsSystem()
 
 void MassAggregatePhysicsSystem::Init()
 {
-
+	//mForceGenerators.push_back(new ParticlePlanetaryGravitation(this));
 }
 
 void MassAggregatePhysicsSystem::Update(float dt)
@@ -38,6 +38,26 @@ void MassAggregatePhysicsSystem::Update(float dt)
 	{
 		(*it)->Update(dt);
 	}
+}
+
+const std::vector<Particle*>& MassAggregatePhysicsSystem::getParticles() const
+{
+	return mParticles;
+}
+
+void MassAggregatePhysicsSystem::AddParticle(Particle* particle)
+{
+	mParticles.push_back(particle);
+}
+
+void MassAggregatePhysicsSystem::AddForceGenerator(ParticleForceGenerator* generator)
+{
+	mForceGenerators.push_back(generator);
+}
+
+void MassAggregatePhysicsSystem::AddRegistryEntry(Particle* particle, ParticleForceGenerator* generator)
+{
+	mForceRegistry.Add(particle, generator);
 }
 
 }

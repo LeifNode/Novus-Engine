@@ -17,11 +17,12 @@ public:
 class ParticlePlanetaryGravitation : public ParticleForceGenerator
 {
 public:
-	ParticlePlanetaryGravitation();
+	ParticlePlanetaryGravitation(class MassAggregatePhysicsSystem* physicsSystem);
 
 	virtual void UpdateForce(Particle* particle, float dt) override;
-private:
 
+private:
+	class MassAggregatePhysicsSystem* mpPhysicsSystem;
 };
 
 class ParticleGravity : public ParticleForceGenerator

@@ -340,6 +340,9 @@
     <ClCompile Include="src\Physics\MassAggregatePhysicsSystem.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Physics\ParticleForceGenerator.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Math\Vector3_t.inl">

@@ -9,6 +9,10 @@
 #include <Graphics/Camera.h>
 #include <Graphics/D3DRenderer.h>
 #include <Graphics/PostProcess/DeferredRenderer.h>
+#include <Physics/Particle.h>
+#include <Physics/ParticleForceGenerator.h>
+#include <Physics/MassAggregatePhysicsSystem.h>
+
 
 using namespace novus;
 
@@ -42,12 +46,14 @@ mpTiledDeferredShader(NULL)
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
+	mpPhysicsSystem = NE_NEW MassAggregatePhysicsSystem();
 }
 
 PhysicsTestApplication::~PhysicsTestApplication()
 {
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
+	NE_DELETE(mpPhysicsSystem);
 }
 
 bool PhysicsTestApplication::Init()
@@ -74,7 +80,32 @@ bool PhysicsTestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::Italic);
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
+	mpPhysicsSystem->Init();
+
+	InitSolarSystem();
+
 	return true;
+}
+
+void PhysicsTestApplication::InitSolarSystem()
+{
+	ParticlePlanetaryGravitation* gravityGen = new ParticlePlanetaryGravitation(mpPhysicsSystem);
+	mpPhysicsSystem->AddForceGenerator(gravityGen);
+
+	Particle* sunParticle = new Particle();
+
+	sunParticle->setMass(1.98855e30f); 
+
+	mpPhysicsSystem->AddParticle(sunParticle);
+
+	mpEarthParticle = new Particle();
+	mpEarthParticle->setMass(5.9721986e24f);
+	mpEarthParticle->setPosition(Vector3(1.4709807e11f, 0.0f, 0.0f));
+	mpEarthParticle->setVelocity(Vector3(0.0f, 0.0f, 3.0298357e04f));
+
+	mpPhysicsSystem->AddParticle(mpEarthParticle);
+
+	mpPhysicsSystem->AddRegistryEntry(mpEarthParticle, gravityGen);
 }
 
 void PhysicsTestApplication::InitShader()
@@ -139,12 +170,14 @@ void PhysicsTestApplication::OnResize()
 
 void PhysicsTestApplication::Update(float dt)
 {
+	for (int i = 0; i < 2000; i++)
+		mpPhysicsSystem->Update(dt * 30758400.0f * 0.001f);//1 year every 10 seconds
 	mpCamera->Update(dt);
 
-	mCurrentRotation = Quaternion::AxisAngle(Normalize(Vector3(1.0f, 1.0f, 1.0f)), dt) * mCurrentRotation;
-	mCurrentRotation = Quaternion::Normalize(mCurrentRotation);
-
 	mpRenderer->getDeferredRenderer()->Update(dt);
+
+	//std::cout << "Position: " << mpEarthParticle->getPosition().x << ", " << mpEarthParticle->getPosition().y << ", " << mpEarthParticle->getPosition().z << "\n";
+	//std::cout << "Velocity: " << mpEarthParticle->getVelocity().x << ", " << mpEarthParticle->getVelocity().y << ", " << mpEarthParticle->getVelocity().z << "\n";
 }
 
 void PhysicsTestApplication::Render()
@@ -168,29 +201,8 @@ void PhysicsTestApplication::Render()
 
 	CBPerObject perObject;
 
-	/*for (int x = -10; x < 10; x++)
-	{
-		for (int y = -10; y < 10; y++)
-		{
-			for (int z = -10; z < 10; z++)
-			{
-				perObject.World = Quaternion::ToMatrix(mCurrentRotation) *
-					Matrix4::Scale(0.1f, 0.1f, 0.1f) *
-					Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
-
-				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-
-				mpRenderer->setPerObjectBuffer(perObject);
-
-				mMeshRenderer.Render(mpRenderer);
-			}
-		}
-	}
-*/
-
 	//Render plane
-	perObject.World = Matrix4::Scale(100.0f, 1.0f, 100.0f) * Matrix4::Translate(0.0f, -10.0f, 0.0f);
+	perObject.World = Matrix4::Scale(100.0f, 1.0f, 100.0f) * Matrix4::Translate(0.0f, -5.0f, 0.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 
@@ -198,8 +210,17 @@ void PhysicsTestApplication::Render()
 
 	mPlaneRenderer.Render(mpRenderer);
 
-	//Render sphere
-	perObject.World = Matrix4(1.0f);
+	//Render earth
+	perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(mpEarthParticle->getPosition() / 1.0e11f);
+	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+
+	mpRenderer->setPerObjectBuffer(perObject);
+
+	mMeshRenderer.Render(mpRenderer);
+
+	//Render sun
+	perObject.World = Matrix4::Scale(Vector3(1.0f));
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 

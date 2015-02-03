@@ -101,7 +101,7 @@ void TestApplication::InitMesh()
 {
 	Mesh mesh;
 
-	GeometryGenerator::CreateGrid(100.0f, 100.0f, 10, 10, mesh);
+	GeometryGenerator::CreateGeosphere(1.0f, 2, mesh);
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
@@ -164,15 +164,15 @@ void TestApplication::Render()
 
 	CBPerObject perObject;
 
-	/*for (int x = -10; x < 10; x++)
+	for (int x = -10; x < 10; x++)
 	{
 		for (int y = -10; y < 10; y++)
 		{
 			for (int z = -10; z < 10; z++)
-			{*/
-				perObject.World = //Quaternion::ToMatrix(mCurrentRotation) * 
-								  Matrix4::Scale(1.0f, 1.0f, 1.0f) * 
-								  Matrix4::Translate(static_cast<float>(0), static_cast<float>(0), static_cast<float>(0));
+			{
+				perObject.World = Quaternion::ToMatrix(mCurrentRotation) * 
+								  Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
+								  Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
 
 				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
@@ -180,9 +180,9 @@ void TestApplication::Render()
 				mpRenderer->setPerObjectBuffer(perObject);
 
 				mMeshRenderer.Render(mpRenderer);
-	//		}
-	//	}
-	//}
+			}
+		}
+	}
 
 	mpRenderer->RenderDeferredShading();
 	

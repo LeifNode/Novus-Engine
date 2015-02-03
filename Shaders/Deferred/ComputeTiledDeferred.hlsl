@@ -131,7 +131,7 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 	
 	OutputTexture[globalCoords] = float4(finalColor, 1.0f);
 
-	//OutputTexture[globalCoords] = float4((float(TileNumLights) / 20.0f).xxx, 1.0f);
+	//OutputTexture[globalCoords] = float4((float(TileNumLights) / 400.0f).xxx, 1.0f);
 
 	//OutputTexture[globalCoords] = float(maxTileZ).xxxx / 20.0f;
 

@@ -247,6 +247,7 @@
     <ClCompile Include="src\Math\Transform.cpp" />
     <ClCompile Include="src\Physics\MassAggregatePhysicsSystem.cpp" />
     <ClCompile Include="src\Physics\Particle.cpp" />
+    <ClCompile Include="src\Physics\ParticleForceGenerator.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />

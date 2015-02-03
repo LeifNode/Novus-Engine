@@ -22,7 +22,7 @@ public:
 
 	void Update(float dt);
 
-	void AddForce(const DVector3& force);
+	void AddForce(const Vector3& force);
 
 	void Reset();
 
@@ -32,17 +32,17 @@ public:
 	void setInverseMass(float inverseMass);
 	float getInverseMass() const;
 
-	void setPosition(const DVector3& position);
-	void setVelocity(const DVector3& velocity);
+	void setPosition(const Vector3& position);
+	void setVelocity(const Vector3& velocity);
 
-	DVector3 getPosition() const;
-	DVector3 getVelocity() const;
-	DVector3 getAcceleration() const;
+	Vector3 getPosition() const;
+	Vector3 getVelocity() const;
+	Vector3 getAcceleration() const;
 
 private:
-	DVector3 mPosition;
-	DVector3 mVelocity;
-	DVector3 mAcceleration;
+	Vector3 mPosition;
+	Vector3 mVelocity;
+	Vector3 mAcceleration;
 
 	float mDamping;
 	float mInverseMass;

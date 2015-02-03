@@ -28,6 +28,12 @@ public:
 
 	void Update(float dt);
 
+	const std::vector<Particle*>& getParticles() const;
+
+	void AddParticle(Particle* particle);
+	void AddForceGenerator(ParticleForceGenerator* generator);
+	void AddRegistryEntry(Particle* particle, ParticleForceGenerator* generator);
+
 private:
 	std::vector<Particle*> mParticles;
 

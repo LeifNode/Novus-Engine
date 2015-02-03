@@ -24,6 +24,8 @@
 namespace novus
 {
 	class Camera;
+	class MassAggregatePhysicsSystem;
+	class Particle;
 }
 
 class PhysicsTestApplication : public novus::NovusApplication
@@ -46,7 +48,11 @@ public:
 	void InitMesh();
 
 private:
-	novus::Quaternion mCurrentRotation;
+	void InitSolarSystem();
+
+private:
+	novus::MassAggregatePhysicsSystem* mpPhysicsSystem;
+	novus::Particle* mpEarthParticle;
 
 	novus::Camera* mpCamera;
 

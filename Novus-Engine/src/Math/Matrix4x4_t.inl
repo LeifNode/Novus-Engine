@@ -530,7 +530,7 @@ namespace novus
 			1, 0, 0, 0,
 			0, 1, 0, 0,
 			0, 0, 1, 0,
-			translation.z, translation.y, translation.z, 1);
+			translation.x, translation.y, translation.z, 1);
 	}
 
 	template <typename T>
