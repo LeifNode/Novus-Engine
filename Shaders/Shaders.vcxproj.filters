@@ -10,9 +10,6 @@
     <Filter Include="Deferred">
       <UniqueIdentifier>{102516e0-9927-4ebe-bc4b-a9fe9824b95f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utils\Debug">
-      <UniqueIdentifier>{7d2ce934-2456-4485-b490-6a8836ea2a5e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Utils\ConstantBuffers.hlsl">
@@ -46,11 +43,11 @@
     <FxCompile Include="Deferred\ComputeTiledDeferred.hlsl">
       <Filter>Deferred</Filter>
     </FxCompile>
-    <FxCompile Include="Utils\Debug\DebugFullscreenTriangle.hlsl">
-      <Filter>Utils\Debug</Filter>
-    </FxCompile>
     <FxCompile Include="Lighting\Shading.hlsl">
       <Filter>Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\DebugFullscreenTriangle.hlsl">
+      <Filter>Utils</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
