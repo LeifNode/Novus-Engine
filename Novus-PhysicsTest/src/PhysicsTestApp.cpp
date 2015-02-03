@@ -164,7 +164,7 @@ void PhysicsTestApplication::Render()
 
 	CBPerObject perObject;
 
-	for (int x = -10; x < 10; x++)
+	/*for (int x = -10; x < 10; x++)
 	{
 		for (int y = -10; y < 10; y++)
 		{
@@ -183,7 +183,15 @@ void PhysicsTestApplication::Render()
 			}
 		}
 	}
+*/
 
+	perObject.World = Matrix4(1.0f);
+	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+
+	mpRenderer->setPerObjectBuffer(perObject);
+
+	mMeshRenderer.Render(mpRenderer);
 	mpRenderer->RenderDeferredShading();
 
 	mpRenderer->getDeferredRenderer()->RenderDebugOutput(mpRenderer);

@@ -72,6 +72,9 @@
     <Filter Include="Source Files\Graphics\Debug">
       <UniqueIdentifier>{2935de53-9f11-4874-945b-d48680c7584f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{69ebf1c2-0932-4b8e-a4e5-0f0801aa9ed0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h">
       <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\Particle.h">
+      <Filter>Source Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -207,6 +207,7 @@
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />
     <ClInclude Include="src\Math\Vector3_t.h" />
+    <ClInclude Include="src\Physics\Particle.h" />
     <ClInclude Include="src\Resources\Font\Font.h" />
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
