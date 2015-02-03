@@ -15,8 +15,6 @@
 namespace novus
 {
 
-class D3DRenderer;
-
 namespace ShaderType
 {
 	enum Type
@@ -42,7 +40,7 @@ class IShader
 public:
 	virtual ShaderType::Type getShaderType() const = 0;
 
-	virtual void Bind(D3DRenderer* renderer) = 0;
+	virtual void Bind(class D3DRenderer* renderer) = 0;
 };
 
 }

@@ -186,6 +186,7 @@
     <ClInclude Include="src\Graphics\Geometry.h" />
     <ClInclude Include="src\Graphics\Lights.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
+    <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Shaders\D3DLocalInclude.h" />
     <ClInclude Include="src\Graphics\Shaders\IShader.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="src\Graphics\D3DRenderer.cpp" />
     <ClCompile Include="src\Graphics\GBuffer.cpp" />
     <ClCompile Include="src\Graphics\Geometry.cpp" />
+    <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture2D.cpp" />

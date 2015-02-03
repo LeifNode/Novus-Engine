@@ -233,6 +233,9 @@
     <ClInclude Include="src\Graphics\Shaders\D3DLocalInclude.h">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -315,6 +318,9 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp">
       <Filter>Source Files\Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

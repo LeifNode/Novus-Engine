@@ -10,8 +10,8 @@
 
 struct QUAD_OUT
 {
-	float4 PositionH;
-	float2 TexCoord;
+	float4 PositionH : SV_POSITION;
+	float2 TexCoord  : TEXCOORD;
 };
 
 QUAD_OUT FullscreenQuad(uint vertexId)

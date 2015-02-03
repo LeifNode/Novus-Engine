@@ -106,13 +106,13 @@ void GBuffer::OnResize(int width, int height)
 
 	D3DRenderer* renderer = EngineStatics::getRenderer();
 
-	static const DXGI_FORMAT depthStencilTextureFormat = DXGI_FORMAT_R24G8_TYPELESS;
+	static const DXGI_FORMAT depthStencilTextureFormat = DXGI_FORMAT_R32_TYPELESS;
 	static const DXGI_FORMAT diffuseTextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	static const DXGI_FORMAT normalTextureFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	static const DXGI_FORMAT roughnessTextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	static const DXGI_FORMAT emissiveTextureFormat = DXGI_FORMAT_R16G16B16A16_UNORM;
 
-	static const DXGI_FORMAT depthStencilRenderViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	static const DXGI_FORMAT depthStencilRenderViewFormat = DXGI_FORMAT_D32_FLOAT;
 	static const DXGI_FORMAT diffuseRenderViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	static const DXGI_FORMAT normalRenderViewFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	static const DXGI_FORMAT roughnessRenderViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -133,7 +133,7 @@ void GBuffer::OnResize(int width, int height)
 	desc.MiscFlags = 0;
 
 	desc.Format = depthStencilTextureFormat;
-	renderer->CreateTexture(&desc, &mpDepthStencilTexture, &mpDepthStencilResourceView, DXGI_FORMAT_R24_UNORM_X8_TYPELESS);
+	renderer->CreateTexture(&desc, &mpDepthStencilTexture, &mpDepthStencilResourceView, DXGI_FORMAT_R32_FLOAT);
 
 	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	desc.Format = diffuseTextureFormat;

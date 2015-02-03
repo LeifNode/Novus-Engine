@@ -30,8 +30,8 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	:
 	mhAppInstance(hInstance),
 	mMainWndCaption(L"Novus Application"),
-	mClientWidth(1980),
-	mClientHeight(1080),
+	mClientWidth(1280),
+	mClientHeight(720),
 	mhWnd(0),
 	mAppPaused(false),
 	mMinimized(false),
@@ -313,7 +313,7 @@ bool NovusApplication::InitWindow()
 	int height = R.bottom - R.top;
 
 	mhWnd = CreateWindowW(L"D3DWndClassName", mMainWndCaption.c_str(),
-		wsStyle | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, width / 2, height / 2, NULL, NULL, mhAppInstance, NULL);
+		wsStyle | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULL, NULL, mhAppInstance, NULL);
 	if (!mhWnd)
 	{
 		MessageBox(0, L"CreateWindow Failed.", 0, 0);

@@ -13,6 +13,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Novus-TestApp", "Novus-Test
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shaders.vcxproj", "{74BD1DA8-6915-4CAD-85A0-BB200A832150}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Novus-PhysicsTest", "Novus-PhysicsTest\Novus-PhysicsTest.vcxproj", "{0099FAC0-D43A-4284-B508-E9257093F8AE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15A1CE3C-5E20-4762-9572-00A00BDC7F70} = {15A1CE3C-5E20-4762-9572-00A00BDC7F70}
+		{74BD1DA8-6915-4CAD-85A0-BB200A832150} = {74BD1DA8-6915-4CAD-85A0-BB200A832150}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -59,6 +65,17 @@ Global
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|Win32.Build.0 = Release|Win32
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|x64.ActiveCfg = Release|x64
 		{74BD1DA8-6915-4CAD-85A0-BB200A832150}.Release|x64.Build.0 = Release|x64
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Debug|Win32.Build.0 = Debug|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Debug|x64.ActiveCfg = Debug|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Release|Win32.ActiveCfg = Release|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Release|Win32.Build.0 = Release|Win32
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Release|x64.ActiveCfg = Release|x64
+		{0099FAC0-D43A-4284-B508-E9257093F8AE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

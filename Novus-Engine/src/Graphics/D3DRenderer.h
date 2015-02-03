@@ -38,6 +38,7 @@ namespace DepthStencilState
 class D3DRenderer
 {
 	friend class OVRRenderer;
+	friend class DeferredRenderer;
 	
 public:
 	D3DRenderer();
@@ -58,9 +59,10 @@ public:
 	void setConstantBuffer(int index, ID3D11Buffer*);
 	void setPerFrameBuffer(CBPerFrame& buffer);
 	void setPerObjectBuffer(CBPerObject& buffer);
-	void bindPerFrameBuffer();
+	void BindPerFrameBuffer();
 
 	void UnbindTextureResources();
+	void UnbindUAVs();
 
 	//Texture2D* CreateTexture(UINT format, int width, int height);
 	Texture2D* CreateTexture(D3D11_TEXTURE2D_DESC* textureDescription, DXGI_FORMAT resViewFmt = DXGI_FORMAT_UNKNOWN);
@@ -112,6 +114,7 @@ public:
 	Matrix4 GetTopTransformInverse() const;
 
 	GBuffer* getGBuffer() const { return mpGBuffer; }
+	DeferredRenderer* getDeferredRenderer() const { return mpDeferredRenderer; }
 	//OVRManager* getHMD() const { return mpOVRManager; }
 	bool isUsingHMD() const;
 
@@ -129,8 +132,8 @@ private:
 	bool mUseHMD;
 
 	GBuffer* mpGBuffer;
-	Texture2D* mpHDRRenderTarget;
-	//DeferredRenderer* mpDeferredRenderer;
+
+	DeferredRenderer* mpDeferredRenderer;
 
 	UINT m4xMsaaQuality;
 

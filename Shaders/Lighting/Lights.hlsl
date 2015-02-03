@@ -18,15 +18,15 @@ struct DirectionalLight
 
 struct PointLight
 {
-	float4 Color;
+	float3 Color;
+	float Intensity;
 
 	float3 PositionView;
 	float Range;
 
-	float Intensity;
 	float Radius;
 	float FalloffPow;
-	float pad;
+	float2 pad;
 };
 
 struct SpotLight

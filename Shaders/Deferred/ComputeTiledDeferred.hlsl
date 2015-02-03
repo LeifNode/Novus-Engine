@@ -33,12 +33,13 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 	float minZSample = gClipNearFar.y;
 	float maxZSample = gClipNearFar.x;
 
+
 	[flatten]
-	if (surface.ViewPosition.z >= gClipNearFar.x &&
-		surface.ViewPosition.z < gClipNearFar.y)
+	if (surface.PositionView.z >= gClipNearFar.x &&
+		surface.PositionView.z < gClipNearFar.y)
 	{
-		minZSample = min(minZSample, surface.ViewPosition.z);
-		maxZSample = max(maxZSample, surface.ViewPosition.z);
+		minZSample = min(minZSample, surface.PositionView.z);
+		maxZSample = max(maxZSample, surface.PositionView.z);
 	}
 
 	//Init shared memory
@@ -66,8 +67,8 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 	float2 tileScale = float2(gScreenDimensions.xy) * rcp(float(2 * COMPUTE_SHADER_TILE_GROUP_DIM));
 	float2 tileBias = tileScale - float2(groupID.xy);
 
-	float4 c1 = float4(gProjection[0][0] * tileScale.x, 0.0f, tileBias.x, 0.0f);
-	float4 c2 = float4(0.0f, -gProjection[3][3] * tileScale.y, tileBias.y, 0.0f);
+	float4 c1 = float4(gProjection._11 * tileScale.x, 0.0f, gProjection._31 * tileScale.x + tileBias.x, 0.0f);
+	float4 c2 = float4(0.0f, -gProjection._22 * tileScale.y, gProjection._32 * tileScale.y + tileBias.y, 0.0f);
 	float4 c4 = float4(0.0f, 0.0f, 1.0f, 0.0f);
 
 	float4 frustumPlanes[6];
@@ -77,7 +78,6 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 	frustumPlanes[1] = c4 + c1;
 	frustumPlanes[2] = c4 - c2;
 	frustumPlanes[3] = c4 + c2;
-
 
 	frustumPlanes[4] = float4(0.0f, 0.0f, 1.0f, -minTileZ);
 	frustumPlanes[5] = float4(0.0f, 0.0f, -1.0f, maxTileZ);
@@ -99,7 +99,7 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		for (uint i = 0; i < 6; i++)
 		{
 			float d = dot(frustumPlanes[i], float4(light.PositionView, 1.0f));
-			inFrustum = inFrustum && d >= light.Range;
+			inFrustum = inFrustum && (d >= -light.Range);
 		}
 
 		[branch]
@@ -113,5 +113,29 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 
 	GroupMemoryBarrierWithGroupSync();
 
-	OutputTexture[globalCoords].rgba = (float(TileNumLights) / 255.0f).xxxx;
+	uint numLights = TileNumLights;
+
+	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
+
+	if (all(globalCoords < gScreenDimensions.xy))
+	{
+		if (numLights > 0)
+		{
+			for (uint tileLightIndex = 0; tileLightIndex < numLights; ++tileLightIndex)
+			{
+				AccumulateBRDF(surface, gPointLights[TileLightIndices[tileLightIndex]], finalColor);
+			}
+		}
+	}
+
+	
+	OutputTexture[globalCoords] = float4(finalColor, 1.0f);
+
+	//OutputTexture[globalCoords] = float4((float(TileNumLights) / 20.0f).xxx, 1.0f);
+
+	//OutputTexture[globalCoords] = float(maxTileZ).xxxx / 20.0f;
+
+	//OutputTexture[globalCoords] = float4(surface.Normal.xyz, 1.0f);
+
+	//OutputTexture[globalCoords] = float4(1.0f, 0.0f, 0.0f, 1.0f);
 }

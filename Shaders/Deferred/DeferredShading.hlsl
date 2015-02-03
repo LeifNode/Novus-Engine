@@ -13,6 +13,7 @@
 #include "Utils/Defines.hlsl"
 #include "Utils/ConstantBuffers.hlsl"
 #include "Lighting/Lights.hlsl"
+#include "Lighting/Shading.hlsl"
 
 Texture2D<float4> DiffuseTexture   : register(t0);
 Texture2D<float3> NormalTexture    : register(t1);
@@ -26,19 +27,9 @@ SamplerState PointSampler          : register(s0);
 
 StructuredBuffer<PointLight> gPointLights : register(t5);
 
-struct SURFACE_DATA
-{
-	float3 ViewPosition;
-	float4 Diffuse;
-	float3 Normal;
-	float3 SpecularColor;
-	float Roughness;
-	float3 Emissive;
-};
-
 float ConvertZToLinearDepth(float depth)
 {
-	float linearDepth = gProjection[3][2] / (depth + gProjection[2][2]);
+	float linearDepth = gProjection._43 / (depth + gProjection._33);
 	return linearDepth;
 }
 
@@ -47,7 +38,7 @@ float3 GetViewPos(float2 posClip, float viewSpaceZ)
 	float3 position;
 	//float linearDepth = ConvertZToLinearDepth(depth);
 
-	position.xy = posClip.xy * float2(1.0 / gProjection[0][0], 1.0 / gProjection[1][1]) * viewSpaceZ;
+	position.xy = posClip.xy * float2(1.0 / gProjection._11, 1.0 / gProjection._22) * viewSpaceZ;
 	position.z = viewSpaceZ;
 
 	return position;
@@ -105,7 +96,7 @@ SURFACE_DATA UnpackGBufferViewport(uint2 viewportPosition)
 	float zBuffer = DepthTexture.Load(uint3(viewportPosition, 0)).r;
 	float ViewSpaceZ = ConvertZToLinearDepth(zBuffer);
 
-	Out.ViewPosition = GetViewPos(ScreenPosition, ViewSpaceZ);
+	Out.PositionView = GetViewPos(ScreenPosition, ViewSpaceZ);
 
 	return Out;
 }

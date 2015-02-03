@@ -3,6 +3,7 @@
 #include "Application/NovusApplication.h"
 #include "Math/Transform.h"
 #include "Shaders/D3DLocalInclude.h"
+#include "Graphics/PostProcess/DeferredRenderer.h"
 
 namespace novus
 {
@@ -26,8 +27,8 @@ D3DRenderer::D3DRenderer()
 	mpBlendStateAlpha(NULL),
 	mpBlendStateOpaque(NULL),
 	mpGBuffer(NULL),
-	mpHDRRenderTarget(NULL),
-	//mpDeferredRenderer(NULL),
+	//mpHDRRenderTarget(NULL),
+	mpDeferredRenderer(NULL),
 	//mpOVRManager(NULL),
 	mUseHMD(false)
 {
@@ -50,8 +51,8 @@ D3DRenderer::D3DRenderer()
 D3DRenderer::~D3DRenderer()
 {
 	NE_DELETE(mpGBuffer);
-	NE_DELETE(mpHDRRenderTarget);
-	//NE_DELETE(mpDeferredRenderer);
+	//NE_DELETE(mpHDRRenderTarget);
+	NE_DELETE(mpDeferredRenderer);
 	//NE_DELETE(mpOVRManager);
 
 	for (auto it = mLoadedShaders.begin(); it != mLoadedShaders.end(); ++it)
@@ -171,8 +172,9 @@ void D3DRenderer::OnResize()
 	//mpOVRManager->OnResize();
 
 	mpGBuffer->OnResize(width, height);
+	mpDeferredRenderer->Init(this, width, height);
 
-	mpHDRRenderTarget->Init(this, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS); 
+	//mpHDRRenderTarget->Init(this, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS); 
 }
 
 bool D3DRenderer::Init()
@@ -355,9 +357,9 @@ bool D3DRenderer::Init()
 	mpGBuffer = NE_NEW GBuffer();
 	mpGBuffer->Init(EngineStatics::getApplication()->getClientWidth(), EngineStatics::getApplication()->getClientHeight());
 
-	mpHDRRenderTarget = NE_NEW Texture2D();
+	//mpHDRRenderTarget = NE_NEW Texture2D();
 
-	//mpDeferredRenderer = NE_NEW DeferredRenderer();
+	mpDeferredRenderer = NE_NEW DeferredRenderer();
 	//mpDeferredRenderer->Initialize();
 
 	OnResize();
@@ -676,6 +678,16 @@ void D3DRenderer::UnbindTextureResources()
 	NE_DELETEARR(arr);
 }
 
+void D3DRenderer::UnbindUAVs()
+{
+	ID3D11UnorderedAccessView** arr = NE_NEW ID3D11UnorderedAccessView*[8];
+	for (int i = 0; i < 8; i++) arr[i] = NULL;
+
+	mpd3dImmediateContext->CSSetUnorderedAccessViews(0, 8, arr, 0);
+
+	NE_DELETEARR(arr);
+}
+
 void D3DRenderer::setSampler(int index, ID3D11SamplerState* samplerState)
 {
 	if (mpActiveShader)
@@ -729,7 +741,7 @@ void D3DRenderer::setPerObjectBuffer(CBPerObject& buffer)
 	setConstantBuffer(1, mpPerObjectBuffer);
 }
 
-void D3DRenderer::bindPerFrameBuffer()
+void D3DRenderer::BindPerFrameBuffer()
 {
 	setConstantBuffer(0, mpPerFrameBuffer);
 }
@@ -997,7 +1009,7 @@ void D3DRenderer::RenderDeferredShading()
 {
 	mpd3dImmediateContext->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 
-	//mpDeferredRenderer->Render(this);
+	mpDeferredRenderer->RenderDeferredShading(this);
 }
 
 void D3DRenderer::PushTransform(const Transform& transform)

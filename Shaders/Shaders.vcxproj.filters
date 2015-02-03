@@ -43,11 +43,14 @@
     <FxCompile Include="Deferred\DeferredRendering.hlsl">
       <Filter>Deferred</Filter>
     </FxCompile>
-    <FxCompile Include="Utils\Debug\DebugGBuffer.hlsl">
-      <Filter>Utils\Debug</Filter>
-    </FxCompile>
     <FxCompile Include="Deferred\ComputeTiledDeferred.hlsl">
       <Filter>Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Utils\Debug\DebugFullscreenTriangle.hlsl">
+      <Filter>Utils\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="Lighting\Shading.hlsl">
+      <Filter>Lighting</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

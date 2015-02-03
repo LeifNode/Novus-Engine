@@ -105,6 +105,9 @@ namespace novus
 	};
 
 	template <typename T>
+	Matrix3x3_t<T> operator- (const Matrix3x3_t<T>& m);
+
+	template <typename T>
 	Matrix3x3_t<T> operator+ (const Matrix3x3_t<T>& m1, const Matrix3x3_t<T>& m2);
 
 	template <typename T>

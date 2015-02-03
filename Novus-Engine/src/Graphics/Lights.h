@@ -16,15 +16,15 @@ namespace novus
 {
 struct PointLight
 {
-	Vector4 Color;
+	Vector3 Color;
+	float Intensity;
 
 	Vector3 PositionView;
 	float Range;
 
-	float Intensity;
 	float Radius;
 	float FalloffPow;
-	float pad;
+	Vector2 pad;
 };
 }
 

@@ -99,7 +99,7 @@ T* StructuredBuffer<T>::Map(D3DRenderer* renderer)
 	D3D11_MAPPED_SUBRESOURCE resource;
 	renderer->context()->Map(mpBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
-	return static_cast<T>(resource.pData);
+	return static_cast<T*>(resource.pData);
 }
 
 template <typename T>

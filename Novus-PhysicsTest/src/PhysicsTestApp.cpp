@@ -1,4 +1,4 @@
-#include "TestApplication.h"
+#include "PhysicsTestApp.h"
 
 #include <Application/EngineStatics.h>
 #include <Events/Events.h>
@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	TestApplication* application = NE_NEW TestApplication(hInstance);
+	PhysicsTestApplication* application = NE_NEW PhysicsTestApplication(hInstance);
 
 	if (!application->Init())
 		return 0;
@@ -32,25 +32,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 	return returnVal;
 }
 
-TestApplication::TestApplication(HINSTANCE instance)
-	:
-	NovusApplication(instance),
-	mpMainShader(NULL),
-	mpTiledDeferredShader(NULL)
+PhysicsTestApplication::PhysicsTestApplication(HINSTANCE instance)
+:
+NovusApplication(instance),
+mpMainShader(NULL),
+mpTiledDeferredShader(NULL)
 {
-	mMainWndCaption = L"Novus Engine Test App v0.0.1";
+	mMainWndCaption = L"Physics Test v0.0.1";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
 }
 
-TestApplication::~TestApplication()
+PhysicsTestApplication::~PhysicsTestApplication()
 {
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
 }
 
-bool TestApplication::Init()
+bool PhysicsTestApplication::Init()
 {
 	if (!NovusApplication::Init())
 		return false;
@@ -77,7 +77,7 @@ bool TestApplication::Init()
 	return true;
 }
 
-void TestApplication::InitShader()
+void PhysicsTestApplication::InitShader()
 {
 	ShaderInfo shaderInfo[] = {
 		{ ShaderType::Vertex, "VS" },
@@ -97,7 +97,7 @@ void TestApplication::InitShader()
 	mpMainShader = mpRenderer->LoadShader(L"../Shaders/GenericShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vertexDescription, ARRAYSIZE(vertexDescription));
 }
 
-void TestApplication::InitMesh()
+void PhysicsTestApplication::InitMesh()
 {
 	Mesh mesh;
 
@@ -106,17 +106,17 @@ void TestApplication::InitMesh()
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
 
-void TestApplication::HookInputEvents()
+void PhysicsTestApplication::HookInputEvents()
 {
-	EngineStatics::getEventSystem()->AddListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
+	EngineStatics::getEventSystem()->AddListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &PhysicsTestApplication::OnKeyDown));
 }
 
-void TestApplication::UnhookInputEvents()
+void PhysicsTestApplication::UnhookInputEvents()
 {
-	EngineStatics::getEventSystem()->RemoveListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
+	EngineStatics::getEventSystem()->RemoveListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &PhysicsTestApplication::OnKeyDown));
 }
 
-void TestApplication::OnKeyDown(novus::IEventDataPtr eventData)
+void PhysicsTestApplication::OnKeyDown(novus::IEventDataPtr eventData)
 {
 	auto dataPtr = static_pointer_cast<EventData_KeyboardDown>(eventData);
 
@@ -126,14 +126,14 @@ void TestApplication::OnKeyDown(novus::IEventDataPtr eventData)
 	}
 }
 
-void TestApplication::OnResize()
+void PhysicsTestApplication::OnResize()
 {
 	NovusApplication::OnResize();
 
 	mpCamera->OnResize(getClientWidth(), getClientHeight());
 }
 
-void TestApplication::Update(float dt)
+void PhysicsTestApplication::Update(float dt)
 {
 	mpCamera->Update(dt);
 
@@ -143,14 +143,14 @@ void TestApplication::Update(float dt)
 	mpRenderer->getDeferredRenderer()->Update(dt);
 }
 
-void TestApplication::Render()
+void PhysicsTestApplication::Render()
 {
 	mpRenderer->PreRender();
 	mpRenderer->setShader(mpMainShader);
 
 	CBPerFrame perFrame;
 	perFrame.ScreenResolution = Vector2_t<unsigned int>(
-		static_cast<unsigned int>(getClientWidth()), 
+		static_cast<unsigned int>(getClientWidth()),
 		static_cast<unsigned int>(getClientHeight()));
 	perFrame.ClipNearFar = Vector2(mpCamera->getNear(), mpCamera->getFar());
 	perFrame.Projection = mpCamera->getProj();
@@ -170,9 +170,9 @@ void TestApplication::Render()
 		{
 			for (int z = -10; z < 10; z++)
 			{
-				perObject.World = Quaternion::ToMatrix(mCurrentRotation) * 
-								  Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
-								  Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+				perObject.World = Quaternion::ToMatrix(mCurrentRotation) *
+					Matrix4::Scale(0.1f, 0.1f, 0.1f) *
+					Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
 
 				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
@@ -185,7 +185,7 @@ void TestApplication::Render()
 	}
 
 	mpRenderer->RenderDeferredShading();
-	
+
 	mpRenderer->getDeferredRenderer()->RenderDebugOutput(mpRenderer);
 
 	mpRenderer->PostRender();

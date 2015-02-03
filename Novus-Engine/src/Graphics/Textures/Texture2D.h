@@ -37,7 +37,7 @@ public:
 	ID3D11Texture2D* getTexture() const { return mpTexture; }
 	ID3D11ShaderResourceView* getResourceView() const { return mpResourceView; }
 	ID3D11RenderTargetView* getRenderTargetView() const { return mpRenderTargetView; }
-	ID3D11UnorderedAccessView* getUnordedAccessView() const { return mpUnorderedAccessView; }
+	ID3D11UnorderedAccessView* getUnorderedAccessView() const { return mpUnorderedAccessView; }
 	
 	void setDebugName(const std::string& name);
 

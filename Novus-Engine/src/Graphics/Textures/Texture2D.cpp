@@ -28,6 +28,9 @@ void Texture2D::Init(D3DRenderer* renderer,
 {
 	DeInit();
 
+	mWidth = width;
+	mHeight = height;
+
 	D3D11_TEXTURE2D_DESC desc;
 	desc.Width = width;
 	desc.Height = height;

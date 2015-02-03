@@ -22,8 +22,8 @@
 
 struct TRIANGLE_OUT
 {
-	float4 PostionH;
-	float2 TexCoord;
+	float4 PostionH : SV_POSITION;
+	float2 TexCoord : TEXCOORD;
 };
 
 TRIANGLE_OUT FullscreenTriangle(uint vertexId)

@@ -57,22 +57,19 @@ void Camera::OnMouseMove(IEventDataPtr eventData)
 		int mouseDx = mLastMousePosition.x - dataPtr->getX();
 		int mouseDy = mLastMousePosition.y - dataPtr->getY();
 
-		float dx = mouseDx * (Math::Pi / 180.0f) * 0.2f;
-		float dy = mouseDy * (Math::Pi / 180.0f) * 0.2f;
+		float dx = -mouseDx * (Math::Pi / 180.0f) * 0.2f;
+		float dy = -mouseDy * (Math::Pi / 180.0f) * 0.2f;
 
 		Vector3 right = Normalize(Cross(mDirection, Vector3(0.0f, 1.0f, 0.0f)));
-		/*XMVECTOR rotationQuat;
+		Quaternion rotationQuat;
 
-		if (gpApplication->getRenderer()->isUsingHMD())
-		rotationQuat = XMQuaternionRotationAxis(XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)), dx);
-		else
-		rotationQuat = XMQuaternionMultiply(XMQuaternionRotationAxis(XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)), dx), XMQuaternionRotationAxis(right, dy));
+		rotationQuat = Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dx) * Quaternion::AxisAngle(right, dy);
 
-		mRotation = XMQuaternionNormalize(XMQuaternionMultiply(mRotation, rotationQuat));
+		mRotation = Quaternion::Normalize(mRotation * rotationQuat);
 
-		XMStoreFloat3(&mDirection, XMVector3Normalize(XMVector3Rotate(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 1.0f)), mRotation)));*/
+		mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
 
-		mDirection = Matrix3::RotateY(dx) * mDirection;
+		//mDirection = Matrix3::RotateY(dx) * mDirection;
 	}
 
 	mLastMousePosition.x = dataPtr->getX();

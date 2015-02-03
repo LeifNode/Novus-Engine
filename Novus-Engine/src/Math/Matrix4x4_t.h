@@ -120,6 +120,9 @@ namespace novus
 	};
 
 	template <typename T>
+	Matrix4x4_t<T> operator- (const Matrix4x4_t<T>& m);
+
+	template <typename T>
 	Matrix4x4_t<T> operator+ (const Matrix4x4_t<T>& m1, const Matrix4x4_t<T>& m2);
 
 	template <typename T>

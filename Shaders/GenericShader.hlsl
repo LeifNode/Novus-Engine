@@ -41,6 +41,7 @@ PS_INPUT VS(VS_INPUT vin)
 	vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);
 
 	vout.Normal = mul(normalize(vin.Normal), (float3x3)gWorldInvTranspose);
+	vout.Normal = mul(vout.Normal, (float3x3)gView);
 	vout.Tangent = mul(normalize(vin.Tangent), (float3x3)gWorldInvTranspose);
 	vout.Bitangent = mul(normalize(vin.Bitangent), (float3x3)gWorldInvTranspose);
 
@@ -57,5 +58,5 @@ PS_INPUT VS(VS_INPUT vin)
 
 PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
-	return PackGBuffer(float4(1.0f, 1.0f, 1.0f, 1.0f), normalize(pin.Normal), float3(1.0f, 0.0f, 0.0f), 0.5f, float3(0.0f, 0.0f, 0.0f));
+	return PackGBuffer(float4(1.0f, 1.0f, 1.0f, 1.0f), normalize(pin.Normal), float3(1.0f, 1.0f, 1.0f), 0.5f, float3(0.0f, 0.0f, 0.0f));
 }
