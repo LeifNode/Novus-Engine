@@ -37,7 +37,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			{ ShaderType::None, NULL }
 		};
 
-		mpDebugOutputShader = renderer->LoadShader(L"../Shaders/Utils/Debug/DebugFullscreenTriangle.hlsl", debugShaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, NULL, 0);
+		mpDebugOutputShader = renderer->LoadShader(L"../Shaders/Utils/DebugFullscreenTriangle.hlsl", debugShaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, NULL, 0);
 
 		mTestPointLights.clear();
 		mTestPointLights.reserve(1028);
@@ -45,11 +45,11 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		{
 			PointLight light;
 			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
-			light.Intensity = 1.0f; 
+			light.Intensity = 1.5f; 
 			light.Range = sqrt(light.Intensity / 0.0001f) - 1.0f;
 			light.FalloffPow = 1;
 			light.Radius = 0.0f;
-			light.PositionView = Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))) * Math::RandF(0.0f, 80.0f);
+			light.PositionView = Vector3(Math::RandF(-1.0f, 1.0f), 0.01f, Math::RandF(-1.0f, 1.0f)) * 50.0f;
 
 			mTestPointLights.push_back(light);
 		}
@@ -75,7 +75,7 @@ void DeferredRenderer::Update(float dt)
 {
 	for (int i = 0; i < 1028; i++)
 	{
-		mTestPointLights[i].PositionView = Matrix3::RotateY(dt * 0.1f) * mTestPointLights[i].PositionView;
+		mTestPointLights[i].PositionView = Matrix3::RotateY(dt * 0.2f) * mTestPointLights[i].PositionView;
 	}
 }
 

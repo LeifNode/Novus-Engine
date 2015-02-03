@@ -242,6 +242,12 @@
     <ClInclude Include="src\Physics\Particle.h">
       <Filter>Source Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Physics\MassAggregatePhysicsSystem.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\ParticleForceGenerator.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -327,6 +333,12 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp">
       <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\Particle.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\MassAggregatePhysicsSystem.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -207,7 +207,9 @@
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />
     <ClInclude Include="src\Math\Vector3_t.h" />
+    <ClInclude Include="src\Physics\MassAggregatePhysicsSystem.h" />
     <ClInclude Include="src\Physics\Particle.h" />
+    <ClInclude Include="src\Physics\ParticleForceGenerator.h" />
     <ClInclude Include="src\Resources\Font\Font.h" />
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
@@ -243,6 +245,8 @@
     <ClCompile Include="src\Math\Math.cpp" />
     <ClCompile Include="src\Math\MatrixStack.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
+    <ClCompile Include="src\Physics\MassAggregatePhysicsSystem.cpp" />
+    <ClCompile Include="src\Physics\Particle.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />

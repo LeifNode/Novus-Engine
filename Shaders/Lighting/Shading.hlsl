@@ -23,13 +23,15 @@ struct SURFACE_DATA
 void AccumulateBRDF(SURFACE_DATA surface, PointLight light, inout float3 finalColor)//Need to optimize
 {
 	float3 toEye = normalize(-surface.PositionView);
-	float distance = length(surface.PositionView - light.PositionView);
-	float3 toLight = (surface.PositionView - light.PositionView) / distance;
-	float NoV = dot(surface.Normal, toEye);
+	float3 toLight = surface.PositionView - light.PositionView;
+	float distance = length(toLight);
+	toLight /= distance;
 
+	float NoV = dot(surface.Normal, toEye);
 	float NoL = dot(surface.Normal, toLight);
+
 	float distanceSq = distance * distance;
-	float oneOverDistSq = 1.0f / distanceSq;
+	float oneOverDistSq = rcp(distanceSq);
 
 	finalColor += light.Color * light.Intensity * saturate(NoL) * oneOverDistSq;
 }

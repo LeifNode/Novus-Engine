@@ -104,6 +104,10 @@ void PhysicsTestApplication::InitMesh()
 	GeometryGenerator::CreateGeosphere(1.0f, 2, mesh);
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
+
+	GeometryGenerator::CreateGrid(1.0f, 1.0f, 5, 5, mesh);
+
+	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
 
 void PhysicsTestApplication::HookInputEvents()
@@ -185,6 +189,16 @@ void PhysicsTestApplication::Render()
 	}
 */
 
+	//Render plane
+	perObject.World = Matrix4::Scale(100.0f, 1.0f, 100.0f) * Matrix4::Translate(0.0f, -10.0f, 0.0f);
+	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+
+	mpRenderer->setPerObjectBuffer(perObject);
+
+	mPlaneRenderer.Render(mpRenderer);
+
+	//Render sphere
 	perObject.World = Matrix4(1.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
@@ -192,6 +206,8 @@ void PhysicsTestApplication::Render()
 	mpRenderer->setPerObjectBuffer(perObject);
 
 	mMeshRenderer.Render(mpRenderer);
+
+
 	mpRenderer->RenderDeferredShading();
 
 	mpRenderer->getDeferredRenderer()->RenderDebugOutput(mpRenderer);
