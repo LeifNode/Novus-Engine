@@ -159,10 +159,15 @@ void TestApplication::Render()
 	perFrame.ViewInv = Matrix4::Inverse(perFrame.View);
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
 	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
+	perFrame.EyePosition = mpCamera->getPosition();
 
 	mpRenderer->setPerFrameBuffer(perFrame);
 
 	CBPerObject perObject;
+	perObject.Material.Diffuse = Vector4(1.0f);
+	perObject.Material.SpecularColor = Vector3(1.0f);
+	perObject.Material.Roughness = 0.4f;
+	perObject.Material.Emissive = Vector3(0.0f);
 
 	for (int x = -10; x < 10; x++)
 	{

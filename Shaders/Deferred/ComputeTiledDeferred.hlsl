@@ -128,14 +128,17 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		}
 	}
 
+	finalColor += surface.Emissive;
 	
 	OutputTexture[globalCoords] = float4(finalColor, 1.0f);
 
-	//OutputTexture[globalCoords] = float4((float(TileNumLights) / 400.0f).xxx, 1.0f);
+	//OutputTexture[globalCoords] = float4((float(TileNumLights) / 1028.0f).xxx, 1.0f);
 
 	//OutputTexture[globalCoords] = float(maxTileZ).xxxx / 20.0f;
 
 	//OutputTexture[globalCoords] = float4(surface.Normal.xyz, 1.0f);
+
+	//OutputTexture[globalCoords] = float4(surface.PositionWorld.xyz / 10.0f, 1.0f);
 
 	//OutputTexture[globalCoords] = float4(1.0f, 0.0f, 0.0f, 1.0f);
 }

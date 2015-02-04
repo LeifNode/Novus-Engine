@@ -16,6 +16,15 @@
 namespace novus
 {
 
+struct Material
+{
+	Vector4 Diffuse;
+	Vector3 SpecularColor;
+	float Roughness;
+	Vector3 Emissive;
+	float pad;
+};
+
 struct CBPerFrame
 {
 	Matrix4 View;
@@ -47,7 +56,7 @@ struct CBPerObject
 	Matrix4 WorldViewProj;
 	Matrix4 WorldInvTranspose;
 	Matrix4 TextureTransform;
-	//Material Material;
+	Material Material;
 };
 
 }

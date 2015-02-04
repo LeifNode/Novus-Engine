@@ -45,11 +45,12 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		{
 			PointLight light;
 			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
-			light.Intensity = 1.5f; 
-			light.Range = sqrt(light.Intensity / 0.0001f) - 1.0f;
+			light.Intensity = Math::RandF(0.3f, 0.7f) * 0.4f;
+			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f;
 			light.FalloffPow = 1;
 			light.Radius = 0.0f;
-			light.PositionView = Vector3(Math::RandF(-1.0f, 1.0f), 0.01f, Math::RandF(-1.0f, 1.0f)) * 50.0f;
+			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 50.0f;
+			light.PositionWorld.y = -4.5f;
 
 			mTestPointLights.push_back(light);
 		}
@@ -75,7 +76,7 @@ void DeferredRenderer::Update(float dt)
 {
 	for (int i = 0; i < 1028; i++)
 	{
-		mTestPointLights[i].PositionView = Matrix3::RotateY(dt * 0.2f) * mTestPointLights[i].PositionView;
+		mTestPointLights[i].PositionWorld = Matrix3::RotateY(dt * 0.2f) * mTestPointLights[i].PositionWorld;
 	}
 }
 
@@ -91,7 +92,7 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 	for (int i = 0; i < 1028; i++)
 	{
 		PointLight light = mTestPointLights[i];
-		light.PositionView = Vector3(Vector4(light.PositionView, 1.0f) * view);
+		light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);
 		light.PositionView.z = -light.PositionView.z;
 
 		lightBufferPtr[i] = light;

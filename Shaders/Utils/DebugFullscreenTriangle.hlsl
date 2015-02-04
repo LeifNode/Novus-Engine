@@ -19,5 +19,5 @@ TRIANGLE_OUT VS(uint vertexID : SV_VertexID)
 float4 PS(TRIANGLE_OUT pin) : SV_Target
 {
 	//return float4(pin.TexCoord.xy, 0.0f, 1.0f);
-	return float4(textureDiffuse.Sample(texSampler, pin.TexCoord));
+	return float4(pow(textureDiffuse.Sample(texSampler, pin.TexCoord), 1.0f / 2.2f));
 }

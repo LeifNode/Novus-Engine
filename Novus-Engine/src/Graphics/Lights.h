@@ -22,9 +22,12 @@ struct PointLight
 	Vector3 PositionView;
 	float Range;
 
+	Vector3 PositionWorld;
+	float pad;
+
 	float Radius;
 	float FalloffPow;
-	Vector2 pad;
+	Vector2 pad2;
 };
 }
 

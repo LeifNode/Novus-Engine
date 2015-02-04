@@ -8,6 +8,15 @@
 #ifndef LIGHTS_HLSL
 #define LIGHTS_HLSL
 
+struct Material
+{
+	float4 Diffuse;
+	float3 SpecularColor;
+	float Roughness;
+	float3 Emissive;
+	float pad;
+};
+
 struct DirectionalLight
 {
 	float4 Color;
@@ -24,9 +33,12 @@ struct PointLight
 	float3 PositionView;
 	float Range;
 
+	float3 PositionWorld;
+	float pad;
+
 	float Radius;
 	float FalloffPow;
-	float2 pad;
+	float2 pad2;
 };
 
 struct SpotLight

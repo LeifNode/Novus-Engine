@@ -8,6 +8,8 @@
 #ifndef CONSTANT_BUFFERS_HLSL
 #define CONSTANT_BUFFERS_HLSL
 
+#include "Lighting/Lights.hlsl"
+
 cbuffer cbPerFrame : register(b0)
 {
 	float4x4 gView;
@@ -35,7 +37,7 @@ cbuffer cbPerObject : register(b1)
 	float4x4 gWorldViewProj;
 	float4x4 gWorldInvTranspose;
 	float4x4 gTextureTransform;
-	//Material gMaterial;
+	Material gMaterial;
 };
 
 #endif

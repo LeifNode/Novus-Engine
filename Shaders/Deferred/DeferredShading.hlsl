@@ -54,7 +54,7 @@ float3 GetWorldPos(float2 posClip, float depth)
 	position.w = 1.0;
 
 
-	position = mul(gViewProjInv, position);
+	position = mul(position, gViewProjInv);
 
 	return position.xyz / position.w;
 }
@@ -97,6 +97,7 @@ SURFACE_DATA UnpackGBufferViewport(uint2 viewportPosition)
 	float ViewSpaceZ = ConvertZToLinearDepth(zBuffer);
 
 	Out.PositionView = GetViewPos(ScreenPosition, ViewSpaceZ);
+	Out.PositionWorld = GetWorldPos(ScreenPosition, zBuffer);
 
 	return Out;
 }

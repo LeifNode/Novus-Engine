@@ -175,9 +175,6 @@ void PhysicsTestApplication::Update(float dt)
 	mpCamera->Update(dt);
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
-
-	//std::cout << "Position: " << mpEarthParticle->getPosition().x << ", " << mpEarthParticle->getPosition().y << ", " << mpEarthParticle->getPosition().z << "\n";
-	//std::cout << "Velocity: " << mpEarthParticle->getVelocity().x << ", " << mpEarthParticle->getVelocity().y << ", " << mpEarthParticle->getVelocity().z << "\n";
 }
 
 void PhysicsTestApplication::Render()
@@ -196,6 +193,7 @@ void PhysicsTestApplication::Render()
 	perFrame.ViewInv = Matrix4::Inverse(perFrame.View);
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
 	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
+	perFrame.EyePosition = mpCamera->getPosition();
 
 	mpRenderer->setPerFrameBuffer(perFrame);
 
@@ -206,14 +204,38 @@ void PhysicsTestApplication::Render()
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 
+	perObject.Material.Diffuse = Vector4(1.0f);
+	perObject.Material.SpecularColor = Vector3(1.0f);
+	perObject.Material.Roughness = 0.4f;
+	perObject.Material.Emissive = Vector3(0.0f);
+
 	mpRenderer->setPerObjectBuffer(perObject);
 
 	mPlaneRenderer.Render(mpRenderer);
+
+	for (int x = -10; x < 10; x++)
+	{
+		for (int z = -10; z < 10; z++)
+		{
+			perObject.World = 
+				Matrix4::Scale(0.2f, 0.2f, 0.2f) *
+				Matrix4::Translate(static_cast<float>(x), static_cast<float>(-4.8f), static_cast<float>(z));
+
+			perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+			perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+			perObject.Material.Roughness = (static_cast<float>(z) + 10.0f) / 20.0f;
+
+			mpRenderer->setPerObjectBuffer(perObject);
+
+			mMeshRenderer.Render(mpRenderer);
+		}
+	}
 
 	//Render earth
 	perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(mpEarthParticle->getPosition() / 1.0e11f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	perObject.Material.Roughness = 0.5f;
 
 	mpRenderer->setPerObjectBuffer(perObject);
 
@@ -223,6 +245,7 @@ void PhysicsTestApplication::Render()
 	perObject.World = Matrix4::Scale(Vector3(1.0f));
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	//perObject.Material.Emissive = Vector3(0.98f, 0.6f, 0.25f);
 
 	mpRenderer->setPerObjectBuffer(perObject);
 
