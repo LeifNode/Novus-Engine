@@ -186,6 +186,7 @@
     <ClInclude Include="src\Graphics\GBuffer.h" />
     <ClInclude Include="src\Graphics\Geometry.h" />
     <ClInclude Include="src\Graphics\Lights.h" />
+    <ClInclude Include="src\Graphics\LineRenderer.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h" />
     <ClInclude Include="src\Graphics\Shader.h" />

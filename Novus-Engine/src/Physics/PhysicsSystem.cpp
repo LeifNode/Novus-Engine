@@ -8,7 +8,7 @@ PhysicsSystem::PhysicsSystem()
 {
 }
 
-	PhysicsSystem::~PhysicsSystem()
+PhysicsSystem::~PhysicsSystem()
 {
 	for (auto it = mForceGenerators.begin(); it != mForceGenerators.end(); ++it)
 	{
@@ -25,12 +25,12 @@ PhysicsSystem::PhysicsSystem()
 	mParticles.clear();
 }
 
-	void PhysicsSystem::Init()
+void PhysicsSystem::Init()
 {
 	//mForceGenerators.push_back(new ParticlePlanetaryGravitation(this));
 }
 
-	void PhysicsSystem::Update(float dt)
+void PhysicsSystem::Update(float dt)
 {
 	mForceRegistry.Update(dt);
 

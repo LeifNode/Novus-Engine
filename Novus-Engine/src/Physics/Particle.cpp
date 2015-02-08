@@ -14,23 +14,23 @@ void Particle::Update(float dt)
 	if (mInverseMass <= 0.0f)
 		return;
 
-	mPosition += mVelocity * dt;
-	mVelocity += mAcceleration * mInverseMass * dt;
+	mPosition += mVelocity * static_cast<double>(dt);
+	mVelocity += mAcceleration * static_cast<double>(mInverseMass)* static_cast<double>(dt);
 
 	//mVelocity *= static_cast<double>(powf(mDamping, dt));
 
-	mAcceleration = Vector3();
+	mAcceleration = Vector3d();
 }
 
-void Particle::AddForce(const Vector3& force)
+void Particle::AddForce(const Vector3d& force)
 {
 	mAcceleration += force;
 }
 
 void Particle::Reset()
 {
-	mVelocity = Vector3();
-	mAcceleration = Vector3();
+	mVelocity = Vector3d();
+	mAcceleration = Vector3d();
 }
 
 void Particle::setMass(float mass)
@@ -55,27 +55,27 @@ float Particle::getInverseMass() const
 	return mInverseMass;
 }
 
-void Particle::setPosition(const Vector3& position)
+void Particle::setPosition(const Vector3d& position)
 {
 	mPosition = position;
 }
 
-void Particle::setVelocity(const Vector3& velocity)
+void Particle::setVelocity(const Vector3d& velocity)
 {
 	mVelocity = velocity;
 }
 
-Vector3 Particle::getPosition() const
+Vector3d Particle::getPosition() const
 {
 	return mPosition;
 }
 
-Vector3 Particle::getVelocity() const
+Vector3d Particle::getVelocity() const
 {
 	return mVelocity;
 }
 
-Vector3 Particle::getAcceleration() const
+Vector3d Particle::getAcceleration() const
 {
 	return mAcceleration;
 }

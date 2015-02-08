@@ -484,6 +484,16 @@ namespace novus
 	}
 
 	template <typename T>
+	Matrix4x4_t<T> Matrix4x4_t<T>::Scale(const T& scale)
+	{
+		return Matrix4x4_t<T>(
+			scale, 0, 0, 0,
+			0, scale, 0, 0,
+			0, 0, scale, 0,
+			0, 0, 0, 1);
+	}
+
+	template <typename T>
 	Matrix4x4_t<T> Matrix4x4_t<T>::Scale(const T& scaleX, const T& scaleY, const T& scaleZ)
 	{
 		return Matrix4x4_t<T>(

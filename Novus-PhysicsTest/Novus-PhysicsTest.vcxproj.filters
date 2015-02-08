@@ -21,15 +21,21 @@
     <ClCompile Include="src\PlanetaryGravitationGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlanetParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PhysicsTestApp.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Planet.h">
+    <ClInclude Include="src\PlanetaryGravitationGenerator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\PlanetaryGravitationGenerator.h">
+    <ClInclude Include="src\PlanetParticle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlanetParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

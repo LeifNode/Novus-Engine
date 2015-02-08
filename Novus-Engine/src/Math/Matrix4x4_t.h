@@ -102,6 +102,7 @@ namespace novus
 		static Matrix4x4_t<T> Transpose(const Matrix4x4_t<T>& m);
 
 		static Matrix4x4_t<T> Scale(const Vector3_t<T>& scale);
+		static Matrix4x4_t<T> Scale(const T& scale);
 		static Matrix4x4_t<T> Scale(const T& scaleX, const T& scaleY, const T& scaleZ);
 
 		static Matrix4x4_t<T> RotateX(const T& r);

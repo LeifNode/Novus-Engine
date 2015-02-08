@@ -53,7 +53,7 @@ private:
 
 private:
 	novus::PhysicsSystem* mpPhysicsSystem;
-	novus::Particle* mpEarthParticle;
+	std::vector<class PlanetParticle*> mPlanets;
 
 	novus::Camera* mpCamera;
 

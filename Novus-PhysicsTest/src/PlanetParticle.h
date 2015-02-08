@@ -13,10 +13,10 @@
 #include <Application/Common.h>
 #include <Physics/Particle.h>
 
-class Planet : public novus::Particle
+class PlanetParticle : public novus::Particle
 {
 public:
-	Planet() : mPlanetRadius(0.0) {}
+	PlanetParticle() : mPlanetRadius(0.0) {}
 
 	const std::string& getName() const { return mPlanetName; }
 	void setName(const std::string& name) { mPlanetName = name; }
@@ -25,8 +25,8 @@ public:
 	void setRadius(double radius) { mPlanetRadius = radius; }
 
 private:
-	Planet(const Planet&);
-	Planet& operator= (const Planet&);
+	PlanetParticle(const PlanetParticle&);
+	PlanetParticle& operator= (const PlanetParticle&);
 
 
 private:

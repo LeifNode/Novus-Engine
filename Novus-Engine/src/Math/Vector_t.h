@@ -16,17 +16,23 @@ namespace novus
 	template <typename T> struct Vector3_t;
 	template <typename T> struct Vector4_t;
 
-	typedef Vector2_t<float>        FVector2;
-	typedef Vector2_t<double>       DVector2;
-	typedef FVector2                 Vector2;
+	typedef Vector2_t<float>        Vector2f;
+	typedef Vector2_t<double>       Vector2d;
+	typedef Vector2_t<int>          Vector2i;
+	typedef Vector2_t<unsigned int> Vector2u;
+	typedef Vector2f                 Vector2;
 
-	typedef Vector3_t<float>        FVector3;
-	typedef Vector3_t<double>       DVector3;
-	typedef FVector3                 Vector3;
+	typedef Vector3_t<float>        Vector3f;
+	typedef Vector3_t<double>       Vector3d;
+	typedef Vector3_t<int>          Vector3i;
+	typedef Vector3_t<unsigned int> Vector3u;
+	typedef Vector3f                 Vector3;
 
-	typedef Vector4_t<float>        FVector4;
-	typedef Vector4_t<double>       DVector4;
-	typedef FVector4                 Vector4;
+	typedef Vector4_t<float>        Vector4f;
+	typedef Vector4_t<double>       Vector4d;
+	typedef Vector4_t<int>          Vector4i;
+	typedef Vector4_t<unsigned int> Vector4u;
+	typedef Vector4f                 Vector4;
 }
 
 #endif

@@ -9,7 +9,7 @@ PlanetaryGravitationGenerator::PlanetaryGravitationGenerator(PhysicsSystem* phys
 
 void PlanetaryGravitationGenerator::UpdateForce(Particle* particle, float dt)
 {
-	const static double gravitationalConstant = 6.673e-11f;
+	const static double gravitationalConstant = 6.673e-20f;
 
 	for (auto it = mpPhysicsSystem->getParticles().cbegin(); it != mpPhysicsSystem->getParticles().cend(); ++it)
 	{
@@ -22,7 +22,7 @@ void PlanetaryGravitationGenerator::UpdateForce(Particle* particle, float dt)
 
 			double force = gravitationalConstant * (mass / distanceSq);
 
-			Vector3 forceVec = Normalize((*it)->getPosition() - particle->getPosition()) * static_cast<float>(force);
+			Vector3d forceVec = Normalize((*it)->getPosition() - particle->getPosition()) * force;
 
 			particle->AddForce(forceVec);
 		}

@@ -283,7 +283,7 @@ namespace novus
 	template <typename T>
 	Vector3_t<T> Normalize(const Vector3_t<T>& v)
 	{
-		float length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+		T length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 
 		return v / length;
 	}

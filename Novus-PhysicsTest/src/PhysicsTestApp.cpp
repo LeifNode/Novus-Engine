@@ -13,8 +13,9 @@
 #include <Physics/ParticleForceGenerator.h>
 #include <Physics/PhysicsSystem.h>
 
-#include "Planet.h"
+#include "PlanetParticle.h"
 #include "PlanetaryGravitationGenerator.h"
+#include "PlanetParser.h"
 
 
 using namespace novus;
@@ -95,21 +96,23 @@ void PhysicsTestApplication::InitSolarSystem()
 	PlanetaryGravitationGenerator* gravityGen = new PlanetaryGravitationGenerator(mpPhysicsSystem);
 	mpPhysicsSystem->AddForceGenerator(gravityGen);
 
-	Planet* sunParticle = new Planet();
+	PlanetParser parser;
+	parser.Parse("./data/SolSystem.xml");
 
-	sunParticle->setName("Sol");
-	sunParticle->setMass(1.98855e30f); 
+	for (auto it = parser.getPlanets().cbegin(); it != parser.getPlanets().cend(); ++it)
+	{
+		PlanetParticle* newPlanet = new PlanetParticle();
 
-	mpPhysicsSystem->AddParticle(sunParticle);
-
-	mpEarthParticle = new Particle();
-	mpEarthParticle->setMass(5.9721986e24f);
-	mpEarthParticle->setPosition(Vector3(1.4709807e11f, 0.0f, 0.0f));
-	mpEarthParticle->setVelocity(Vector3(0.0f, 0.0f, 3.0298357e04f));
-
-	mpPhysicsSystem->AddParticle(mpEarthParticle);
-
-	mpPhysicsSystem->AddRegistryEntry(mpEarthParticle, gravityGen);
+		newPlanet->setName(it->Name);
+		newPlanet->setMass(static_cast<float>(it->Mass));
+		newPlanet->setRadius(static_cast<float>(it->Radius));
+		newPlanet->setPosition(Vector3d(it->Perihelion, 0.0, 0.0));
+		newPlanet->setVelocity(Vector3d(0.0, 0.0, -it->PerihelionVelocity));
+		
+		mpPhysicsSystem->AddParticle(newPlanet);
+		mpPhysicsSystem->AddRegistryEntry(newPlanet, gravityGen);
+		mPlanets.push_back(newPlanet);
+	}
 }
 
 void PhysicsTestApplication::InitShader()
@@ -174,8 +177,15 @@ void PhysicsTestApplication::OnResize()
 
 void PhysicsTestApplication::Update(float dt)
 {
-	for (int i = 0; i < 2000; i++)
-		mpPhysicsSystem->Update(dt * 30758400.0f * 0.001f);//1 year every 10 seconds
+	for (int i = 0; i < 200; i++)
+		mpPhysicsSystem->Update(dt * 30758400.0f * 0.00001f);
+
+	for (auto it = mPlanets.cbegin(); it != mPlanets.cend(); ++it)
+	{
+		if ((*it)->getName() == "Earth" || (*it)->getName() == "Earth's Moon")
+			std::cout << "Planet: " << (*it)->getName() << "\nLocation: " << (*it)->getPosition().x << ", " << (*it)->getPosition().y << ", " << (*it)->getPosition().z << "\n";
+	}
+
 	mpCamera->Update(dt);
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
@@ -187,7 +197,7 @@ void PhysicsTestApplication::Render()
 	mpRenderer->setShader(mpMainShader);
 
 	CBPerFrame perFrame;
-	perFrame.ScreenResolution = Vector2_t<unsigned int>(
+	perFrame.ScreenResolution = Vector2u(
 		static_cast<unsigned int>(getClientWidth()),
 		static_cast<unsigned int>(getClientHeight()));
 	perFrame.ClipNearFar = Vector2(mpCamera->getNear(), mpCamera->getFar());
@@ -215,45 +225,21 @@ void PhysicsTestApplication::Render()
 
 	mpRenderer->setPerObjectBuffer(perObject);
 
-	mPlaneRenderer.Render(mpRenderer);
+	//mPlaneRenderer.Render(mpRenderer);
 
-	/*for (int x = -10; x < 10; x++)
+	//Render planets
+
+	for (auto it = mPlanets.cbegin(); it != mPlanets.cend(); ++it)
 	{
-		for (int z = -10; z < 10; z++)
-		{
-			perObject.World = 
-				Matrix4::Scale(0.2f, 0.2f, 0.2f) *
-				Matrix4::Translate(static_cast<float>(x), static_cast<float>(-4.8f), static_cast<float>(z));
+		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius()) / 1.0e6f) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() / 1.0e7));
+		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+		perObject.Material.Roughness = 0.5f;
 
-			perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-			perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-			perObject.Material.Roughness = (static_cast<float>(z) + 10.0f) / 20.0f;
+		mpRenderer->setPerObjectBuffer(perObject);
 
-			mpRenderer->setPerObjectBuffer(perObject);
-
-			mMeshRenderer.Render(mpRenderer);
-		}
+		mMeshRenderer.Render(mpRenderer);
 	}
-*/
-	//Render earth
-	perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(mpEarthParticle->getPosition() / 1.0e11f);
-	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-	perObject.Material.Roughness = 0.5f;
-
-	mpRenderer->setPerObjectBuffer(perObject);
-
-	mMeshRenderer.Render(mpRenderer);
-
-	//Render sun
-	perObject.World = Matrix4::Scale(Vector3(1.0f));
-	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-	//perObject.Material.Emissive = Vector3(0.98f, 0.6f, 0.25f);
-
-	mpRenderer->setPerObjectBuffer(perObject);
-
-	mMeshRenderer.Render(mpRenderer);
 
 
 	mpRenderer->RenderDeferredShading();
