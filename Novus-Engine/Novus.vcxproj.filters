@@ -75,6 +75,12 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{69ebf1c2-0932-4b8e-a4e5-0f0801aa9ed0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\3rdParty\FastDelegate">
+      <UniqueIdentifier>{2c966f07-5833-4121-89c4-38564860763b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rdParty\TinyXML">
+      <UniqueIdentifier>{101b259e-4435-4856-ba21-3fd5f620eeda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -121,12 +127,6 @@
     </ClInclude>
     <ClInclude Include="src\Events\EventSystem.h">
       <Filter>Source Files\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\3rdParty\FastDelegate.h">
-      <Filter>Source Files\3rdParty</Filter>
-    </ClInclude>
-    <ClInclude Include="src\3rdParty\FastDelegateBind.h">
-      <Filter>Source Files\3rdParty</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Events.h">
       <Filter>Source Files\Events</Filter>
@@ -242,11 +242,20 @@
     <ClInclude Include="src\Physics\Particle.h">
       <Filter>Source Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Physics\MassAggregatePhysicsSystem.h">
-      <Filter>Source Files\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Physics\ParticleForceGenerator.h">
       <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\PhysicsSystem.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdParty\FastDelegateBind.h">
+      <Filter>Source Files\3rdParty\FastDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdParty\FastDelegate.h">
+      <Filter>Source Files\3rdParty\FastDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\TinyXML\tinyxml2.h">
+      <Filter>Source Files\3rdParty\TinyXML</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -337,11 +346,14 @@
     <ClCompile Include="src\Physics\Particle.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics\MassAggregatePhysicsSystem.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Physics\ParticleForceGenerator.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\PhysicsSystem.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\TinyXML\tinyxml2.cpp">
+      <Filter>Source Files\3rdParty\TinyXML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,7 @@
 namespace novus
 {
 	class Camera;
-	class MassAggregatePhysicsSystem;
+	class PhysicsSystem;
 	class Particle;
 }
 
@@ -44,14 +44,15 @@ public:
 
 	void OnKeyDown(novus::IEventDataPtr eventData);
 
+	
+
+private:
+	void InitSolarSystem(); 
 	void InitShader();
 	void InitMesh();
 
 private:
-	void InitSolarSystem();
-
-private:
-	novus::MassAggregatePhysicsSystem* mpPhysicsSystem;
+	novus::PhysicsSystem* mpPhysicsSystem;
 	novus::Particle* mpEarthParticle;
 
 	novus::Camera* mpCamera;

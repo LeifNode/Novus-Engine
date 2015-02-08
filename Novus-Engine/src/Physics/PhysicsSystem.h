@@ -18,11 +18,11 @@
 namespace novus
 {
 
-class MassAggregatePhysicsSystem
+class PhysicsSystem
 {
 public:
-	MassAggregatePhysicsSystem();
-	~MassAggregatePhysicsSystem();
+	PhysicsSystem();
+	~PhysicsSystem();
 
 	void Init();
 

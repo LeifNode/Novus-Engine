@@ -68,7 +68,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\FreeType;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novusd</TargetName>
@@ -78,18 +78,18 @@
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novus</TargetName>
-    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\FreeType;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)3rdParty\lib\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\FreeType;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novusd</TargetName>
     <LibraryPath>$(SolutionDir)3rdParty\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\freetype;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)3rdParty\include;$(SolutionDir)3rdParty\include\FreeType;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)lib\$(PlatformShortName)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Novus</TargetName>
@@ -168,6 +168,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdParty\include\TinyXML\tinyxml2.h" />
     <ClInclude Include="src\3rdParty\FastDelegate.h" />
     <ClInclude Include="src\3rdParty\FastDelegateBind.h" />
     <ClInclude Include="src\Application\Common.h" />
@@ -207,7 +208,7 @@
     <ClInclude Include="src\Math\Vector4_t.h" />
     <ClInclude Include="src\Math\Vector_t.h" />
     <ClInclude Include="src\Math\Vector3_t.h" />
-    <ClInclude Include="src\Physics\MassAggregatePhysicsSystem.h" />
+    <ClInclude Include="src\Physics\PhysicsSystem.h" />
     <ClInclude Include="src\Physics\Particle.h" />
     <ClInclude Include="src\Physics\ParticleForceGenerator.h" />
     <ClInclude Include="src\Resources\Font\Font.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="src\Utils\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdParty\include\TinyXML\tinyxml2.cpp" />
     <ClCompile Include="src\Application\EngineStatics.cpp" />
     <ClCompile Include="src\Application\NovusApplication.cpp" />
     <ClCompile Include="src\Events\Events.cpp" />
@@ -245,7 +247,7 @@
     <ClCompile Include="src\Math\Math.cpp" />
     <ClCompile Include="src\Math\MatrixStack.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
-    <ClCompile Include="src\Physics\MassAggregatePhysicsSystem.cpp" />
+    <ClCompile Include="src\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\Physics\Particle.cpp" />
     <ClCompile Include="src\Physics\ParticleForceGenerator.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />

@@ -14,17 +14,6 @@ public:
 	virtual void UpdateForce(Particle* particle, float dt) = 0;
 };
 
-class ParticlePlanetaryGravitation : public ParticleForceGenerator
-{
-public:
-	ParticlePlanetaryGravitation(class MassAggregatePhysicsSystem* physicsSystem);
-
-	virtual void UpdateForce(Particle* particle, float dt) override;
-
-private:
-	class MassAggregatePhysicsSystem* mpPhysicsSystem;
-};
-
 class ParticleGravity : public ParticleForceGenerator
 {
 public:

@@ -1,14 +1,14 @@
-#include "MassAggregatePhysicsSystem.h"
+#include "PhysicsSystem.h"
 #include "Application/Common.h"
 
 namespace novus
 {
 
-MassAggregatePhysicsSystem::MassAggregatePhysicsSystem()
+PhysicsSystem::PhysicsSystem()
 {
 }
 
-MassAggregatePhysicsSystem::~MassAggregatePhysicsSystem()
+	PhysicsSystem::~PhysicsSystem()
 {
 	for (auto it = mForceGenerators.begin(); it != mForceGenerators.end(); ++it)
 	{
@@ -25,12 +25,12 @@ MassAggregatePhysicsSystem::~MassAggregatePhysicsSystem()
 	mParticles.clear();
 }
 
-void MassAggregatePhysicsSystem::Init()
+	void PhysicsSystem::Init()
 {
 	//mForceGenerators.push_back(new ParticlePlanetaryGravitation(this));
 }
 
-void MassAggregatePhysicsSystem::Update(float dt)
+	void PhysicsSystem::Update(float dt)
 {
 	mForceRegistry.Update(dt);
 
@@ -40,22 +40,22 @@ void MassAggregatePhysicsSystem::Update(float dt)
 	}
 }
 
-const std::vector<Particle*>& MassAggregatePhysicsSystem::getParticles() const
+const std::vector<Particle*>& PhysicsSystem::getParticles() const
 {
 	return mParticles;
 }
 
-void MassAggregatePhysicsSystem::AddParticle(Particle* particle)
+void PhysicsSystem::AddParticle(Particle* particle)
 {
 	mParticles.push_back(particle);
 }
 
-void MassAggregatePhysicsSystem::AddForceGenerator(ParticleForceGenerator* generator)
+void PhysicsSystem::AddForceGenerator(ParticleForceGenerator* generator)
 {
 	mForceGenerators.push_back(generator);
 }
 
-void MassAggregatePhysicsSystem::AddRegistryEntry(Particle* particle, ParticleForceGenerator* generator)
+void PhysicsSystem::AddRegistryEntry(Particle* particle, ParticleForceGenerator* generator)
 {
 	mForceRegistry.Add(particle, generator);
 }

@@ -11,7 +11,10 @@
 #include <Graphics/PostProcess/DeferredRenderer.h>
 #include <Physics/Particle.h>
 #include <Physics/ParticleForceGenerator.h>
-#include <Physics/MassAggregatePhysicsSystem.h>
+#include <Physics/PhysicsSystem.h>
+
+#include "Planet.h"
+#include "PlanetaryGravitationGenerator.h"
 
 
 using namespace novus;
@@ -46,7 +49,7 @@ mpTiledDeferredShader(NULL)
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
-	mpPhysicsSystem = NE_NEW MassAggregatePhysicsSystem();
+	mpPhysicsSystem = NE_NEW PhysicsSystem();
 }
 
 PhysicsTestApplication::~PhysicsTestApplication()
@@ -89,11 +92,12 @@ bool PhysicsTestApplication::Init()
 
 void PhysicsTestApplication::InitSolarSystem()
 {
-	ParticlePlanetaryGravitation* gravityGen = new ParticlePlanetaryGravitation(mpPhysicsSystem);
+	PlanetaryGravitationGenerator* gravityGen = new PlanetaryGravitationGenerator(mpPhysicsSystem);
 	mpPhysicsSystem->AddForceGenerator(gravityGen);
 
-	Particle* sunParticle = new Particle();
+	Planet* sunParticle = new Planet();
 
+	sunParticle->setName("Sol");
 	sunParticle->setMass(1.98855e30f); 
 
 	mpPhysicsSystem->AddParticle(sunParticle);
@@ -213,7 +217,7 @@ void PhysicsTestApplication::Render()
 
 	mPlaneRenderer.Render(mpRenderer);
 
-	for (int x = -10; x < 10; x++)
+	/*for (int x = -10; x < 10; x++)
 	{
 		for (int z = -10; z < 10; z++)
 		{
@@ -230,7 +234,7 @@ void PhysicsTestApplication::Render()
 			mMeshRenderer.Render(mpRenderer);
 		}
 	}
-
+*/
 	//Render earth
 	perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * Matrix4::Translate(mpEarthParticle->getPosition() / 1.0e11f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));

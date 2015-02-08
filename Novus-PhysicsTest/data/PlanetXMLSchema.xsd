@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PlanetXMLSchema"
+    targetNamespace="http://leifnode.com/PlanetXMLSchema.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://leifnode.com/PlanetXMLSchema.xsd"
+    xmlns:mstns="http://leifnode.com/PlanetXMLSchema.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="planetmaterial">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="diffuse">
+          <xs:complexType>
+            <xs:attribute name="r" type="xs:float" use="required"/>
+            <xs:attribute name="g" type="xs:float" use="required"/>
+            <xs:attribute name="b" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="emissive">
+          <xs:complexType>
+            <xs:attribute name="r" type="xs:float" use="required"/>
+            <xs:attribute name="g" type="xs:float" use="required"/>
+            <xs:attribute name="b" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="roughness" type="xs:float"/>
+        <xs:element name="pathcolor" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="r" type="xs:float" use="required"/>
+            <xs:attribute name="g" type="xs:float" use="required"/>
+            <xs:attribute name="b" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="planet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="mass" type="xs:double"/>
+        <xs:element name="radius" type="xs:double"/>
+        <xs:element name="aphelion" type="xs:double"/>
+        <xs:element name="perihelion" type="xs:double"/>
+        <xs:element name="semimajoraxis" type="xs:double"/>
+        <xs:element name="semiminoraxis" type="xs:double"/>
+        <xs:element name="perihelionvelocity" type="xs:double"/>
+        <xs:element name="moons" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="planet" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="texturepath" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="planetmaterial" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="solarsystem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="planet" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="solarsystemlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="solarsystem" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>
