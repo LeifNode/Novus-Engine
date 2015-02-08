@@ -13,7 +13,7 @@ This project is built in Visual Studio 2013 and is currently only targeted at x6
 #### Graphics
 * Cascaded Shadow Mapping
 * High Dynamic Range Rendering
-* Tiled Deferred Shading Pipeline
+* ~~Tiled Deferred Shading Pipeline~~ Functional but needs some work to give it more utility
 * Physically Based Shading BRDF (based on Unreal Engine 4's)
 * Voxel Cone Traced Global Illumination
 
