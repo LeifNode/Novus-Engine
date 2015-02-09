@@ -189,9 +189,9 @@
     <ClInclude Include="src\Graphics\LineRenderer.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h" />
-    <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Shaders\D3DLocalInclude.h" />
     <ClInclude Include="src\Graphics\Shaders\IShader.h" />
+    <ClInclude Include="src\Graphics\Shaders\Shader.h" />
     <ClInclude Include="src\Graphics\Shaders\VertexShader.h" />
     <ClInclude Include="src\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Graphics\Textures\Texture2D.h" />
@@ -216,6 +216,7 @@
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
     <ClInclude Include="src\Resources\ResourceManager.h" />
+    <ClInclude Include="src\Utils\Containers\PointList.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
     <ClInclude Include="src\Utils\Logging\ConsoleLogSerializer.h" />
@@ -224,7 +225,12 @@
     <ClInclude Include="src\Utils\Memory\MallocTracker.h" />
     <ClInclude Include="src\Utils\Memory\Memory.h" />
     <ClInclude Include="src\Utils\Objects\Type.h" />
+    <ClInclude Include="src\Utils\Primitives\Box.h" />
+    <ClInclude Include="src\Utils\Primitives\LineSegment.h" />
+    <ClInclude Include="src\Utils\Primitives\Plane.h" />
+    <ClInclude Include="src\Utils\Primitives\Ray.h" />
     <ClInclude Include="src\Utils\Primitives\Rectangle.h" />
+    <ClInclude Include="src\Utils\Primitives\Sphere.h" />
     <ClInclude Include="src\Utils\RectangleBinPacker.h" />
     <ClInclude Include="src\Utils\StringUtils.h" />
   </ItemGroup>
@@ -238,9 +244,10 @@
     <ClCompile Include="src\Graphics\D3DRenderer.cpp" />
     <ClCompile Include="src\Graphics\GBuffer.cpp" />
     <ClCompile Include="src\Graphics\Geometry.cpp" />
+    <ClCompile Include="src\Graphics\LineRenderer.cpp" />
     <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp" />
-    <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp" />
+    <ClCompile Include="src\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture2D.cpp" />
     <ClCompile Include="src\Input\InputSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardState.cpp" />
@@ -253,12 +260,14 @@
     <ClCompile Include="src\Physics\ParticleForceGenerator.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
+    <ClCompile Include="src\Utils\Containers\PointList.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
     <ClCompile Include="src\Utils\Logging\ConsoleLogSerializer.cpp" />
     <ClCompile Include="src\Utils\Logging\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
+    <ClCompile Include="src\Utils\Primitives\LineSegment.cpp" />
     <ClCompile Include="src\Utils\RectangleBinPacker.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />
   </ItemGroup>

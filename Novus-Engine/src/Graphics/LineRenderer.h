@@ -12,7 +12,7 @@
 
 #include "Application/Common.h"
 #include "Math/Math.h"
-//#include "PointList.h"
+#include "Utils/Containers/PointList.h"
 
 namespace novus
 {
@@ -59,7 +59,7 @@ public:
 
 	void Render(D3DRenderer* renderer);
 
-	//PointList Points;
+	PointList points;
 
 private:
 	void generateIndices(UINT** ppArrayOut, UINT* pIndexCount);

@@ -1,5 +1,5 @@
 #include "DeferredRenderer.h"
-#include "Graphics/Shader.h"
+#include "Graphics/Shaders/Shader.h"
 #include "Graphics/Textures/Texture2D.h"
 #include "Graphics/D3DRenderer.h"
 

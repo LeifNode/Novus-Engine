@@ -13,7 +13,7 @@
 #include "Application/Common.h"
 #include "GBuffer.h"
 #include "Shaders/IShader.h"
-#include "Shader.h"
+#include "Shaders/Shader.h"
 #include "ConstantBuffers.h"
 #include "Textures/Texture2D.h"
 #include "Math/MatrixStack.h"

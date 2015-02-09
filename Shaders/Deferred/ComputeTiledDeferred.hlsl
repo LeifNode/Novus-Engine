@@ -67,8 +67,8 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 	float2 tileScale = float2(gScreenDimensions.xy) * rcp(float(2 * COMPUTE_SHADER_TILE_GROUP_DIM));
 	float2 tileBias = tileScale - float2(groupID.xy);
 
-	float4 c1 = float4(gProjection._11 * tileScale.x, 0.0f, gProjection._31 * tileScale.x + tileBias.x, 0.0f);
-	float4 c2 = float4(0.0f, -gProjection._22 * tileScale.y, gProjection._32 * tileScale.y + tileBias.y, 0.0f);
+	float4 c1 = float4(gProjection._11 * tileScale.x, 0.0f, gProjection._13 * tileScale.x + tileBias.x, 0.0f);
+	float4 c2 = float4(0.0f, -gProjection._22 * tileScale.y, gProjection._23 * tileScale.y + tileBias.y, 0.0f);
 	float4 c4 = float4(0.0f, 0.0f, 1.0f, 0.0f);
 
 	float4 frustumPlanes[6];

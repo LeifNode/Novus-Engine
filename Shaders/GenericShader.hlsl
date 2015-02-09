@@ -36,15 +36,15 @@ PS_INPUT VS(VS_INPUT vin)
 {
 	PS_INPUT vout;
 
-	vout.PosW = mul(float4(vin.PosL, 1.0f), gWorld).xyz;
+	vout.PosW = mul(gWorld, float4(vin.PosL, 1.0f)).xyz;
 
-	vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);
+	vout.PosH = mul(gWorldViewProj, float4(vin.PosL, 1.0f));
 
-	vout.Normal = mul(normalize(vin.Normal), (float3x3)gWorldInvTranspose);
-	vout.Tangent = mul(normalize(vin.Tangent), (float3x3)gWorldInvTranspose);
-	vout.Bitangent = mul(normalize(vin.Bitangent), (float3x3)gWorldInvTranspose);
+	vout.Normal = mul((float3x3)gWorldInvTranspose, normalize(vin.Normal));
+	vout.Tangent = mul((float3x3)gWorldInvTranspose, normalize(vin.Tangent));
+	vout.Bitangent = mul((float3x3)gWorldInvTranspose, normalize(vin.Bitangent));
 
-	vout.Tex = mul(float4(vin.Tex, 0.0f, 1.0f), gTextureTransform).xy;
+	vout.Tex = mul(gTextureTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
 
 	return vout;
 }

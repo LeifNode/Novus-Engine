@@ -14,7 +14,7 @@
 
 #include <Application/Common.h>
 #include <Application/NovusApplication.h>
-#include <Graphics/Shader.h>
+#include <Graphics/Shaders/Shader.h>
 #include <Graphics/ConstantBuffers.h>
 #include <Graphics/MeshRenderer.h>
 #include <Graphics/Geometry.h>

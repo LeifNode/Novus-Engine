@@ -81,6 +81,9 @@
     <Filter Include="Source Files\3rdParty\TinyXML">
       <UniqueIdentifier>{101b259e-4435-4856-ba21-3fd5f620eeda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utils\Containers">
+      <UniqueIdentifier>{6409badd-74a1-40d0-8232-77a1f3a3db9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -112,9 +115,6 @@
     </ClInclude>
     <ClInclude Include="src\Application\EngineStatics.h">
       <Filter>Source Files\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Shader.h">
-      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\ConstantBuffers.h">
       <Filter>Source Files\Graphics</Filter>
@@ -248,9 +248,6 @@
     <ClInclude Include="src\Physics\PhysicsSystem.h">
       <Filter>Source Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\3rdParty\FastDelegateBind.h">
-      <Filter>Source Files\3rdParty\FastDelegate</Filter>
-    </ClInclude>
     <ClInclude Include="src\3rdParty\FastDelegate.h">
       <Filter>Source Files\3rdParty\FastDelegate</Filter>
     </ClInclude>
@@ -259,6 +256,30 @@
     </ClInclude>
     <ClInclude Include="src\Graphics\LineRenderer.h">
       <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\Plane.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\Ray.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\Sphere.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\Box.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\LineSegment.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Containers\PointList.h">
+      <Filter>Source Files\Utils\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdParty\FastDelegateBind.h">
+      <Filter>Source Files\3rdParty\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shaders\Shader.h">
+      <Filter>Source Files\Graphics\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,9 +306,6 @@
     </ClCompile>
     <ClCompile Include="src\Application\EngineStatics.cpp">
       <Filter>Source Files\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Shader.cpp">
-      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Input\KeyboardState.cpp">
       <Filter>Source Files\Input</Filter>
@@ -357,6 +375,18 @@
     </ClCompile>
     <ClCompile Include="..\3rdParty\include\TinyXML\tinyxml2.cpp">
       <Filter>Source Files\3rdParty\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Primitives\LineSegment.cpp">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Containers\PointList.cpp">
+      <Filter>Source Files\Utils\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\LineRenderer.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shaders\Shader.cpp">
+      <Filter>Source Files\Graphics\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

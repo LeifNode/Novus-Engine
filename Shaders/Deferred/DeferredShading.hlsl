@@ -29,7 +29,7 @@ StructuredBuffer<PointLight> gPointLights : register(t5);
 
 float ConvertZToLinearDepth(float depth)
 {
-	float linearDepth = gProjection._43 / (depth + gProjection._33);
+	float linearDepth = gProjection._34 / (depth + gProjection._33);
 	return linearDepth;
 }
 
@@ -54,7 +54,7 @@ float3 GetWorldPos(float2 posClip, float depth)
 	position.w = 1.0;
 
 
-	position = mul(position, gViewProjInv);
+	position = mul(gViewProjInv, position);
 
 	return position.xyz / position.w;
 }

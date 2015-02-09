@@ -180,11 +180,11 @@ void PhysicsTestApplication::Update(float dt)
 	for (int i = 0; i < 200; i++)
 		mpPhysicsSystem->Update(dt * 30758400.0f * 0.00001f);
 
-	for (auto it = mPlanets.cbegin(); it != mPlanets.cend(); ++it)
-	{
-		if ((*it)->getName() == "Earth" || (*it)->getName() == "Earth's Moon")
-			std::cout << "Planet: " << (*it)->getName() << "\nLocation: " << (*it)->getPosition().x << ", " << (*it)->getPosition().y << ", " << (*it)->getPosition().z << "\n";
-	}
+	//for (auto it = mPlanets.cbegin(); it != mPlanets.cend(); ++it)
+	//{
+	//	if ((*it)->getName() == "Earth" || (*it)->getName() == "Earth's Moon")
+	//		std::cout << "Planet: " << (*it)->getName() << "\nLocation: " << (*it)->getPosition().x << ", " << (*it)->getPosition().y << ", " << (*it)->getPosition().z << "\n";
+	//}
 
 	mpCamera->Update(dt);
 
