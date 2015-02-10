@@ -9,6 +9,8 @@
 #include <Graphics/Camera.h>
 #include <Graphics/D3DRenderer.h>
 #include <Graphics/PostProcess/DeferredRenderer.h>
+#include <Graphics/Textures/Texture2D.h>
+#include <Graphics/SkyboxRenderer.h>
 
 using namespace novus;
 
@@ -36,9 +38,9 @@ TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
 	mpMainShader(NULL),
-	mpTiledDeferredShader(NULL)
+	mpSkyboxRenderer(NULL)
 {
-	mMainWndCaption = L"Novus Engine Test App v0.0.1";
+	mMainWndCaption = L"Novus Engine Test App v0.0.41";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
@@ -48,6 +50,7 @@ TestApplication::~TestApplication()
 {
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
+	NE_DELETE(mpSkyboxRenderer);
 }
 
 bool TestApplication::Init()
@@ -73,6 +76,9 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::Bold);
 	verdana->LoadGlyphs(24, novus::FontType::Italic);
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
+
+	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
+	mpSkyboxRenderer->Init(L"../Textures/green_galaxy_cube.dds");
 
 	return true;
 }
@@ -101,9 +107,13 @@ void TestApplication::InitMesh()
 {
 	Mesh mesh;
 
-	GeometryGenerator::CreateGeosphere(1.0f, 2, mesh);
+	GeometryGenerator::CreateGeosphere(1.0f, 4, mesh);
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
+
+	GeometryGenerator::CreateGrid(100.0f, 100.0f, 4, 4, mesh);
+
+	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
 
 void TestApplication::HookInputEvents()
@@ -167,30 +177,34 @@ void TestApplication::Render()
 	perObject.Material.Diffuse = Vector4(1.0f);
 	perObject.Material.SpecularColor = Vector3(1.0f);
 	perObject.Material.Roughness = 0.4f;
+	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Emissive = Vector3(0.0f);
 
-	for (int x = -10; x < 10; x++)
+	for (int x = -5; x < 5; x++)
 	{
-		for (int y = -10; y < 10; y++)
+		for (int z = -5; z < 5; z++)
 		{
-			for (int z = -10; z < 10; z++)
-			{
-				perObject.World = Quaternion::ToMatrix(mCurrentRotation) * 
-								  Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
-								  Matrix4::Translate(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
+							  Matrix4::Translate(static_cast<float>(x), -4.8f, static_cast<float>(z));
 
-				perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-				perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+			perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+			perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 
-				mpRenderer->setPerObjectBuffer(perObject);
+			mpRenderer->setPerObjectBuffer(perObject);
 
-				mMeshRenderer.Render(mpRenderer);
-			}
+			mMeshRenderer.Render(mpRenderer);
 		}
 	}
 
+	perObject.World = Matrix4::Translate(0.0f, -5.0f, 0.0f);
+	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	mpRenderer->setPerObjectBuffer(perObject);
+	mPlaneRenderer.Render(mpRenderer);
+
+	mpSkyboxRenderer->Render(mpRenderer);
+
 	mpRenderer->RenderDeferredShading();
-	
 	mpRenderer->getDeferredRenderer()->RenderDebugOutput(mpRenderer);
 
 	mpRenderer->PostRender();

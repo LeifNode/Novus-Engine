@@ -1,5 +1,6 @@
 #include "Logger.h"
 #include "ILogSerializer.h"
+#include "Utils/Memory/Memory.h"
 
 namespace novus
 {
@@ -14,6 +15,11 @@ Logger* Logger::getInstance()
 	return mspInstance;
 }
 
+Logger::~Logger()
+{
+	
+}
+
 void Logger::Log(const char* message, const char* tag, LogLevel::Type errorLevel, const char* fileName, int lineNumber)
 {
 	LogEntry entry;
@@ -24,6 +30,7 @@ void Logger::Log(const char* message, const char* tag, LogLevel::Type errorLevel
 	entry.lineNumber = lineNumber;
 
 	mMessages.push_back(entry);
+	DispatchLogEvent(entry);
 }
 
 void Logger::AddSerializer(ILogSerializer* serializer, LogLevel::Type levelMask, const char* tagMask)

@@ -26,6 +26,7 @@ namespace novus
 	class Camera;
 	class PhysicsSystem;
 	class Particle;
+	class SkyboxRenderer;
 }
 
 class PhysicsTestApplication : public novus::NovusApplication
@@ -52,6 +53,7 @@ private:
 	void InitMesh();
 
 private:
+	novus::SkyboxRenderer* mpSkyboxRenderer;
 	novus::PhysicsSystem* mpPhysicsSystem;
 	std::vector<class PlanetParticle*> mPlanets;
 

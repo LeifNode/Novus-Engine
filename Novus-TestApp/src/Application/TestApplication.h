@@ -24,6 +24,8 @@
 namespace novus
 {
 	class Camera;
+	class Texture2D;
+	class SkyboxRenderer;
 }
 
 class TestApplication : public novus::NovusApplication
@@ -46,16 +48,18 @@ public:
 	void InitMesh();
 
 private:
+	novus::SkyboxRenderer* mpSkyboxRenderer;
+
 	novus::Quaternion mCurrentRotation;
 
 	novus::Camera* mpCamera;
 
 	novus::Shader* mpMainShader;
-	novus::Shader* mpTiledDeferredShader;
 
 	novus::CBPerFrame mPerFrameData;
 
 	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
+	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
 };
 
 

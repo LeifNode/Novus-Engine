@@ -711,4 +711,83 @@ void GeometryGenerator::CreateFullscreenQuad(Mesh& mesh)
 	mesh.Indices[5] = 3;
 }
 
+void GeometryGenerator::CreateSkybox(std::vector<Vector3>& vertices, std::vector<UINT>& indices)
+{
+	Vector3 v[24];
+
+	float w2 = 1.0f;
+	float h2 = 1.0f;
+	float d2 = 1.0f;
+
+	//Front face
+	v[0] = Vector3(-w2, -h2, -d2);
+	v[1] = Vector3(-w2, +h2, -d2);
+	v[2] = Vector3(+w2, +h2, -d2);
+	v[3] = Vector3(+w2, -h2, -d2);
+
+	//Back face
+	v[4] = Vector3(-w2, -h2, +d2);
+	v[5] = Vector3(+w2, -h2, +d2);
+	v[6] = Vector3(+w2, +h2, +d2);
+	v[7] = Vector3(-w2, +h2, +d2);
+
+	//Top face
+	v[8] = Vector3(-w2, +h2, -d2);
+	v[9] = Vector3(-w2, +h2, +d2);
+	v[10] = Vector3(+w2, +h2, +d2);
+	v[11] = Vector3(+w2, +h2, -d2);
+
+	//Bottom face
+	v[12] = Vector3(-w2, -h2, -d2);
+	v[13] = Vector3(+w2, -h2, -d2);
+	v[14] = Vector3(+w2, -h2, +d2);
+	v[15] = Vector3(-w2, -h2, +d2);
+
+	//Left face
+	v[16] = Vector3(-w2, -h2, +d2);
+	v[17] = Vector3(-w2, +h2, +d2);
+	v[18] = Vector3(-w2, +h2, -d2);
+	v[19] = Vector3(-w2, -h2, -d2);
+
+	//Right face
+	v[20] = Vector3(+w2, -h2, -d2);
+	v[21] = Vector3(+w2, +h2, -d2);
+	v[22] = Vector3(+w2, +h2, +d2);
+	v[23] = Vector3(+w2, -h2, +d2);
+
+	vertices.assign(&v[0], &v[24]);
+
+	//
+	// Create the indices.
+	//
+
+	UINT i[36];
+
+	//Front face
+	i[0] = 0; i[1] = 2; i[2] = 1;
+	i[3] = 0; i[4] = 3; i[5] = 2;
+
+	//Back face
+	i[6] = 4; i[7] = 6; i[8] = 5;
+	i[9] = 4; i[10] = 7; i[11] = 6;
+
+	//Top face
+	i[12] = 8; i[13] = 10; i[14] = 9;
+	i[15] = 8; i[16] = 11; i[17] = 10;
+
+	//Bottom face
+	i[18] = 12; i[19] = 14; i[20] = 13;
+	i[21] = 12; i[22] = 15; i[23] = 14;
+
+	//Left face
+	i[24] = 16; i[25] = 18; i[26] = 17;
+	i[27] = 16; i[28] = 19; i[29] = 18;
+
+	//Right face
+	i[30] = 20; i[31] = 22; i[32] = 21;
+	i[33] = 20; i[34] = 23; i[35] = 22;
+
+	indices.assign(&i[0], &i[36]);
+}
+
 }//namespace novus

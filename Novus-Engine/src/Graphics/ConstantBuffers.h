@@ -22,7 +22,7 @@ struct Material
 	Vector3 SpecularColor;
 	float Roughness;
 	Vector3 Emissive;
-	float pad;
+	float Metallic;
 };
 
 struct CBPerFrame

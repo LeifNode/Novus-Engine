@@ -378,7 +378,7 @@ void D3DRenderer::InitDepthStencilStates()
 	//Default state
 	dsDesc.DepthEnable = true;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
 	dsDesc.StencilEnable = false;
 	dsDesc.StencilReadMask = 0xFF;

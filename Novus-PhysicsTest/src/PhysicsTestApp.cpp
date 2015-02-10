@@ -12,6 +12,7 @@
 #include <Physics/Particle.h>
 #include <Physics/ParticleForceGenerator.h>
 #include <Physics/PhysicsSystem.h>
+#include <Graphics/SkyboxRenderer.h>
 
 #include "PlanetParticle.h"
 #include "PlanetaryGravitationGenerator.h"
@@ -44,9 +45,10 @@ PhysicsTestApplication::PhysicsTestApplication(HINSTANCE instance)
 :
 NovusApplication(instance),
 mpMainShader(NULL),
-mpTiledDeferredShader(NULL)
+mpTiledDeferredShader(NULL),
+mpSkyboxRenderer(NULL)
 {
-	mMainWndCaption = L"Physics Test v0.0.1";
+	mMainWndCaption = L"Physics Test v0.0.40";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
@@ -58,6 +60,7 @@ PhysicsTestApplication::~PhysicsTestApplication()
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
 	NE_DELETE(mpPhysicsSystem);
+	NE_DELETE(mpSkyboxRenderer);
 }
 
 bool PhysicsTestApplication::Init()
@@ -87,6 +90,9 @@ bool PhysicsTestApplication::Init()
 	mpPhysicsSystem->Init();
 
 	InitSolarSystem();
+
+	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
+	mpSkyboxRenderer->Init(L"../Textures/skybox.dds");
 
 	return true;
 }
@@ -180,12 +186,6 @@ void PhysicsTestApplication::Update(float dt)
 	for (int i = 0; i < 200; i++)
 		mpPhysicsSystem->Update(dt * 30758400.0f * 0.00001f);
 
-	//for (auto it = mPlanets.cbegin(); it != mPlanets.cend(); ++it)
-	//{
-	//	if ((*it)->getName() == "Earth" || (*it)->getName() == "Earth's Moon")
-	//		std::cout << "Planet: " << (*it)->getName() << "\nLocation: " << (*it)->getPosition().x << ", " << (*it)->getPosition().y << ", " << (*it)->getPosition().z << "\n";
-	//}
-
 	mpCamera->Update(dt);
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
@@ -241,6 +241,7 @@ void PhysicsTestApplication::Render()
 		mMeshRenderer.Render(mpRenderer);
 	}
 
+	mpSkyboxRenderer->Render(mpRenderer);
 
 	mpRenderer->RenderDeferredShading();
 

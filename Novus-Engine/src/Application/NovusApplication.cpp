@@ -5,6 +5,7 @@
 #include "Events/EventSystem.h"
 #include "Resources/Font/FontManager.h"
 #include "Utils/Memory/MallocTracker.h"
+#include "Utils/Logging/ConsoleLogSerializer.h"
 
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")
@@ -61,6 +62,9 @@ NovusApplication::~NovusApplication()
 	NE_DELETE(mpInputSystem);
 	NE_DELETE(mpEventSystem);
 	NE_DELETE(mpRenderer);
+
+	Logger::getInstance()->RemoveSerializer(mpLogSerializer, LogLevel::All, "");
+	NE_DELETE(mpLogSerializer);
 
 	novus::MallocTracker::getInstance()->DumpTrackedMemory();
 }
@@ -153,7 +157,8 @@ bool NovusApplication::Init()
 	if (!mpFontManager->Init())
 		return false;
 
-	//LeapManager::getInstance().Initialize();
+	mpLogSerializer = NE_NEW ConsoleLogSerializer();
+	Logger::getInstance()->AddSerializer(mpLogSerializer, LogLevel::All, "");
 
 	//LineRenderer::Initialize();
 

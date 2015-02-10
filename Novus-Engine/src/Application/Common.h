@@ -45,6 +45,7 @@
 
 #include "Math/Math.h"
 #include "Utils/Memory/Memory.h"
+#include "Utils/Logging/Logger.h"
 
 #include "3rdParty/FastDelegate.h"
 

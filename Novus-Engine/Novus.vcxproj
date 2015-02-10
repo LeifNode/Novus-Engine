@@ -193,6 +193,7 @@
     <ClInclude Include="src\Graphics\Shaders\IShader.h" />
     <ClInclude Include="src\Graphics\Shaders\Shader.h" />
     <ClInclude Include="src\Graphics\Shaders\VertexShader.h" />
+    <ClInclude Include="src\Graphics\SkyboxRenderer.h" />
     <ClInclude Include="src\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Graphics\Textures\Texture2D.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="src\Physics\PhysicsSystem.h" />
     <ClInclude Include="src\Physics\Particle.h" />
     <ClInclude Include="src\Physics\ParticleForceGenerator.h" />
+    <ClInclude Include="src\Resources\DDSTextureLoader.h" />
     <ClInclude Include="src\Resources\Font\Font.h" />
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
@@ -248,6 +250,7 @@
     <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp" />
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp" />
     <ClCompile Include="src\Graphics\Shaders\Shader.cpp" />
+    <ClCompile Include="src\Graphics\SkyboxRenderer.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture2D.cpp" />
     <ClCompile Include="src\Input\InputSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardState.cpp" />
@@ -258,6 +261,7 @@
     <ClCompile Include="src\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\Physics\Particle.cpp" />
     <ClCompile Include="src\Physics\ParticleForceGenerator.cpp" />
+    <ClCompile Include="src\Resources\DDSTextureLoader.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Utils\Containers\PointList.cpp" />

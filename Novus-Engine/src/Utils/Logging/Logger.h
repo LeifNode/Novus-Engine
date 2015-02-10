@@ -26,7 +26,8 @@ namespace LogLevel
 		Message = 1,
 		Warning = 2,
 		Error   = 4,
-		Critical = 8 //Will also make application exit
+		Critical = 8,
+		All = 15 //Will also make application exit
 	};
 }
 
@@ -60,7 +61,7 @@ private:
 
 private:
 	Logger() {}
-	~Logger() {}
+	~Logger();
 	Logger(const Logger&);
 
 	Logger& operator= (const Logger&);

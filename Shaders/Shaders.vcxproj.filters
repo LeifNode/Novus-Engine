@@ -49,5 +49,6 @@
     <FxCompile Include="Utils\DebugFullscreenTriangle.hlsl">
       <Filter>Utils</Filter>
     </FxCompile>
+    <FxCompile Include="Skybox.hlsl" />
   </ItemGroup>
 </Project>

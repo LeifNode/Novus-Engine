@@ -1,5 +1,7 @@
 #include "Texture2D.h"
+#include "Application/Common.h"
 #include "Graphics/D3DRenderer.h"
+#include "Resources/DDSTextureLoader.h"
 
 namespace novus
 {
@@ -84,6 +86,33 @@ void Texture2D::DeInit()
 	ReleaseCOM(mpRenderTargetView);
 	ReleaseCOM(mpResourceView);
 	ReleaseCOM(mpTexture);
+}
+
+void Texture2D::Load(D3DRenderer* renderer, const wchar_t* filePath)
+{
+	ID3D11Resource* textureResource;
+	ID3D11ShaderResourceView* textureSRV;
+
+	DirectX::CreateDDSTextureFromFile(renderer->device(), filePath, &textureResource, &textureSRV);
+
+	if (textureResource == NULL || textureSRV == NULL)
+	{
+		NE_CRITICAL("Failed to load texture.", "Texture2D");
+	}
+
+	D3D11_RESOURCE_DIMENSION dimension;
+	textureResource->GetType(&dimension);
+
+	if (dimension != D3D11_RESOURCE_DIMENSION_TEXTURE2D)
+	{
+		ReleaseCOM(textureSRV);
+		ReleaseCOM(textureResource);
+
+		NE_CRITICAL("Invalid texture dimension.", "Texture2D");
+	}
+
+	mpTexture = reinterpret_cast<ID3D11Texture2D*>(textureResource);
+	mpResourceView = textureSRV;
 }
 
 void Texture2D::setDebugName(const std::string& name)

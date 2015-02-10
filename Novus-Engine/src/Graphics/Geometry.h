@@ -151,6 +151,8 @@ public:
 
 	static void CreatePlayerArrow(Mesh& mesh);
 
+	static void CreateSkybox(std::vector<Vector3>& vertices, std::vector<UINT>& indices);
+
 private:
 	static void Subdivide(Mesh& meshData);
 	static void BuildCylinderTopCap(float bottomRadius, float topRadius, float height, UINT sliceCount, UINT stackCount, Mesh& mesh);

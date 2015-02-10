@@ -31,6 +31,8 @@ public:
 			  UINT bindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 	void DeInit();
 
+	void Load(D3DRenderer* renderer, const wchar_t* filePath);
+
 	int getWidth() const { return mWidth; }
 	int getHeight() const { return mHeight; }
 

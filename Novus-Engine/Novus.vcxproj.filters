@@ -281,6 +281,12 @@
     <ClInclude Include="src\Graphics\Shaders\Shader.h">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="src\Resources\DDSTextureLoader.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\SkyboxRenderer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -387,6 +393,12 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Shaders\Shader.cpp">
       <Filter>Source Files\Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\DDSTextureLoader.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\SkyboxRenderer.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

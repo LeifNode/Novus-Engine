@@ -71,6 +71,7 @@ private:
 	int mClientHeight;
 
 	GameTimer mTimer;
+	class ConsoleLogSerializer* mpLogSerializer;
 };
 
 }
