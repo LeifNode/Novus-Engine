@@ -78,7 +78,7 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
-	mpSkyboxRenderer->Init(L"../Textures/green_galaxy_cube.dds");
+	mpSkyboxRenderer->Init(L"../Textures/skybox.dds");
 
 	return true;
 }

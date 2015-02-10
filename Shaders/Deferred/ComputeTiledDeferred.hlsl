@@ -117,18 +117,26 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
 
+	float3 toEye = normalize(gEyePosition - surface.PositionWorld);
+
 	if (all(globalCoords < gScreenDimensions.xy))
 	{
 		if (numLights > 0)
 		{
 			for (uint tileLightIndex = 0; tileLightIndex < numLights; ++tileLightIndex)
 			{
-				AccumulateBRDF(surface, gPointLights[TileLightIndices[tileLightIndex]], finalColor);
+				AccumulateBRDF(surface, gPointLights[TileLightIndices[tileLightIndex]], toEye, finalColor);
 			}
 		}
 	}
 
+	float3 sampleColor = EnvironmentProbe.SampleLevel(EnvironmentSampler, reflect(-toEye, surface.Normal), 4).rgb;
+
 	finalColor += surface.Emissive;
+
+	[flatten]
+	if (surface.PositionView.z < gClipNearFar.y - 1000.0)
+		finalColor += sampleColor * saturate((1.0 - dot(surface.Normal, toEye)));
 	
 	OutputTexture[globalCoords] = float4(finalColor, 1.0f);
 

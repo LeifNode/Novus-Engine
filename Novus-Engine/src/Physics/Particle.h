@@ -19,8 +19,9 @@ class Particle
 {
 public:
 	Particle();
+	virtual ~Particle() {};
 
-	void Update(float dt);
+	virtual void Update(float dt);
 
 	void AddForce(const Vector3d& force);
 

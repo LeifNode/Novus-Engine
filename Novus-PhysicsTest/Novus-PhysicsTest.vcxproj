@@ -162,6 +162,7 @@
     <ClCompile Include="src\PhysicsTestApp.cpp" />
     <ClCompile Include="src\PlanetaryGravitationGenerator.cpp" />
     <ClCompile Include="src\PlanetParser.cpp" />
+    <ClCompile Include="src\PlanetParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PhysicsTestApp.h" />

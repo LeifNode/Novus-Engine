@@ -13,6 +13,7 @@
 #include "Application/Common.h"
 #include "Graphics/StructuredBuffer.h"
 #include "Graphics/Lights.h"
+#include "Graphics/Textures/Texture2D.h"
 
 namespace novus
 {
@@ -38,10 +39,13 @@ private:
 	class Shader* mpDebugOutputShader;
 	class Texture2D* mpHDRRenderTarget;
 	ID3D11SamplerState* mpPointSampler;
+	ID3D11SamplerState* mpEnvironmentSampler;
 
 	StructuredBuffer<PointLight> mLightBuffer;
 
 	std::vector<PointLight> mTestPointLights;
+
+	Texture2D* mpEnvironmentProbe;
 };
 
 }

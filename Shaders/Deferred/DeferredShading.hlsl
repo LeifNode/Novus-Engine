@@ -19,13 +19,16 @@ Texture2D<float4> DiffuseTexture   : register(t0);
 Texture2D<float3> NormalTexture    : register(t1);
 Texture2D<float4> SpecularTexture  : register(t2);//rgb specular color, a roughness
 Texture2D<float4> EmissiveTexture  : register(t3);//a is unused at the moment
-Texture2D<float> DepthTexture      : register(t4);
+Texture2D<float>  DepthTexture     : register(t4);
+
+TextureCube       EnvironmentProbe : register(t5);
 
 RWTexture2D<float4> OutputTexture  : register(u0);
 
 SamplerState PointSampler          : register(s0);
+SamplerState EnvironmentSampler    : register(s1);
 
-StructuredBuffer<PointLight> gPointLights : register(t5);
+StructuredBuffer<PointLight> gPointLights : register(t6);
 
 float ConvertZToLinearDepth(float depth)
 {

@@ -48,14 +48,13 @@ public:
 	LineRenderer();
 	~LineRenderer();
 
-	void reloadPoints();
+	void ReloadPoints();
 
 	void setDrawMode(LineDrawMode::Type mode);
-	void setLineThickness(float thickness);
+	void setLineWidth(float width);
 	void setLineColor(const Vector4& color);
 
-	static void Initialize();
-	static void DeInit();
+	void Init();
 
 	void Render(D3DRenderer* renderer);
 
@@ -65,8 +64,8 @@ private:
 	void generateIndices(UINT** ppArrayOut, UINT* pIndexCount);
 
 private:
-	static Shader* pLineShader;
-	ID3D11Buffer* pPerLineBuffer;
+	Shader* mpLineShader;
+	ID3D11Buffer* mpPerLineBuffer;
 
 	float mLineWidth;
 	Vector4 mLineColor;

@@ -13,16 +13,28 @@
 #include <Application/Common.h>
 #include <Physics/Particle.h>
 
+namespace novus
+{
+	class LineRenderer;
+	class D3DRenderer;
+}
+
 class PlanetParticle : public novus::Particle
 {
 public:
-	PlanetParticle() : mPlanetRadius(0.0) {}
+	PlanetParticle();
+	~PlanetParticle();
 
 	const std::string& getName() const { return mPlanetName; }
 	void setName(const std::string& name) { mPlanetName = name; }
 
 	double getRadius() const { return mPlanetRadius; }
 	void setRadius(double radius) { mPlanetRadius = radius; }
+
+	void Init();
+
+	virtual void Update(float dt) override;
+	void Render(novus::D3DRenderer* renderer);
 
 private:
 	PlanetParticle(const PlanetParticle&);
@@ -32,6 +44,9 @@ private:
 private:
 	std::string mPlanetName;
 	double mPlanetRadius;
+
+	novus::LineRenderer* mpPathRenderer;
+	float mTimeToUpdate;
 };
 
 

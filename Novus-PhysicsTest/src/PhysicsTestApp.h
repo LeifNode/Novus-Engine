@@ -27,6 +27,7 @@ namespace novus
 	class PhysicsSystem;
 	class Particle;
 	class SkyboxRenderer;
+	class LineRenderer;
 }
 
 class PhysicsTestApplication : public novus::NovusApplication
@@ -54,6 +55,7 @@ private:
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
+	novus::LineRenderer* mpTrailRenderer;
 	novus::PhysicsSystem* mpPhysicsSystem;
 	std::vector<class PlanetParticle*> mPlanets;
 

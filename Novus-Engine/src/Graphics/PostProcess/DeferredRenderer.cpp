@@ -6,18 +6,22 @@
 namespace novus
 {
 
-DeferredRenderer::DeferredRenderer()
-	: mpTiledDeferredShader(NULL),
-	mpDebugOutputShader(NULL),
-	mpPointSampler(NULL)
+	DeferredRenderer::DeferredRenderer()
+		: mpTiledDeferredShader(NULL),
+		mpDebugOutputShader(NULL),
+		mpPointSampler(NULL),
+		mpEnvironmentSampler(NULL)
 {
-	mpHDRRenderTarget = new Texture2D();
+	mpHDRRenderTarget = NE_NEW Texture2D();
+	mpEnvironmentProbe = NE_NEW Texture2D();
 }
 
 DeferredRenderer::~DeferredRenderer()
 {
 	ReleaseCOM(mpPointSampler);
+	ReleaseCOM(mpEnvironmentSampler);
 	NE_DELETE(mpHDRRenderTarget);
+	NE_DELETE(mpEnvironmentProbe);
 }
 
 void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
@@ -64,10 +68,16 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		renderer->device()->CreateSamplerState(&samDesc, &mpPointSampler);
+
+		samDesc.Filter = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+
+		renderer->device()->CreateSamplerState(&samDesc, &mpEnvironmentSampler);
 	}
 
 	mpHDRRenderTarget->Init(renderer, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_RENDER_TARGET);
 	mpHDRRenderTarget->setDebugName("HDR Render Target");
+
+	mpEnvironmentProbe->Load(renderer, L"../Textures/skybox.dds");
 
 	mLightBuffer.Init(renderer, 1028, D3D11_BIND_SHADER_RESOURCE, true);
 }
@@ -102,8 +112,10 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 	renderer->setShader(mpTiledDeferredShader);
 	renderer->BindPerFrameBuffer(); 
 	renderer->getGBuffer()->BindTextures();
+	renderer->ResetSamplerState();
+	renderer->setTextureResource(5, mpEnvironmentProbe);
 	ID3D11ShaderResourceView* lightSRV = mLightBuffer.getSRV();
-	renderer->context()->CSSetShaderResources(5, 1, &lightSRV);
+	renderer->context()->CSSetShaderResources(6, 1, &lightSRV);
 
 	ID3D11UnorderedAccessView* outputUAV = mpHDRRenderTarget->getUnorderedAccessView();
 	renderer->context()->CSSetUnorderedAccessViews(0, 1, &outputUAV, 0);

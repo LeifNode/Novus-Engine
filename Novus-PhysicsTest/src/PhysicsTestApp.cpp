@@ -13,6 +13,7 @@
 #include <Physics/ParticleForceGenerator.h>
 #include <Physics/PhysicsSystem.h>
 #include <Graphics/SkyboxRenderer.h>
+#include <Graphics/LineRenderer.h>
 
 #include "PlanetParticle.h"
 #include "PlanetaryGravitationGenerator.h"
@@ -46,7 +47,8 @@ PhysicsTestApplication::PhysicsTestApplication(HINSTANCE instance)
 NovusApplication(instance),
 mpMainShader(NULL),
 mpTiledDeferredShader(NULL),
-mpSkyboxRenderer(NULL)
+mpSkyboxRenderer(NULL),
+mpTrailRenderer(NULL)
 {
 	mMainWndCaption = L"Physics Test v0.0.40";
 
@@ -61,6 +63,7 @@ PhysicsTestApplication::~PhysicsTestApplication()
 	NE_DELETE(mpCamera);
 	NE_DELETE(mpPhysicsSystem);
 	NE_DELETE(mpSkyboxRenderer);
+	NE_DELETE(mpTrailRenderer);
 }
 
 bool PhysicsTestApplication::Init()
@@ -94,6 +97,22 @@ bool PhysicsTestApplication::Init()
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/skybox.dds");
 
+	mpTrailRenderer = NE_NEW LineRenderer();
+	mpTrailRenderer->Init();
+	mpTrailRenderer->setLineWidth(0.1f);
+	mpTrailRenderer->setDrawMode(LineDrawMode::LineStrip);
+
+	/*for (int i = 0; i < 100; i++)
+	{
+		float amount = Math::TwoPi * ((float)i / 99.0f);
+
+		Vector3 point = Vector3(cosf(amount), 0.0f, sinf(amount));
+
+		mpTrailRenderer->points.AddPoint(point);
+	}*/
+
+	mpTrailRenderer->ReloadPoints();
+
 	return true;
 }
 
@@ -114,7 +133,8 @@ void PhysicsTestApplication::InitSolarSystem()
 		newPlanet->setRadius(static_cast<float>(it->Radius));
 		newPlanet->setPosition(Vector3d(it->Perihelion, 0.0, 0.0));
 		newPlanet->setVelocity(Vector3d(0.0, 0.0, -it->PerihelionVelocity));
-		
+		newPlanet->Init();
+
 		mpPhysicsSystem->AddParticle(newPlanet);
 		mpPhysicsSystem->AddRegistryEntry(newPlanet, gravityGen);
 		mPlanets.push_back(newPlanet);
@@ -183,7 +203,7 @@ void PhysicsTestApplication::OnResize()
 
 void PhysicsTestApplication::Update(float dt)
 {
-	for (int i = 0; i < 200; i++)
+	for (int i = 0; i < 2000; i++)
 		mpPhysicsSystem->Update(dt * 30758400.0f * 0.00001f);
 
 	mpCamera->Update(dt);
@@ -231,15 +251,22 @@ void PhysicsTestApplication::Render()
 
 	for (auto it = mPlanets.cbegin(); it != mPlanets.cend(); ++it)
 	{
-		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius()) / 1.0e6f) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() / 1.0e7));
+		mpRenderer->setShader(mpMainShader);
+
+		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius()) * 1.0e-7f) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() * 1.0e-7));
 		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 		perObject.Material.Roughness = 0.5f;
 
+		mpRenderer->setPerFrameBuffer(perFrame);
 		mpRenderer->setPerObjectBuffer(perObject);
 
 		mMeshRenderer.Render(mpRenderer);
+
+		(*it)->Render(mpRenderer);
 	}
+	
+	mpTrailRenderer->Render(mpRenderer);
 
 	mpSkyboxRenderer->Render(mpRenderer);
 

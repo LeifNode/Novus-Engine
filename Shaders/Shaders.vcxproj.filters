@@ -50,5 +50,6 @@
       <Filter>Utils</Filter>
     </FxCompile>
     <FxCompile Include="Skybox.hlsl" />
+    <FxCompile Include="Line.hlsl" />
   </ItemGroup>
 </Project>

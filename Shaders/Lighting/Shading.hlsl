@@ -21,11 +21,10 @@ struct SURFACE_DATA
 	float3 Emissive;
 };
 
-void AccumulateBRDF(SURFACE_DATA surface, PointLight light, inout float3 finalColor)//Need to optimize
+void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout float3 finalColor)//Need to optimize
 {
 	float specPow = (1.0f - surface.Roughness) * 128.0f;
 
-	float3 toEye = normalize(gEyePosition - surface.PositionWorld);
 	float3 toLight = light.PositionWorld - surface.PositionWorld;
 	float distance = length(toLight);
 	toLight /= distance;

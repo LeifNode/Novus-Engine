@@ -33,5 +33,5 @@ PS_INPUT VS(VS_INPUT vin)
 
 PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
-	return PackGBuffer(float4(0.0f, 0.0f, 0.0f, 1.0f), float3(0.0f, 0.0f, 0.0f), float3(0.0f, 0.0f, 0.0f), 0.0f, 0.06f * pow(gCubemap.Sample(gSampler, pin.PositionL).rgb, 2.2f));
+	return PackGBuffer(float4(0.0f, 0.0f, 0.0f, 1.0f), float3(0.0f, 0.0f, 0.0f), float3(0.0f, 0.0f, 0.0f), 0.0f, pow(gCubemap.Sample(gSampler, pin.PositionL).rgb, 2.2f));
 }
