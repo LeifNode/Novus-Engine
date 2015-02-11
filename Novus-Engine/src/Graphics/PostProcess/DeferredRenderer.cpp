@@ -53,8 +53,8 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f;
 			light.FalloffPow = 1;
 			light.Radius = 0.0f;
-			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 50.0f;
-			light.PositionWorld.y = -4.5f;
+			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 25.0f;
+			light.PositionWorld.y = -4.9f;
 
 			mTestPointLights.push_back(light);
 		}
@@ -77,7 +77,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 	mpHDRRenderTarget->Init(renderer, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_RENDER_TARGET);
 	mpHDRRenderTarget->setDebugName("HDR Render Target");
 
-	mpEnvironmentProbe->Load(renderer, L"../Textures/skybox.dds");
+	mpEnvironmentProbe->Load(renderer, L"../Textures/grasscube1024.dds");
 
 	mLightBuffer.Init(renderer, 1028, D3D11_BIND_SHADER_RESOURCE, true);
 }
@@ -86,7 +86,7 @@ void DeferredRenderer::Update(float dt)
 {
 	for (int i = 0; i < 1028; i++)
 	{
-		mTestPointLights[i].PositionWorld = Matrix3::RotateY(dt * 0.2f) * mTestPointLights[i].PositionWorld;
+		mTestPointLights[i].PositionWorld = Matrix3::RotateY(dt * 0.02f) * mTestPointLights[i].PositionWorld;
 	}
 }
 

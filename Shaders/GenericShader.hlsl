@@ -57,5 +57,5 @@ PS_INPUT VS(VS_INPUT vin)
 
 PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
-	return PackGBuffer(gMaterial.Diffuse, normalize(pin.Normal), gMaterial.SpecularColor, gMaterial.Roughness, gMaterial.Emissive);
+	return PackGBuffer(gMaterial.Diffuse, normalize(pin.Normal), gMaterial.SpecularColor, gMaterial.Roughness, gMaterial.Metallic, gMaterial.Emissive);
 }

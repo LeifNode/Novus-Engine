@@ -22,7 +22,7 @@ struct PS_GBUFFER_OUT
 	float4 Emissive  : SV_TARGET3;
 };
 
-PS_GBUFFER_OUT PackGBuffer(float4 DiffuseColor, float3 Normal, float3 SpecularColor, float Roughness, float3 Emissive)
+PS_GBUFFER_OUT PackGBuffer(float4 DiffuseColor, float3 Normal, float3 SpecularColor, float Roughness, float Metallic, float3 Emissive)
 {
 	PS_GBUFFER_OUT Out;
 
@@ -30,7 +30,7 @@ PS_GBUFFER_OUT PackGBuffer(float4 DiffuseColor, float3 Normal, float3 SpecularCo
 	Out.Diffuse = DiffuseColor;
 	Out.Normal = Normal * 0.5 + 0.5;
 	Out.Specular = float4(SpecularColor, Roughness);
-	Out.Emissive = float4(Emissive, 0.0f);
+	Out.Emissive = float4(Emissive, Metallic);
 
 	return Out;
 }

@@ -130,15 +130,17 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		}
 	}
 
-	float3 sampleColor = EnvironmentProbe.SampleLevel(EnvironmentSampler, reflect(-toEye, surface.Normal), 4).rgb;
+	float3 specularLighting = SpecularIBL(float3(0.0f, 0.0f, 0.0f), surface.Roughness, surface.Normal, toEye);
 
 	finalColor += surface.Emissive;
 
 	[flatten]
 	if (surface.PositionView.z < gClipNearFar.y - 1000.0)
-		finalColor += sampleColor * saturate((1.0 - dot(surface.Normal, toEye)));
+		finalColor += specularLighting;
 	
 	OutputTexture[globalCoords] = float4(finalColor, 1.0f);
+
+	//OutputTexture[globalCoords] = float4(sampleColor + surface.Emissive, 1.0f);
 
 	//OutputTexture[globalCoords] = float4((float(TileNumLights) / 1028.0f).xxx, 1.0f);
 

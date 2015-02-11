@@ -14,7 +14,7 @@ struct Material
 	float3 SpecularColor;
 	float Roughness;
 	float3 Emissive;
-	float pad;
+	float Metallic;
 };
 
 struct DirectionalLight

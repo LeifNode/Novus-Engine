@@ -78,7 +78,7 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
-	mpSkyboxRenderer->Init(L"../Textures/skybox.dds");
+	mpSkyboxRenderer->Init(L"../Textures/grasscube1024.dds");
 
 	return true;
 }
@@ -174,9 +174,9 @@ void TestApplication::Render()
 	mpRenderer->setPerFrameBuffer(perFrame);
 
 	CBPerObject perObject;
-	perObject.Material.Diffuse = Vector4(1.0f);
+	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	perObject.Material.SpecularColor = Vector3(1.0f);
-	perObject.Material.Roughness = 0.4f;
+	perObject.Material.Roughness = 0.0f;
 	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Emissive = Vector3(0.0f);
 
@@ -184,8 +184,9 @@ void TestApplication::Render()
 	{
 		for (int z = -5; z < 5; z++)
 		{
+			perObject.Material.Roughness = (x + 5) / 10.0f;
 			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
-							  Matrix4::Translate(static_cast<float>(x), -4.8f, static_cast<float>(z));
+							  Matrix4::Translate(static_cast<float>(x), -4.9f, static_cast<float>(z));
 
 			perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 			perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
@@ -199,6 +200,7 @@ void TestApplication::Render()
 	perObject.World = Matrix4::Translate(0.0f, -5.0f, 0.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	perObject.Material.Roughness = 0.2f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);
 
