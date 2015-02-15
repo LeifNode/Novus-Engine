@@ -171,15 +171,11 @@ void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout 
 
 	float D = D_GGX(roughness2, NoH);
 	float G = G_Smith(surface.Roughness, NoV, NoL);
-	float3 F = F_Schlick(float3(1.0f, 0.8f, 0.0f), VoH);
-
-	//float G = G_Smith(surface.Roughness, NoV, NoL);
-	//float Fc = pow(1 - VoH, 5);
-	//float3 F = (1 - Fc) * surface.SpecularColor + Fc;
+	float3 F = F_Schlick(lerp(float3(0.0f, 0.0f, 0.0f), surface.SpecularColor, surface.Metallic), VoH);
 
 	float3 contribution = (D*G*F) / (4*NoL*NoV);
 
-	//finalColor += light.Color / PI * surface.Diffuse * light.Intensity * saturate(NoL) * oneOverDistSq;//Diffuse
+	finalColor += light.Color / PI * surface.Diffuse * light.Intensity * saturate(NoL) * oneOverDistSq * (1.0f - surface.Metallic);//Diffuse
 	finalColor += light.Color * light.Intensity * saturate(contribution) * oneOverDistSq;//Specular
 }
 

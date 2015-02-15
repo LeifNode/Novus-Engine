@@ -49,15 +49,15 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		{
 			PointLight light;
 			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
-			light.Intensity = Math::RandF(0.3f, 0.7f) * 100.8f;
+			light.Intensity = Math::RandF(0.3f, 0.7f) * 0.1f;
 			
-			if (i > 10)
-				light.Intensity = 0.0f;
-			light.Range = sqrt(light.Intensity / 0.01f) - 1.0f;
+			//if (i > 100)
+				//light.Intensity = 0.0f;
+			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f;
 			light.FalloffPow = 1;
 			light.Radius = 0.0f;
 			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), 0.0f, Math::RandF(-1.0f, 1.0f)) * 15.0f;
-			light.PositionWorld.y = Math::RandF(-4.0f, -3.0f);
+			light.PositionWorld.y = Math::RandF(-4.9f, -3.0f);
 
 			mTestPointLights.push_back(light);
 		}
@@ -80,7 +80,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 	mpHDRRenderTarget->Init(renderer, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_RENDER_TARGET);
 	mpHDRRenderTarget->setDebugName("HDR Render Target");
 
-	mpEnvironmentProbe->Load(renderer, L"../Textures/grasscube1024.dds");
+	mpEnvironmentProbe->Load(renderer, L"../Textures/sunsetcube1024.dds");
 
 	mLightBuffer.Init(renderer, 1028, D3D11_BIND_SHADER_RESOURCE, true);
 }
