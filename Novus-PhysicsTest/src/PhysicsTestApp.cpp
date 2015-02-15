@@ -118,7 +118,7 @@ bool PhysicsTestApplication::Init()
 
 void PhysicsTestApplication::InitSolarSystem()
 {
-	PlanetaryGravitationGenerator* gravityGen = new PlanetaryGravitationGenerator(mpPhysicsSystem);
+	PlanetaryGravitationGenerator* gravityGen = NE_NEW PlanetaryGravitationGenerator(mpPhysicsSystem);
 	mpPhysicsSystem->AddForceGenerator(gravityGen);
 
 	PlanetParser parser;
@@ -126,7 +126,7 @@ void PhysicsTestApplication::InitSolarSystem()
 
 	for (auto it = parser.getPlanets().cbegin(); it != parser.getPlanets().cend(); ++it)
 	{
-		PlanetParticle* newPlanet = new PlanetParticle();
+		PlanetParticle* newPlanet = NE_NEW PlanetParticle();
 
 		newPlanet->setName(it->Name);
 		newPlanet->setMass(static_cast<float>(it->Mass));

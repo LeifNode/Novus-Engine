@@ -57,10 +57,11 @@ float2 Hammersley(uint i, uint N) {
 
 float D_GGX(float a, float NoH)
 {
-	float denom = ((NoH * NoH) * ((a * a) - 1.0) + 1.0);
+	float a2 = a * a;
+	float denom = (NoH * NoH) * (a2 - 1.0) + 1.0;
 	denom *= denom;
 
-	return (a * a) / (PI * denom);
+	return a2 / (PI * denom);
 }
 
 float G1_Smith(float k, float NoV)
@@ -70,23 +71,29 @@ float G1_Smith(float k, float NoV)
 
 float G_Smith(float r, float NoV, float NoL)
 {
-	/*float a = r * r;
+	/*float a = (r * r);
+	float Vis_SmithV = NoL * (NoV * (1 - a) + a);
+	float Vis_SmithL = NoV * (NoL * (1 - a) + a);
+	return 0.5 * rcp(Vis_SmithV + Vis_SmithL);*/
+
+	/*float a = r*r;
 	float a2 = a*a;
 	float Vis_SmithV = NoV + sqrt(NoV * (NoV - NoV * a2) + a2);
 	float Vis_SmithL = NoL + sqrt(NoL * (NoL - NoL * a2) + a2);
 	return rcp(Vis_SmithV * Vis_SmithL);*/
 
 	float r2 = (r + 1) * (r + 1);
-
 	float k = r2 / 8.0;
-
 	return G1_Smith(k, NoV) * G1_Smith(k, NoL);
 }
 
-//F0 is essentially the metalic parameter I think?
-float F_Schlick(float f0, float VoH)
+//F0 is specular color at normal incidence
+float3 F_Schlick(float3 f0, float VoH)
 {
 	return f0 + (1.0 - f0) * exp2((-5.55473 * VoH) - (6.98316 * VoH));
+
+	//float Fc = pow(1 - VoH, 5);
+	//return saturate(50.0 * f0) * Fc + (1 - Fc) * f0;
 }
 
 
@@ -114,7 +121,7 @@ float3 ImportanceSampleGGX(float2 Xi, float Roughness, float3 N)
 float3 SpecularIBL(float3 SpecularColor, float Roughness, float3 N, float3 V)
 {
 	float3 SpecularLighting = 0;
-	const uint NumSamples = 1024;
+	const uint NumSamples = 128;
 
 	for (uint i = 0; i < NumSamples; i++)
 	{
@@ -122,7 +129,7 @@ float3 SpecularIBL(float3 SpecularColor, float Roughness, float3 N, float3 V)
 		float3 H = ImportanceSampleGGX(Xi, Roughness, N);
 		float3 L = 2 * dot(V, H) * H - V;
 
-		float NoV = saturate(dot(N, V));
+		float NoV = abs(dot(N, V));
 		float NoL = saturate(dot(N, L));
 		float NoH = saturate(dot(N, H));
 		float VoH = saturate(dot(V, H));
@@ -145,36 +152,35 @@ float3 SpecularIBL(float3 SpecularColor, float Roughness, float3 N, float3 V)
 
 void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout float3 finalColor)//Need to optimize
 {
-	float specPow = (1.0f - surface.Roughness) * 128.0f;
 	float roughness2 = surface.Roughness * surface.Roughness;
 
 	float3 toLight = light.PositionWorld - surface.PositionWorld;
 	float distance = length(toLight);
 	toLight /= distance;
 
-	float3 H = (toEye + toLight) / 2.0f;
+	float3 H = normalize(toLight + toEye);
 
-	float NoV = saturate(dot(surface.Normal, toEye));
+	float NoV = abs(dot(surface.Normal, toEye));
 	float NoL = saturate(dot(surface.Normal, toLight));
 	float NoH = saturate(dot(surface.Normal, H));
 	float VoH = saturate(dot(toEye, H));
+	float LoH = saturate(dot(toLight, H));
 
 	float distanceSq = distance * distance;
 	float oneOverDistSq = rcp(distanceSq);
 
 	float D = D_GGX(roughness2, NoH);
 	float G = G_Smith(surface.Roughness, NoV, NoL);
-	float F = F_Schlick(0.04, VoH);
+	float3 F = F_Schlick(float3(1.0f, 0.8f, 0.0f), VoH);
 
-	float contribution = (D*G*F) / (4.0*NoL*NoV);
+	//float G = G_Smith(surface.Roughness, NoV, NoL);
+	//float Fc = pow(1 - VoH, 5);
+	//float3 F = (1 - Fc) * surface.SpecularColor + Fc;
 
-	//finalColor += light.Color * surface.Diffuse * light.Intensity * saturate(NoL) * oneOverDistSq;
-	//finalColor += light.Color * light.Intensity * saturate(contribution) * oneOverDistSq;
+	float3 contribution = (D*G*F) / (4*NoL*NoV);
 
-
-
-	//finalColor += light.Color * light.Intensity * saturate(NoL) * oneOverDistSq;
-	//finalColor += max(light.Color * pow(saturate(NoH), specPow) * light.Intensity * oneOverDistSq, 0.0);
+	//finalColor += light.Color / PI * surface.Diffuse * light.Intensity * saturate(NoL) * oneOverDistSq;//Diffuse
+	finalColor += light.Color * light.Intensity * saturate(contribution) * oneOverDistSq;//Specular
 }
 
 float ConvertZToLinearDepth(float depth)

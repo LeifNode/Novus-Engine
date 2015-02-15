@@ -10,7 +10,7 @@ Logger* Logger::mspInstance = NULL;
 Logger* Logger::getInstance()
 {
 	if (mspInstance == NULL)
-		mspInstance = new Logger();
+		mspInstance = NE_NEW Logger();
 
 	return mspInstance;
 }

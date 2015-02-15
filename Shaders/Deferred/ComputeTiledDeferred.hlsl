@@ -130,9 +130,9 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		}
 	}
 
-	float3 specularLighting = SpecularIBL(float3(0.0f, 0.0f, 0.0f), surface.Roughness, surface.Normal, toEye);
-
 	finalColor += surface.Emissive;
+
+	float3 specularLighting = SpecularIBL(float3(1.0f, 0.8f, 0.0f), surface.Roughness, surface.Normal, toEye);
 
 	[flatten]
 	if (surface.PositionView.z < gClipNearFar.y - 1000.0)

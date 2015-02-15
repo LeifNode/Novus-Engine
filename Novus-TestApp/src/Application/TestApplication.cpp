@@ -174,17 +174,19 @@ void TestApplication::Render()
 	mpRenderer->setPerFrameBuffer(perFrame);
 
 	CBPerObject perObject;
-	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	perObject.Material.SpecularColor = Vector3(1.0f);
+	perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+	perObject.Material.SpecularColor = Vector3(0.5f);
 	perObject.Material.Roughness = 0.0f;
 	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Emissive = Vector3(0.0f);
 
-	for (int x = -5; x < 5; x++)
+	for (int x = -5; x <= 5; x++)
 	{
-		for (int z = -5; z < 5; z++)
+		for (int z = -5; z <= 5; z++)
 		{
-			perObject.Material.Roughness = (x + 5) / 10.0f;
+			perObject.Material.Diffuse = Vector4((z + 5.0f) / 10.0f, 1.0f, 0.0f, 0.0f);
+			perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
+
 			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
 							  Matrix4::Translate(static_cast<float>(x), -4.9f, static_cast<float>(z));
 
@@ -200,6 +202,7 @@ void TestApplication::Render()
 	perObject.World = Matrix4::Translate(0.0f, -5.0f, 0.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	perObject.Material.Roughness = 0.2f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);

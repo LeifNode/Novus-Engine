@@ -179,7 +179,7 @@ void D3DRenderer::OnResize()
 
 bool D3DRenderer::Init()
 {
-	mpIncludeDir = new D3DLocalInclude("../Shaders");
+	mpIncludeDir = NE_NEW D3DLocalInclude("../Shaders");
 
 	// Create the device and device context.
 
