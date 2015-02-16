@@ -40,10 +40,13 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpMainShader(NULL),
 	mpSkyboxRenderer(NULL)
 {
-	mMainWndCaption = L"Novus Engine Test App v0.0.41";
+	mMainWndCaption = L"Novus Engine Test App v0.0.51";
 
 	mpCamera = NE_NEW Camera();
-	mpCamera->setPosition(Vector3(0.0f, -4.9f, 1.35f));
+	mpCamera->setPosition(Vector3(0.0f, -4.9f, 1.4f));
+
+	mpCamera->setPosition(Vector3(-3.6f, -4.0f, 1.7f));
+	mpCamera->setRotation(Quaternion::AxisAngle((Vector3(0.5f, 1.0f, 0.0f)), Math::Pi * 0.3f));
 }
 
 TestApplication::~TestApplication()
@@ -180,11 +183,11 @@ void TestApplication::Render()
 	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Emissive = Vector3(0.0f);
 
-	for (int x = -5; x <= 5; x++)
+	/*for (int x = -5; x <= 5; x++)
 	{
 		perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 		perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
-		perObject.Material.Metallic = 1.0f;
+		perObject.Material.Metallic = 0.0f;
 
 		perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
 						  Matrix4::Translate(static_cast<float>(x) / 4.5f, -4.9f, 0.0f);
@@ -195,9 +198,9 @@ void TestApplication::Render()
 		mpRenderer->setPerObjectBuffer(perObject);
 
 		mMeshRenderer.Render(mpRenderer);
-	}
+	}*/
 
-	/*for (int x = -5; x <= 5; x++)
+	for (int x = -5; x <= 5; x++)
 	{
 		for (int z = 0; z < 2; z++)
 		{
@@ -215,7 +218,7 @@ void TestApplication::Render()
 
 			mMeshRenderer.Render(mpRenderer);
 		}
-	}*/
+	}
 
 	perObject.World = Matrix4::Translate(0.0f, -5.0f, 0.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
@@ -225,7 +228,7 @@ void TestApplication::Render()
 	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Roughness = 0.15f;
 	mpRenderer->setPerObjectBuffer(perObject);
-	//mPlaneRenderer.Render(mpRenderer);
+	mPlaneRenderer.Render(mpRenderer);
 
 	mpSkyboxRenderer->Render(mpRenderer);
 

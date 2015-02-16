@@ -32,6 +32,8 @@ public:
 	Vector3 getPosition() const { return mPosition; }
 	void setPosition(const Vector3& p);
 
+	void setRotation(const Quaternion& q);
+
 	float getVelocity() const { return mVelocity; }
 
 	float getNear() const { return mNear; }

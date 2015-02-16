@@ -48,6 +48,12 @@ void Camera::setPosition(const Vector3& p)
 	mPosition = p;
 }
 
+void Camera::setRotation(const Quaternion& q)
+{
+	mRotation = q;
+	mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
+}
+
 void Camera::OnMouseMove(IEventDataPtr eventData)
 {
 	auto dataPtr = static_pointer_cast<EventData_MouseMove>(eventData);
