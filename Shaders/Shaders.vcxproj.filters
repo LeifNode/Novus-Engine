@@ -51,5 +51,8 @@
     </FxCompile>
     <FxCompile Include="Skybox.hlsl" />
     <FxCompile Include="Line.hlsl" />
+    <FxCompile Include="Utils\PrefilterEnvMap.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

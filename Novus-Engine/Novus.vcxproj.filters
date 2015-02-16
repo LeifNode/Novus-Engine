@@ -287,6 +287,9 @@
     <ClInclude Include="src\Graphics\SkyboxRenderer.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.h">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -399,6 +402,9 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\SkyboxRenderer.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.cpp">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

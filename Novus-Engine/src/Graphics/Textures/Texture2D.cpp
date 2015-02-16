@@ -26,7 +26,8 @@ void Texture2D::Init(D3DRenderer* renderer,
 	int height,
 	DXGI_FORMAT format,
 	int mipCount,
-	UINT bindFlags)
+	UINT bindFlags, 
+	UINT miscFlags)
 {
 	DeInit();
 
@@ -36,15 +37,15 @@ void Texture2D::Init(D3DRenderer* renderer,
 	D3D11_TEXTURE2D_DESC desc;
 	desc.Width = width;
 	desc.Height = height;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
+	desc.MipLevels = mipCount;
+	desc.ArraySize = (miscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE) > 0 ? 6 : 1;
 	desc.Format = format;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = bindFlags;
 	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = mipCount != 1 ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
+	desc.MiscFlags = (mipCount > 1 ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0) | miscFlags;
 
 	renderer->device()->CreateTexture2D(&desc, NULL, &mpTexture);
 
@@ -93,7 +94,7 @@ void Texture2D::Load(D3DRenderer* renderer, const wchar_t* filePath)
 	ID3D11Resource* textureResource;
 	ID3D11ShaderResourceView* textureSRV;
 
-	DirectX::CreateDDSTextureFromFile(renderer->device(), filePath, &textureResource, &textureSRV);
+	DirectX::CreateDDSTextureFromFile(renderer->device(), NULL, filePath, &textureResource, &textureSRV);
 
 	if (textureResource == NULL || textureSRV == NULL)
 	{
@@ -113,6 +114,13 @@ void Texture2D::Load(D3DRenderer* renderer, const wchar_t* filePath)
 
 	mpTexture = reinterpret_cast<ID3D11Texture2D*>(textureResource);
 	mpResourceView = textureSRV;
+
+	D3D11_TEXTURE2D_DESC texDesc;
+
+	mpTexture->GetDesc(&texDesc);//This should just be switched out for a get file data function when I get DirectXTex set up 
+
+	mWidth = texDesc.Width;
+	mHeight = texDesc.Height;
 }
 
 void Texture2D::setDebugName(const std::string& name)

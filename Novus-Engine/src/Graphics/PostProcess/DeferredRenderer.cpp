@@ -50,12 +50,12 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			PointLight light;
 			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
 			light.Intensity = Math::RandF(0.3f, 0.7f) * 0.1f;
+			light.Radius = 0.0f;
 			
 			//if (i > 100)
 				//light.Intensity = 0.0f;
-			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f;
+			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
-			light.Radius = 0.0f;
 			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), 0.0f, Math::RandF(-1.0f, 1.0f)) * 15.0f;
 			light.PositionWorld.y = Math::RandF(-4.9f, -3.0f);
 

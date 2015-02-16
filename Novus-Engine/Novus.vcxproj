@@ -189,6 +189,7 @@
     <ClInclude Include="src\Graphics\LineRenderer.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h" />
+    <ClInclude Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.h" />
     <ClInclude Include="src\Graphics\Shaders\D3DLocalInclude.h" />
     <ClInclude Include="src\Graphics\Shaders\IShader.h" />
     <ClInclude Include="src\Graphics\Shaders\Shader.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="src\Graphics\Geometry.cpp" />
     <ClCompile Include="src\Graphics\LineRenderer.cpp" />
     <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp" />
+    <ClCompile Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.cpp" />
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp" />
     <ClCompile Include="src\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Graphics\SkyboxRenderer.cpp" />

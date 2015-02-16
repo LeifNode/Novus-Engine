@@ -26,6 +26,7 @@ namespace novus
 	class Camera;
 	class Texture2D;
 	class SkyboxRenderer;
+	class PrefilteredEnvironmentMap;
 }
 
 class TestApplication : public novus::NovusApplication
@@ -48,6 +49,7 @@ public:
 	void InitMesh();
 
 private:
+	novus::PrefilteredEnvironmentMap* mpEnvMap;
 	novus::SkyboxRenderer* mpSkyboxRenderer;
 
 	novus::Quaternion mCurrentRotation;
