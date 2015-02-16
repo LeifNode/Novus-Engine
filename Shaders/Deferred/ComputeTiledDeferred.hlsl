@@ -132,7 +132,8 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 
 	finalColor += surface.Emissive;
 
-	float3 specularLighting = SpecularIBL(EnvironmentProbe, EnvironmentSampler, lerp(float3(0.0f, 0.0f, 0.0f), surface.SpecularColor, surface.Metallic), surface.Roughness, surface.Normal, toEye);
+	float3 specularLighting = ApproximateSpecularIBL(EnvironmentProbe, EnvironmentSampler, BRDF_LUT, 11, lerp(float3(0.0f, 0.0f, 0.0f), surface.SpecularColor, surface.Metallic), surface.Roughness, surface.Normal, toEye);
+	//float3 specularLighting = SpecularIBL(EnvironmentProbe, EnvironmentSampler, lerp(float3(0.0f, 0.0f, 0.0f), surface.SpecularColor, surface.Metallic), surface.Roughness, surface.Normal, toEye);
 
 	[flatten]
 	if (surface.PositionView.z < gClipNearFar.y - 1000.0)

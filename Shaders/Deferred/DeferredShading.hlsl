@@ -23,6 +23,8 @@ Texture2D<float>  DepthTexture     : register(t4);
 
 TextureCube       EnvironmentProbe : register(t5);
 
+Texture2D<float2> BRDF_LUT         : register(t7);
+
 RWTexture2D<float4> OutputTexture  : register(u0);
 
 SamplerState PointSampler          : register(s0);

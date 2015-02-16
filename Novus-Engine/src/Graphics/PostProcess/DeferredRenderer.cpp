@@ -2,18 +2,21 @@
 #include "Graphics/Shaders/Shader.h"
 #include "Graphics/Textures/Texture2D.h"
 #include "Graphics/D3DRenderer.h"
+#include "PrefilteredEnvironmentMap.h"
 
 namespace novus
 {
 
 	DeferredRenderer::DeferredRenderer()
 		: mpTiledDeferredShader(NULL),
+		mpLUTShader(NULL),
 		mpDebugOutputShader(NULL),
 		mpPointSampler(NULL),
-		mpEnvironmentSampler(NULL)
+		mpEnvironmentSampler(NULL),
+		mpEnvMap(NULL),
+		mpBRDFLUT(NULL)
 {
 	mpHDRRenderTarget = NE_NEW Texture2D();
-	mpEnvironmentProbe = NE_NEW Texture2D();
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -21,7 +24,8 @@ DeferredRenderer::~DeferredRenderer()
 	ReleaseCOM(mpPointSampler);
 	ReleaseCOM(mpEnvironmentSampler);
 	NE_DELETE(mpHDRRenderTarget);
-	NE_DELETE(mpEnvironmentProbe);
+	NE_DELETE(mpEnvMap);
+	NE_DELETE(mpBRDFLUT);
 }
 
 void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
@@ -34,6 +38,13 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		};
 
 		mpTiledDeferredShader = renderer->LoadShader(L"../Shaders/Deferred/ComputeTiledDeferred.hlsl", deferredShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
+
+		ShaderInfo LUTShaderInfo[] = {
+			{ ShaderType::Compute, "PreIntegrateBRDFCS" },
+			{ ShaderType::None, NULL }
+		};
+
+		mpLUTShader = renderer->LoadShader(L"../Shaders/Utils/PreIntegrateBRDF.hlsl", LUTShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
 
 		ShaderInfo debugShaderInfo[] = {
 			{ ShaderType::Vertex, "VS" },
@@ -80,9 +91,21 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 	mpHDRRenderTarget->Init(renderer, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_RENDER_TARGET);
 	mpHDRRenderTarget->setDebugName("HDR Render Target");
 
-	mpEnvironmentProbe->Load(renderer, L"../Textures/sunsetcube1024.dds");
+	mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
+	mpEnvMap->Init(renderer, L"../Textures/sunsetcube1024.dds");
 
 	mLightBuffer.Init(renderer, 1028, D3D11_BIND_SHADER_RESOURCE, true);
+
+	mpBRDFLUT = NE_NEW Texture2D();
+	mpBRDFLUT->Init(renderer, 512, 512, DXGI_FORMAT_R16G16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
+	mpBRDFLUT->setDebugName("BRDF LUT");
+
+	ID3D11UnorderedAccessView* texUav = mpBRDFLUT->getUnorderedAccessView();
+
+	renderer->setShader(mpLUTShader);
+	renderer->context()->CSSetUnorderedAccessViews(0, 1, &texUav, 0);
+
+	renderer->context()->Dispatch(mpBRDFLUT->getWidth() / 16, mpBRDFLUT->getHeight() / 16, 1);
 }
 
 void DeferredRenderer::Update(float dt)
@@ -116,7 +139,9 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 	renderer->BindPerFrameBuffer(); 
 	renderer->getGBuffer()->BindTextures();
 	renderer->ResetSamplerState();
-	renderer->setTextureResource(5, mpEnvironmentProbe);
+	mpEnvMap->Bind(renderer, 5);
+	renderer->setTextureResource(7, mpBRDFLUT);
+
 	ID3D11ShaderResourceView* lightSRV = mLightBuffer.getSRV();
 	renderer->context()->CSSetShaderResources(6, 1, &lightSRV);
 

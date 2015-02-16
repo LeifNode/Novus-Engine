@@ -36,16 +36,17 @@ public:
 
 private:
 	class Shader* mpTiledDeferredShader;
+	class Shader* mpLUTShader;
 	class Shader* mpDebugOutputShader;
 	class Texture2D* mpHDRRenderTarget;
+	class Texture2D* mpBRDFLUT;
+	class PrefilteredEnvironmentMap* mpEnvMap;
 	ID3D11SamplerState* mpPointSampler;
 	ID3D11SamplerState* mpEnvironmentSampler;
 
 	StructuredBuffer<PointLight> mLightBuffer;
 
 	std::vector<PointLight> mTestPointLights;
-
-	Texture2D* mpEnvironmentProbe;
 };
 
 }

@@ -20,6 +20,19 @@ struct SURFACE_DATA
 	float3 Emissive;
 };
 
+half RoughnessToMipLevel(float Roughness, int MipCount)
+{
+	// Level starting from 1x1 mip
+	return MipCount - 6 - 1.15 * log2(Roughness);
+	//solve for x z = y - 4 - 1.15 * log2(x)
+	//log2(roughness) = (mipcount - 4 - mip)
+}
+
+float MipLevelToRoughness(int MipLevel, int MipCount)
+{
+	return pow(2.0f, (MipCount - 6.0f - MipLevel) / 1.15f);
+}
+
 //http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
 float RadicalInverse_VdC(uint bits) {
 	bits = (bits << 16u) | (bits >> 16u);
@@ -97,10 +110,100 @@ float3 ImportanceSampleGGX(float2 Xi, float Roughness, float3 N)
 	return TangentX * H.x + TangentY * H.y + N * H.z;
 }
 
+float4 ImportanceSampleGGX(float2 E, float Roughness)
+{
+	float m = Roughness * Roughness;
+	float m2 = m * m;
+	float Phi = 2 * PI * E.x;
+	float CosTheta = sqrt((1 - E.y) / (1 + (m2 - 1) * E.y));
+	float SinTheta = sqrt(1 - CosTheta * CosTheta);
+	float3 H;
+	H.x = SinTheta * cos(Phi);
+	H.y = SinTheta * sin(Phi);
+	H.z = CosTheta;
+	float d = (CosTheta * m2 - CosTheta) * CosTheta + 1;
+	float D = m2 / (PI*d*d);
+	float PDF = D * CosTheta;
+	return float4(H, PDF);
+}
+
+float3 PrefilterEnvMap(TextureCube EnvMap, SamplerState EnvSampler, float Roughness, float3 R)
+{
+	float3 N = R;
+	float3 V = R;
+	float3 PrefilteredColor = 0;
+	float TotalWeight = 0.0;
+	const uint NumSamples = 1024;
+
+	for (uint i = 0; i < NumSamples; i++)
+	{
+		float2 Xi = Hammersley(i, NumSamples);
+		float3 H = ImportanceSampleGGX(Xi, Roughness, N);
+		float3 L = 2 * dot(V, H) * H - V;
+		float NoL = saturate(dot(N, L));
+
+		if (NoL > 0)
+		{
+			PrefilteredColor += pow(abs(EnvMap.SampleLevel(EnvSampler, L, 0).rgb), 2.2f) * NoL;
+			TotalWeight += NoL;
+		}
+	}
+
+	return PrefilteredColor / TotalWeight;
+}
+
+float2 IntegrateBRDF(float Roughness, float NoV)
+{
+	float3 V;
+	V.x = sqrt(1.0f - NoV * NoV); // sin
+	V.y = 0;
+	V.z = NoV; // cos
+	float A = 0;
+	float B = 0;
+
+	const uint NumSamples = 1024;
+	for (uint i = 0; i < NumSamples; i++)
+	{
+		float2 Xi = Hammersley(i, NumSamples);
+		float3 H = ImportanceSampleGGX(Xi.xy, Roughness).xyz;
+		float3 L = 2 * dot(V, H) * H - V;
+		float NoL = saturate(L.z);
+		float NoH = saturate(H.z);
+		float VoH = saturate(dot(V, H));
+		if (NoL > 0)
+		{
+			float G = G_Smith(Roughness, NoV, NoL);
+			float G_Vis = G * VoH / (NoH * NoV);
+			float Fc = pow(1 - VoH, 5);
+			A += (1 - Fc) * G_Vis;
+			B += Fc * G_Vis;
+		}
+	}
+	return float2(A, B) / NumSamples;
+}
+
+//float3 ApproximateSpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, float3 SpecularColor, float Roughness, float3 N, float3 V)
+//{
+//	float NoV = abs(dot(N, V));
+//	float3 R = 2 * dot(V, N) * N - V;
+//	float3 PrefilteredColor = PrefilterEnvMap(EnvMap, EnvSampler, Roughness, R);
+//	float2 EnvBRDF = IntegrateBRDF(Roughness, NoV);
+//	return PrefilteredColor * (SpecularColor * EnvBRDF.x + EnvBRDF.y);
+//}
+
+float3 ApproximateSpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, Texture2D<float2> LUT, int MipLevels, float3 SpecularColor, float Roughness, float3 N, float3 V)
+{
+	float NoV = abs(dot(N, V));
+	float3 R = 2 * dot(V, N) * N - V;
+	float3 PrefilteredColor = EnvMap.SampleLevel(EnvSampler, R, MipLevels - RoughnessToMipLevel(Roughness, MipLevels)).rgb;
+	float2 EnvBRDF = saturate(LUT.SampleLevel(EnvSampler, saturate(float2(Roughness - 0.001, NoV - 0.001)), 0));
+	return PrefilteredColor * (SpecularColor * EnvBRDF.x + EnvBRDF.y);
+}
+
 float3 SpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, float3 SpecularColor, float Roughness, float3 N, float3 V)
 {
 	float3 SpecularLighting = 0;
-	const uint NumSamples = 512;
+	const uint NumSamples = 1024;
 
 	for (uint i = 0; i < NumSamples; i++)
 	{
@@ -115,7 +218,7 @@ float3 SpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, float3 SpecularC
 
 		if (NoL > 0)
 		{
-			float3 SampleColor = pow(EnvMap.SampleLevel(EnvSampler, L, 0).rgb, 2.2);
+			float3 SampleColor = abs(EnvMap.SampleLevel(EnvSampler, L, 0).rgb);
 			float G = G_Smith(Roughness, NoV, NoL);
 			float Fc = pow(1 - VoH, 5);
 			float3 F = (1 - Fc) * SpecularColor + Fc;
@@ -127,7 +230,7 @@ float3 SpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, float3 SpecularC
 	return SpecularLighting / NumSamples;
 }
 
-void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout float3 finalColor)//Need to optimize
+void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout float3 finalColor)
 {
 	float roughness2 = surface.Roughness * surface.Roughness;
 
@@ -152,7 +255,7 @@ void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout 
 
 	float3 contribution = (D*G*F) / (4 * NoL*NoV);
 
-	finalColor += light.Color / PI * surface.Diffuse * light.Intensity * saturate(NoL) * oneOverDistSq * (1.0f - surface.Metallic);//Diffuse
+	finalColor += light.Color / PI * surface.Diffuse.rgb * light.Intensity * saturate(NoL) * oneOverDistSq * (1.0f - surface.Metallic);//Diffuse
 	finalColor += light.Color * light.Intensity * saturate(contribution) * oneOverDistSq;//Specular
 }
 

@@ -29,10 +29,8 @@ PrefilteredEnvironmentMap::~PrefilteredEnvironmentMap()
 	NE_DELETE(mpSourceTexture);
 }
 
-void PrefilteredEnvironmentMap::Init(const std::wstring& sourcePath)
+void PrefilteredEnvironmentMap::Init(D3DRenderer* renderer, const std::wstring& sourcePath)
 {
-	D3DRenderer* renderer = EngineStatics::getRenderer();
-
 	InitConstantBuffer(renderer);
 	InitSourceTexture(renderer, sourcePath);
 	InitDestinationTexture(renderer);
@@ -133,6 +131,7 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 	renderer->setTextureResource(0, mpSourceTexture);
 
 	CBFilterEnvMap filterBuffer;
+	filterBuffer.MipCount = maxMipFilterLevel;
 
 	Vector3 targets[6] =
 	{
@@ -165,7 +164,9 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 		for (int mip = 0; mip < maxMipFilterLevel; mip++)
 		{
 			filterBuffer.SourceDimensions = dim;
-			filterBuffer.Roughness = mip / ((float)maxMipFilterLevel - 1.0f);
+			filterBuffer.CurrentMip = maxMipFilterLevel - mip;
+
+			std::cout << "Current Mip: " << mip + 2 << ", Corresponding roughness: " << powf(2.0f, (maxMipFilterLevel - 4.0f - mip - 2) / 1.15f) << std::endl;
 
 			renderer->context()->UpdateSubresource(mpFilterBuffer, 0, NULL, &filterBuffer, 0, 0);
 			renderer->setConstantBuffer(2, mpFilterBuffer);
@@ -175,6 +176,11 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 
 			dim /= 2;
 		}
+	}
+
+	for (float r = 0.0f; r <= 1.0f; r += 0.1f)
+	{
+		std::cout << "Current Roughness: " << r << ", Corresponding mip: " << maxMipFilterLevel - 6 - 1.15 * log2f(r) << std::endl;
 	}
 }
 

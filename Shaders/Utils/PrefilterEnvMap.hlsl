@@ -16,8 +16,8 @@ RWTexture2D<float4> OutputTexture  : register(u0);
 cbuffer cbPreFilter : register(b2)
 {
 	int2 gSourceDimensions;
-	float gRoughness;
-	float pad;
+	int gCurrentMip;
+	int gMipCount;
 
 	float3 gUp;
 	float pad2;
@@ -41,6 +41,11 @@ void FilterEnvMapCS(uint3 groupID          : SV_GroupID,
 	normal += clipCoords.x * right - clipCoords.y * gUp;
 	normal = normalize(normal);
 
+	float3 color = PrefilterEnvMap(EnvironmentMap, EnvSampler, MipLevelToRoughness(gCurrentMip, gMipCount), normal);
+
 	//OutputTexture[globalCoords] = float4((normal + 1.0f) * 0.5f, 0.0f);
-	OutputTexture[globalCoords] = float4(EnvironmentMap.SampleLevel(EnvSampler, normal, 0).rgb, 1.0f);
+	if (globalCoords.x < uint(gSourceDimensions.x) && globalCoords.y < uint(gSourceDimensions.y))
+		OutputTexture[globalCoords] = float4(color, 1.0f);
+
+	//OutputTexture[globalCoords] = float4(IntegrateBRDF(sampleCoords.x, sampleCoords.y), 0.0, 1.0);
 }

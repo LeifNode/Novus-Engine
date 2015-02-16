@@ -11,7 +11,6 @@
 #include <Graphics/PostProcess/DeferredRenderer.h>
 #include <Graphics/Textures/Texture2D.h>
 #include <Graphics/SkyboxRenderer.h>
-#include <Graphics/PostProcess/PrefilteredEnvironmentMap.h>
 
 using namespace novus;
 
@@ -39,8 +38,7 @@ TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
 	mpMainShader(NULL),
-	mpSkyboxRenderer(NULL),
-	mpEnvMap(NULL)
+	mpSkyboxRenderer(NULL)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.41";
 
@@ -53,7 +51,6 @@ TestApplication::~TestApplication()
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
 	NE_DELETE(mpSkyboxRenderer);
-	NE_DELETE(mpEnvMap);
 }
 
 bool TestApplication::Init()
@@ -82,10 +79,6 @@ bool TestApplication::Init()
 
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
-
-	mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
-
-	mpEnvMap->Init(L"../Textures/sunsetcube1024.dds");
 
 	return true;
 }
@@ -187,24 +180,24 @@ void TestApplication::Render()
 	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Emissive = Vector3(0.0f);
 
-	//for (int x = -5; x <= 5; x++)
-	//{
-	//	perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-	//	perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
-	//	perObject.Material.Metallic = 1.0f;
-
-	//	perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
-	//					  Matrix4::Translate(static_cast<float>(x) / 4.5f, -4.9f, 0.0f);
-
-	//	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-	//	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-
-	//	mpRenderer->setPerObjectBuffer(perObject);
-
-	//	mMeshRenderer.Render(mpRenderer);
-	//}
-
 	for (int x = -5; x <= 5; x++)
+	{
+		perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
+		perObject.Material.Metallic = 1.0f;
+
+		perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) * 
+						  Matrix4::Translate(static_cast<float>(x) / 4.5f, -4.9f, 0.0f);
+
+		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+
+		mpRenderer->setPerObjectBuffer(perObject);
+
+		mMeshRenderer.Render(mpRenderer);
+	}
+
+	/*for (int x = -5; x <= 5; x++)
 	{
 		for (int z = 0; z < 2; z++)
 		{
@@ -222,7 +215,7 @@ void TestApplication::Render()
 
 			mMeshRenderer.Render(mpRenderer);
 		}
-	}
+	}*/
 
 	perObject.World = Matrix4::Translate(0.0f, -5.0f, 0.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
@@ -232,7 +225,7 @@ void TestApplication::Render()
 	perObject.Material.Metallic = 0.0f;
 	perObject.Material.Roughness = 0.15f;
 	mpRenderer->setPerObjectBuffer(perObject);
-	mPlaneRenderer.Render(mpRenderer);
+	//mPlaneRenderer.Render(mpRenderer);
 
 	mpSkyboxRenderer->Render(mpRenderer);
 

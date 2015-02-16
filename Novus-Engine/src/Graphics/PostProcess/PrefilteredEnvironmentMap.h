@@ -25,8 +25,8 @@ class PrefilteredEnvironmentMap
 	struct CBFilterEnvMap
 	{
 		Vector2i SourceDimensions;
-		float Roughness;
-		float pad;
+		int CurrentMip;
+		int MipCount;
 
 		Vector3 Up;
 		float pad2;
@@ -38,7 +38,7 @@ public:
 	PrefilteredEnvironmentMap();
 	~PrefilteredEnvironmentMap();
 
-	void Init(const std::wstring& sourcePath);
+	void Init(D3DRenderer* renderer, const std::wstring& sourcePath);
 
 	void Bind(D3DRenderer* renderer, int index);
 
@@ -59,7 +59,7 @@ private:
 	ID3D11ShaderResourceView* mpFilteredTextureSRV;
 	ID3D11UnorderedAccessView** mpUAVArray;
 
-	static const int maxMipFilterLevel = 5;
+	static const int maxMipFilterLevel = 11;
 };
 
 }

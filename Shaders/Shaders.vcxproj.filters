@@ -54,5 +54,8 @@
     <FxCompile Include="Utils\PrefilterEnvMap.hlsl">
       <Filter>Utils</Filter>
     </FxCompile>
+    <FxCompile Include="Utils\PreIntegrateBRDF.hlsl">
+      <Filter>Utils</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
