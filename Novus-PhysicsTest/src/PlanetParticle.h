@@ -17,6 +17,7 @@ namespace novus
 {
 	class LineRenderer;
 	class D3DRenderer;
+	class TextRenderer;
 }
 
 class PlanetParticle : public novus::Particle
@@ -36,10 +37,11 @@ public:
 	virtual void Update(float dt) override;
 	void Render(novus::D3DRenderer* renderer);
 
+	void ForwardRender(novus::D3DRenderer* renderer);
+
 private:
 	PlanetParticle(const PlanetParticle&);
 	PlanetParticle& operator= (const PlanetParticle&);
-
 
 private:
 	std::string mPlanetName;
@@ -47,6 +49,11 @@ private:
 
 	novus::LineRenderer* mpPathRenderer;
 	float mTimeToUpdate;
+
+	novus::LineRenderer* mpForceVector;
+	novus::LineRenderer* mpVelocityVector;
+
+	novus::TextRenderer* mpNameRenderer;
 };
 
 

@@ -29,6 +29,7 @@ void PointList::Clear()
 void PointList::setPoints(const std::vector<Vector3>& points)
 {
 	list.clear();
+	list.reserve(points.size());
 
 	for (auto it = points.begin(); it != points.end(); ++it)
 	{

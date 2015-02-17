@@ -51,6 +51,14 @@ void PlanetParser::ParsePlanet(XMLElement* planetElement, const Planet* parent)
 	elementIt = elementIt->NextSiblingElement("perihelionvelocity");
 	newPlanet.PerihelionVelocity = atof(elementIt->GetText());
 
+	auto keyBindIt = elementIt->NextSiblingElement("keybind");
+	if (keyBindIt != NULL)
+	{
+		newPlanet.KeyBind = atoi(keyBindIt->GetText());
+	}
+	else
+		newPlanet.KeyBind = -1;
+
 	if (parent != NULL)
 	{
 		newPlanet.Perihelion += parent->Perihelion;
@@ -62,9 +70,9 @@ void PlanetParser::ParsePlanet(XMLElement* planetElement, const Planet* parent)
 	elementIt = elementIt->NextSiblingElement("moons"); 
 	if (elementIt != NULL)
 	{
-		for (elementIt = elementIt->FirstChildElement("planet"); elementIt != NULL; elementIt = elementIt->NextSiblingElement())
+		for (auto planetIt = elementIt->FirstChildElement("planet"); planetIt != NULL; planetIt = planetIt->NextSiblingElement())
 		{
-			ParsePlanet(elementIt, &newPlanet);
+			ParsePlanet(planetIt, &newPlanet);
 		}
 	}
 }

@@ -40,7 +40,7 @@ public:
 	Vector3d getVelocity() const;
 	Vector3d getAcceleration() const;
 
-private:
+protected:
 	Vector3d mPosition;
 	Vector3d mVelocity;
 	Vector3d mAcceleration;

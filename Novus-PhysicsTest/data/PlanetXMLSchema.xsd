@@ -56,6 +56,7 @@
         </xs:element>
         <xs:element name="texturepath" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="planetmaterial" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="keybind" type="xs:int" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

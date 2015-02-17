@@ -15,6 +15,7 @@
 #include <Graphics/SkyboxRenderer.h>
 #include <Graphics/LineRenderer.h>
 #include <Graphics/TextRenderer.h>
+#include <Input/InputSystem.h>
 
 #include "PlanetParticle.h"
 #include "PlanetaryGravitationGenerator.h"
@@ -50,13 +51,20 @@ PhysicsTestApplication::PhysicsTestApplication(HINSTANCE instance)
 	mpTiledDeferredShader(NULL),
 	mpSkyboxRenderer(NULL),
 	mpTextRenderer(NULL),
-	mpUIRenderer(NULL)
+	mpUIRenderer(NULL),
+	mSelectedPlanet(0),
+	mSelectedDistance(4.0f),
+	mCameraInterpAmount(1.0f),
+	mTimestep(0.00001f)
 {
-	mMainWndCaption = L"Physics Test v0.0.40";
+	mMainWndCaption = L"Solar System v0.5.55";
 
 	mpCamera = NE_NEW Camera();
-	mpCamera->setPosition(Vector3(0.0f, 1.0f, 1.0f));
+	mpCamera->setPosition(Vector3(0.0f, 0.01f, 1.0f));
 	mpPhysicsSystem = NE_NEW PhysicsSystem();
+
+	for (int i = 0; i < 10; i++)
+		mSelectionArray[i] = NULL;
 }
 
 PhysicsTestApplication::~PhysicsTestApplication()
@@ -136,11 +144,13 @@ void PhysicsTestApplication::InitSolarSystem()
 		newPlanet->Init();
 
 		mpPhysicsSystem->AddParticle(newPlanet);
-		mpPhysicsSystem->AddRegistryEntry(newPlanet, gravityGen);
 		mPlanets.push_back(newPlanet);
+		
+		if (it->KeyBind != -1)
+			mSelectionArray[it->KeyBind] = newPlanet;
 
-		if (newPlanet->getName() == "Jupiter")
-			mpUIRenderer->SelectPlanet(newPlanet);
+		if (newPlanet->getName() != "Sun")
+			mpPhysicsSystem->AddRegistryEntry(newPlanet, gravityGen); //The sun wobbles since I have not set an initial velocity on it to coutner the pull of larger planets such as Jupiter
 	}
 }
 
@@ -195,6 +205,25 @@ void PhysicsTestApplication::OnKeyDown(novus::IEventDataPtr eventData)
 	{
 		ExitApp();
 	}
+	if (dataPtr->getKey() >= KeyboardKey::KEY_0 && dataPtr->getKey() <= KeyboardKey::KEY_9)
+	{
+		if (dataPtr->getKey() == KeyboardKey::KEY_0)
+		{
+			Vector3 cameraPosition = -mpCamera->getForward() * 400.0f;
+
+			mpCamera->setPosition(cameraPosition);
+		}
+
+		int key = dataPtr->getKey() - 48;
+
+		if (key != mSelectedPlanet)
+		{
+			mLastCameraPosition = mpCamera->getPosition();
+			mCameraInterpAmount = 0.0f;
+		}
+
+		mSelectedPlanet = key;
+	}
 }
 
 void PhysicsTestApplication::OnResize()
@@ -207,9 +236,43 @@ void PhysicsTestApplication::OnResize()
 void PhysicsTestApplication::Update(float dt)
 {
 	for (int i = 0; i < 2000; i++)
-		mpPhysicsSystem->Update(dt * 30758400.0f * 0.00001f);
+		mpPhysicsSystem->Update(dt * 30758400.0f * mTimestep);
 
 	mpCamera->Update(dt);
+
+	mCameraInterpAmount = min(1.0f, mCameraInterpAmount + dt * 1.5f);
+
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_E))
+	{
+		mTimestep = Math::Min(0.0003f, mTimestep * powf(2.0f, dt));
+	}
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Q))
+	{
+		mTimestep = Math::Min(0.0003f, mTimestep / powf(2.0f, dt));
+	}
+
+	if (mSelectedPlanet != 0 && mSelectionArray[mSelectedPlanet] != NULL)
+	{
+		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_S))
+		{
+			mSelectedDistance += dt * 8.0f;
+		}
+		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_W))
+		{
+			mSelectedDistance -= dt * 8.0f;
+		}
+
+		Vector3 planetScaledPosition = Vector3(mSelectionArray[mSelectedPlanet]->getPosition() * RENDERER_SCALING);
+		float planetScaledRadius = mSelectionArray[mSelectedPlanet]->getRadius() * RENDERER_SCALING;
+		Vector3 cameraPosition = planetScaledPosition - mpCamera->getForward() * planetScaledRadius * mSelectedDistance;
+
+		Vector3 cameraInterpPosition = Math::Lerp(mLastCameraPosition, cameraPosition, mCameraInterpAmount);
+
+		mpCamera->setPosition(cameraInterpPosition);
+		mpUIRenderer->SelectPlanet(mSelectionArray[mSelectedPlanet]);
+	}
+	else if (mSelectedPlanet == 0)
+		mpUIRenderer->SelectPlanet(NULL);
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
 }
@@ -256,7 +319,7 @@ void PhysicsTestApplication::Render()
 	{
 		mpRenderer->setShader(mpMainShader);
 
-		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius()) * 1.0e-7f) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() * 1.0e-7));
+		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius()) * RENDERER_SCALING) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() * RENDERER_SCALING));
 		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 		perObject.Material.Roughness = 0.5f;
@@ -281,6 +344,10 @@ void PhysicsTestApplication::Render()
 
 	mpRenderer->ClearDepth();
 	mpRenderer->ResetRenderTarget();
+
+	for (int i = 0; i < mPlanets.size(); i++)
+		mPlanets[i]->ForwardRender(mpRenderer);
+
 	mpUIRenderer->Render(mpRenderer);
 
 	mpRenderer->PostRender();

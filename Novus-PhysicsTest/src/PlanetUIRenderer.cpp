@@ -28,7 +28,7 @@ void PlanetUIRenderer::Init()
 	mpTextRenderer->setTextSize(16);
 	mpTextRenderer->setFont(EngineStatics::getFontManager()->GetFont("sansserif"));
 	mpTextRenderer->setVerticalSpacing(0.008f);
-	mpTextRenderer->mTransform.SetPosition(Vector3(0.2f, 0.23f, 0.0f));
+	mpTextRenderer->mTransform.SetPosition(Vector3(0.18f, 0.245f, 0.0f));
 	mpTextRenderer->mTransform.SetScale(4.0f, 4.0f, 4.0f);
 	SelectPlanet(NULL);
 }
@@ -41,8 +41,9 @@ void PlanetUIRenderer::SelectPlanet(const PlanetParticle* planet)
 	{
 		stream << "Planet:           " << planet->getName() << "\n"
 			   << "Mass (kg):      " << planet->getMass() << "\n"
-			   << "Speed (km/s): " << Length(planet->getVelocity()) << "\n";
-
+			   << "Speed (km/s): " << Length(planet->getVelocity()) << "\n"
+			   << "Velocity (km/s):\nX: " << planet->getVelocity().x << "\nY: "
+			   << planet->getVelocity().y << "\nZ: " << planet->getVelocity().z << "\n";
 	}
 	else
 	{

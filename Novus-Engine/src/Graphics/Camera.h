@@ -39,6 +39,8 @@ public:
 	float getNear() const { return mNear; }
 	float getFar() const { return mFar; }
 
+	Vector3 getForward() const;
+
 	void OnResize(int width, int height);
 
 	void Update(float dt);

@@ -21,6 +21,8 @@
 #include <Events/EventSystem.h>
 #include <Math/Math.h>
 
+#define RENDERER_SCALING 1.0e-7
+
 namespace novus
 {
 	class Camera;
@@ -58,6 +60,15 @@ private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
 	novus::PhysicsSystem* mpPhysicsSystem;
 	std::vector<class PlanetParticle*> mPlanets;
+
+	float mTimestep;
+
+	class PlanetParticle* mSelectionArray[10];
+	int mSelectedPlanet;
+	float mSelectedDistance;
+
+	novus::Vector3 mLastCameraPosition;
+	float mCameraInterpAmount;
 
 	class PlanetUIRenderer* mpUIRenderer;
 

@@ -9,12 +9,12 @@ Camera::Camera()
 	:mPosition(0.0f, 1.66f, 0.0f),
 	mDirection(0.0f, 0.0f, -1.0f),
 	mReadingMouse(false),
-	mVelocity(5.0f),
+	mVelocity(50.0f),
 	mNear(0.01f),
 	mFar(10000.0f),
 	mFreeRoam(true)
 {
-	OnResize(1280, 720);
+	//OnResize(1280, 720);
 
 	BindInput();
 }
@@ -52,6 +52,11 @@ void Camera::setRotation(const Quaternion& q)
 {
 	mRotation = q;
 	mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
+}
+
+Vector3 Camera::getForward() const
+{
+	return Vector3(Vector4(0.0f, 0.0f, -1.0f, 0.0f) * Quaternion::ToMatrix(mRotation));
 }
 
 void Camera::OnMouseMove(IEventDataPtr eventData)

@@ -27,6 +27,7 @@ public:
 		double SemiMajorAxis;
 		double SemiMinorAxis;
 		double PerihelionVelocity;
+		int KeyBind;
 	};
 	
 public:

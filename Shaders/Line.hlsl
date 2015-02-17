@@ -145,9 +145,8 @@ PS_GBUFFER_OUT PS(PS_INPUT input)
 {
 	//float4 color = gLineColor + float4(0.0f, frac((float)input.Id * 0.0001f), frac((float)input.Id * 0.0003f), 0.0f);
 
-	float4 color = gLineColor + float4(0.0f, frac(input.Id * 0.001f), frac(input.Id * 0.0003f), 0.0f);
+	float3 color = gLineColor;/* +float4(0.0f, frac(input.Id * 0.001f), frac(input.Id * 0.0003f), 0.0f);*/
 	//float4 color = float4(input.PositionH.yyy / 720.0f, 1.0f);
-	color.a = 1.0;
 
-	return PackGBuffer(float4(0.0, 0.0, 0.0, 0.0), float3(0.0, 0.0, 0.0), float3(0.0, 0.0, 0.0), 0.0, 0.0, color.rgb);
+	return PackGBuffer(float4(0.0, 0.0, 0.0, 0.0), float3(0.0, 0.0, 0.0), float3(0.0, 0.0, 0.0), 0.0, 0.0, color);
 }
