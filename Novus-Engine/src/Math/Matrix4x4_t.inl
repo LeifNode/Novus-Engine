@@ -620,6 +620,75 @@ namespace novus
 
 		return M;
 	}
+
+	template <typename T>
+	Matrix4x4_t<T> Matrix4x4_t<T>::Orthographic(float viewWidth,
+												float viewHeight,
+												float nearZ,
+												float farZ)
+	{
+		float fRange = 1.0f / (farZ - nearZ);
+
+		Matrix4 M;
+		M[0][0] = 2.0f / viewWidth;
+		M[0][1] = 0.0f;
+		M[0][2] = 0.0f;
+		M[0][3] = 0.0f;
+
+		M[1][0] = 0.0f;
+		M[1][1] = 2.0f / viewHeight;
+		M[1][2] = 0.0f;
+		M[1][3] = 0.0f;
+
+		M[2][0] = 0.0f;
+		M[2][1] = 0.0f;
+		M[2][2] = fRange;
+		M[2][3] = 0.0f;
+
+		M[3][0] = 0.0f;
+		M[3][1] = 0.0f;
+		M[3][2] = -fRange * nearZ;
+		M[3][3] = 1.0f;
+
+		return M;
+	}
+
+	template <typename T>
+	Matrix4x4_t<T> Matrix4x4_t<T>::OrthographicOffCenter(float viewLeft,
+														 float viewRight,
+														 float viewBottom,
+														 float viewTop,
+														 float nearZ,
+														 float farZ)
+	{
+		float reciprocalWidth = 1.0f / (viewRight - viewLeft);
+		float reciprocalHeight = 1.0f / (viewTop - viewBottom);
+		float fRange = 1.0f / (nearZ - farZ);
+
+		Matrix4 M;
+
+		M[0][0] = reciprocalWidth + reciprocalWidth;
+		M[0][1] = 0.0f;
+		M[0][2] = 0.0f;
+		M[0][3] = 0.0f;
+
+		M[1][0] = 0.0f;
+		M[1][1] = reciprocalHeight + reciprocalHeight;
+		M[1][2] = 0.0f;
+		M[1][3] = 0.0f;
+
+		M[2][0] = 0.0f;
+		M[2][1] = 0.0f;
+		M[2][2] = fRange;
+		M[2][3] = 0.0f;
+
+		M[3][0] = -(viewLeft + viewRight) * reciprocalWidth;
+		M[3][1] = -(viewTop + viewBottom) * reciprocalHeight;
+		M[3][2] = fRange * nearZ;
+		M[3][3] = 1.0f;
+
+		return M;
+	}
 }
 
 #endif

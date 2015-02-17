@@ -80,11 +80,11 @@ void Font::LoadFont(const std::string& path, FT_Library& library, FontType::Type
 
 	if (error == FT_Err_Unknown_File_Format)
 	{
-		std::cout << "Invalid font format." << std::endl;
+		NE_ERROR("Invalid font format.", "Font");
 	}
 	else if (error)
 	{
-		std::cout << "Error loading font.\n";
+		NE_ERROR("Error loading font.", "Font");
 	}
 
 	mFontPaths[type] = path;
@@ -110,7 +110,7 @@ bool Font::LoadCharacter(int charCode, int pointSize, FontType::Type type)
 	int glyphIndex = FT_Get_Char_Index(mFaces[type], charCode);
 	assert(glyphIndex != 0);
 
-	error = FT_Load_Glyph(mFaces[type], glyphIndex, FT_LOAD_DEFAULT);
+	error = FT_Load_Glyph(mFaces[type], glyphIndex, FT_LOAD_MONOCHROME);
 	assert(error == 0);
 
 	FT_Render_Glyph(mFaces[type]->glyph, FT_RENDER_MODE_NORMAL);

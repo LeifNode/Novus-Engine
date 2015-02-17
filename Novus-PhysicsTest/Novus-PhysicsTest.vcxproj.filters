@@ -23,6 +23,9 @@
     <ClCompile Include="src\PlanetParticle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlanetUIRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PhysicsTestApp.h">
@@ -35,6 +38,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\PlanetParser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlanetUIRenderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

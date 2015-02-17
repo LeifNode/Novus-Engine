@@ -104,6 +104,8 @@ public:
 
 	//void Clear(RenderTarget* target);
 
+	void ClearDepth();
+
 	void PreRender();
 	void PostRender();
 	void RenderDeferredShading();

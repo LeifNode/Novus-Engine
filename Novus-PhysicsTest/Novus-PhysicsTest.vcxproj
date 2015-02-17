@@ -163,12 +163,14 @@
     <ClCompile Include="src\PlanetaryGravitationGenerator.cpp" />
     <ClCompile Include="src\PlanetParser.cpp" />
     <ClCompile Include="src\PlanetParticle.cpp" />
+    <ClCompile Include="src\PlanetUIRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PhysicsTestApp.h" />
     <ClInclude Include="src\PlanetParser.h" />
     <ClInclude Include="src\PlanetParticle.h" />
     <ClInclude Include="src\PlanetaryGravitationGenerator.h" />
+    <ClInclude Include="src\PlanetUIRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Xsd Include="data\PlanetXMLSchema.xsd">

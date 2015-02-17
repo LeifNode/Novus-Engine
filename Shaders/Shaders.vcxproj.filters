@@ -57,5 +57,6 @@
     <FxCompile Include="Utils\PreIntegrateBRDF.hlsl">
       <Filter>Utils</Filter>
     </FxCompile>
+    <FxCompile Include="Text.hlsl" />
   </ItemGroup>
 </Project>

@@ -56,7 +56,7 @@ namespace novus
 			typename X2, typename Y2, typename Z2, typename W2,
 			typename X3, typename Y3, typename Z3, typename W3,
 			typename X4, typename Y4, typename Z4, typename W4>
-		Matrix4x4_t(
+			Matrix4x4_t(
 			const X1& x1, const Y1& y1, const Z1& z1, const W1& w1,
 			const X2& x2, const Y2& y2, const Z2& z2, const W2& w2,
 			const X3& x3, const Y3& y3, const Z3& z3, const W3& w3,
@@ -117,7 +117,17 @@ namespace novus
 		static Matrix4x4_t<T> LookAt(const Vector3_t<T>& eyePosition, const Vector3_t<T>& lookAtPosition, const Vector3_t<T>& up);
 
 		static Matrix4x4_t<T> Perspective(T fovAngleY, T aspectHByW, T nearZ, T farZ);
-		static Matrix4x4_t<T> Orthographic();
+
+		static Matrix4x4_t<T> Orthographic(float viewWidth,
+										   float viewHeight,
+										   float nearZ,
+										   float farZ);
+		static Matrix4x4_t<T> OrthographicOffCenter(float viewLeft, 
+										   float viewRight,
+										   float viewBottom,
+										   float viewTop,
+										   float nearZ,
+										   float farZ);
 	};
 
 	template <typename T>

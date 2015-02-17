@@ -17,11 +17,11 @@
 #endif
 
 #ifndef ENV_MAP_SAMPLES
-#define ENV_MAP_SAMPLES 256
+#define ENV_MAP_SAMPLES 128
 #endif
 
 #ifndef BRDF_SAMPLES
-#define BRDF_SAMPLES 256
+#define BRDF_SAMPLES 128
 #endif
 
 #define COMPUTE_SHADER_TILE_GROUP_DIM 16

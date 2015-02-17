@@ -4,6 +4,7 @@
 #include "Application/EngineStatics.h"
 #include "Resources/Font/FontManager.h"
 #include "Resources/Font/Font.h"
+#include "Application/NovusApplication.h"
 
 namespace novus
 {
@@ -15,7 +16,8 @@ TextRenderer::TextRenderer(int capacity)
 	mpFont(NULL),
 	mTextSize(12),
 	mpTextShader(NULL),
-	mpSampler(NULL)
+	mpSampler(NULL),
+	mVerticalSpacing(0.018f)
 {
 }
 
@@ -119,7 +121,7 @@ void TextRenderer::UpdateVertexBuffer()
 		TextQuadVert* pVertArray = NE_NEW TextQuadVert[mMaxCharCount]();
 		memset(pVertArray, 0, sizeof(TextQuadVert)* mMaxCharCount);//Clear array
 		float textOffset = 0.0f;
-		float heightOffset = 0.4f;
+		float heightOffset = 0.0f;
 
 		int skippedCount = 0;
 		int lineCount = 0;
@@ -131,7 +133,7 @@ void TextRenderer::UpdateVertexBuffer()
 			if (ch == '\n')
 			{
 				textOffset = 0;
-				heightOffset -= 0.018f;
+				heightOffset -= mVerticalSpacing;
 				skippedCount++;
 				continue;
 			}
@@ -139,7 +141,7 @@ void TextRenderer::UpdateVertexBuffer()
 			if (lineCount > 450)
 			{
 				textOffset = 0;
-				heightOffset -= 0.018f;
+				heightOffset -= mVerticalSpacing;
 				lineCount = 0;
 			}
 
@@ -160,6 +162,8 @@ void TextRenderer::UpdateVertexBuffer()
 			pVertArray[index].TexBR = Vector2((glyph->left + glyph->width) / width, (glyph->top + glyph->height) / height);
 			pVertArray[index].Dimensions = Vector2(glyph->width / 12000.0f, glyph->height / 12000.0f);//Transform pixel counts into meters assuming 300dpi
 			pVertArray[index].Position = Vector3(textOffset, heightOffset - (glyph->height - glyph->bearing) / 12000.0f, 0.0f);
+			//pVertArray[index].Dimensions = Vector2(1.0f, 1.0f);
+			//pVertArray[index].Position = Vector3(0.0f, 0.0f, 0.0f);
 
 			textOffset += (glyph->advance + 2) / 12000.0f;
 		}
@@ -186,17 +190,7 @@ void TextRenderer::Render(D3DRenderer* renderer)
 	renderer->setShader(mpTextShader);
 	renderer->setSampler(0, mpSampler);
 	renderer->setTextureResource(0, mpFont->getFontTexture());
-
-	CBPerObject perObject;
-
-	//perObject.World =  Matrix4::Scale(-1.0f, 1.0f, 1.0f) * mTransform.GetTransform();
-	Vector3 worldOffset = renderer->getPerFrameBuffer()->HeadPosition;
-	//perObject.World = Matrix4::Scale(-1.0f, 1.0f, 1.0f) * mTransform.GetTransform() * Matrix4::Translate(0.25f, -0.2f, 0.3f) * Matrix4::Translate(worldOffset);
-	perObject.WorldInvTranspose = Matrix4::Inverse(Matrix4::Transpose(perObject.World));
-	//perObject.WorldViewProj = perObject.World * renderer->getPerFrameBuffer()->ViewProj;
-	perObject.WorldViewProj = perObject.World * Matrix4::Orthographic(1.0f, 0.5625f, 0.0f, 1.0f); //Assumes 16:9 aspect ratio
-
-	renderer->setPerObjectBuffer(perObject);
+	renderer->BindPerFrameBuffer();
 
 	unsigned int stride = sizeof(TextQuadVert), offset = 0;
 

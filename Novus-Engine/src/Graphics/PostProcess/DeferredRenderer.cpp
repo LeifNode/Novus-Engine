@@ -86,26 +86,26 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		samDesc.Filter = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
 
 		renderer->device()->CreateSamplerState(&samDesc, &mpEnvironmentSampler);
+
+		mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
+		mpEnvMap->Init(renderer, L"../Textures/sunsetcube1024.dds");
+
+		mLightBuffer.Init(renderer, 128, D3D11_BIND_SHADER_RESOURCE, true);
+
+		mpBRDFLUT = NE_NEW Texture2D();
+		mpBRDFLUT->Init(renderer, 256, 256, DXGI_FORMAT_R16G16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
+		mpBRDFLUT->setDebugName("BRDF LUT");
+
+		ID3D11UnorderedAccessView* texUav = mpBRDFLUT->getUnorderedAccessView();
+
+		renderer->setShader(mpLUTShader);
+		renderer->context()->CSSetUnorderedAccessViews(0, 1, &texUav, 0);
+
+		renderer->context()->Dispatch(mpBRDFLUT->getWidth() / 16, mpBRDFLUT->getHeight() / 16, 1);
 	}
 
 	mpHDRRenderTarget->Init(renderer, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_RENDER_TARGET);
 	mpHDRRenderTarget->setDebugName("HDR Render Target");
-
-	mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
-	mpEnvMap->Init(renderer, L"../Textures/sunsetcube1024.dds");
-
-	mLightBuffer.Init(renderer, 128, D3D11_BIND_SHADER_RESOURCE, true);
-
-	mpBRDFLUT = NE_NEW Texture2D();
-	mpBRDFLUT->Init(renderer, 256, 256, DXGI_FORMAT_R16G16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
-	mpBRDFLUT->setDebugName("BRDF LUT");
-
-	ID3D11UnorderedAccessView* texUav = mpBRDFLUT->getUnorderedAccessView();
-
-	renderer->setShader(mpLUTShader);
-	renderer->context()->CSSetUnorderedAccessViews(0, 1, &texUav, 0);
-
-	renderer->context()->Dispatch(mpBRDFLUT->getWidth() / 16, mpBRDFLUT->getHeight() / 16, 1);
 }
 
 void DeferredRenderer::Update(float dt)

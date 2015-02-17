@@ -53,6 +53,8 @@ public:
 	int getTextSize() const { return mTextSize; }
 	void setTextSize(int size) { mTextSize = size; }
 
+	void setVerticalSpacing(float spacing) { mVerticalSpacing = spacing; mTextChanged = true; }
+
 private:
 	void InitShader();
 	void InitSampler();

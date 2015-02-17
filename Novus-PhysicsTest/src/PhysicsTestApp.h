@@ -28,6 +28,7 @@ namespace novus
 	class Particle;
 	class SkyboxRenderer;
 	class LineRenderer;
+	class TextRenderer;
 }
 
 class PhysicsTestApplication : public novus::NovusApplication
@@ -55,9 +56,10 @@ private:
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
-	novus::LineRenderer* mpTrailRenderer;
 	novus::PhysicsSystem* mpPhysicsSystem;
 	std::vector<class PlanetParticle*> mPlanets;
+
+	class PlanetUIRenderer* mpUIRenderer;
 
 	novus::Camera* mpCamera;
 
@@ -68,6 +70,8 @@ private:
 
 	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
 	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
+
+	novus::TextRenderer* mpTextRenderer;
 };
 
 
