@@ -26,6 +26,4 @@ void PreIntegrateBRDFCS(uint3 groupID          : SV_GroupID,
 
 	if (globalCoords.x < uint(sourceDimensions.x) && globalCoords.y < uint(sourceDimensions.y))
 		OutputTexture[globalCoords] = color;
-
-	//OutputTexture[globalCoords] = float2(1.0, 0.0);
 }

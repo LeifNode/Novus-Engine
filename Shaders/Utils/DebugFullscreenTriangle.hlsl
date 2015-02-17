@@ -42,7 +42,7 @@ float4 PS(TRIANGLE_OUT pin) : SV_Target
 	return float4(pow(curr * whiteScale, 1.0f / 2.2f), 1.0f);*/
 
 	float3 texColor = textureDiffuse.Sample(texSampler, pin.TexCoord).rgb;
-	//texColor *= 1;
+	//texColor /= 2;
 
 	float3 x = max(0, texColor - 0.004);
 	float3 retColor = (x*(6.2*x + .5)) / (x*(6.2*x + 1.7) + 0.06);

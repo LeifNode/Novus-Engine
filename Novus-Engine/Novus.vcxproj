@@ -169,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\3rdParty\include\TinyXML\tinyxml2.h" />
+    <ClInclude Include="Graphics\TextRenderer.h" />
     <ClInclude Include="src\3rdParty\FastDelegate.h" />
     <ClInclude Include="src\3rdParty\FastDelegateBind.h" />
     <ClInclude Include="src\Application\Common.h" />
@@ -239,6 +240,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdParty\include\TinyXML\tinyxml2.cpp" />
+    <ClCompile Include="Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\Application\EngineStatics.cpp" />
     <ClCompile Include="src\Application\NovusApplication.cpp" />
     <ClCompile Include="src\Events\Events.cpp" />

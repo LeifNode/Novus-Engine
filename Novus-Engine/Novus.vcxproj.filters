@@ -290,6 +290,9 @@
     <ClInclude Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.h">
       <Filter>Source Files\Graphics\PostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\TextRenderer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -405,6 +408,9 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.cpp">
       <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TextRenderer.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

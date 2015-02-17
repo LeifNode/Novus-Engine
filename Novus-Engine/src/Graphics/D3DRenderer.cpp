@@ -431,6 +431,13 @@ HRESULT D3DRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEnt
 	}
 	if (pErrorBlob) pErrorBlob->Release();
 
+	std::stringstream message;
+	std::wstring fileLString(szFileName);
+
+	message << "Compiled " << std::string(fileLString.begin(), fileLString.end()) << "@" << szEntryPoint;
+
+	NE_MESSAGE(message.str().c_str(), "D3DRenderer");
+
 	return S_OK;
 }
 

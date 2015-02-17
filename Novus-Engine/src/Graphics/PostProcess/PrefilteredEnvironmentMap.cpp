@@ -166,7 +166,7 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 			filterBuffer.SourceDimensions = dim;
 			filterBuffer.CurrentMip = maxMipFilterLevel - mip;
 
-			std::cout << "Current Mip: " << mip + 2 << ", Corresponding roughness: " << powf(2.0f, (maxMipFilterLevel - 4.0f - mip - 2) / 1.15f) << std::endl;
+			//std::cout << "Current Mip: " << mip + 2 << ", Corresponding roughness: " << powf(2.0f, (maxMipFilterLevel - 4.0f - mip - 2) / 1.15f) << std::endl;
 
 			renderer->context()->UpdateSubresource(mpFilterBuffer, 0, NULL, &filterBuffer, 0, 0);
 			renderer->setConstantBuffer(2, mpFilterBuffer);
@@ -174,14 +174,19 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 
 			renderer->context()->Dispatch(filterBuffer.SourceDimensions.x / 16, filterBuffer.SourceDimensions.y / 16, 1);
 
+			std::stringstream stream;
+			stream << "Dispatched mip " << mip << " for face " << i;
+
+			NE_MESSAGE(stream.str().c_str(), "PrefilteredEnvMap");
+
 			dim /= 2;
 		}
 	}
 
-	for (float r = 0.0f; r <= 1.0f; r += 0.1f)
+	/*for (float r = 0.0f; r <= 1.0f; r += 0.1f)
 	{
 		std::cout << "Current Roughness: " << r << ", Corresponding mip: " << maxMipFilterLevel - 6 - 1.15 * log2f(r) << std::endl;
-	}
+	}*/
 }
 
 }

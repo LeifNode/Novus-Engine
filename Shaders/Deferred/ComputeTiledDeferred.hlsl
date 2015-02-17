@@ -103,7 +103,7 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		}
 
 		[branch]
-		if (inFrustum)
+		if (inFrustum && light.Intensity > 0.0f)
 		{
 			uint listIndex;
 			InterlockedAdd(TileNumLights, 1, listIndex);

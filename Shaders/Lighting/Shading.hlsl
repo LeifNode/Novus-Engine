@@ -8,6 +8,8 @@
 #ifndef SHADING_HLSL
 #define SHADING_HLSL
 
+#include "Utils/Defines.hlsl"
+
 struct SURFACE_DATA
 {
 	float3 PositionView;
@@ -133,7 +135,7 @@ float3 PrefilterEnvMap(TextureCube EnvMap, SamplerState EnvSampler, float Roughn
 	float3 V = R;
 	float3 PrefilteredColor = 0;
 	float TotalWeight = 0.0;
-	const uint NumSamples = 1024;
+	const uint NumSamples = ENV_MAP_SAMPLES;
 
 	for (uint i = 0; i < NumSamples; i++)
 	{
@@ -161,7 +163,8 @@ float2 IntegrateBRDF(float Roughness, float NoV)
 	float A = 0;
 	float B = 0;
 
-	const uint NumSamples = 1024;
+	const uint NumSamples = BRDF_SAMPLES;
+
 	for (uint i = 0; i < NumSamples; i++)
 	{
 		float2 Xi = Hammersley(i, NumSamples);
@@ -196,14 +199,14 @@ float3 ApproximateSpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, Textu
 	float NoV = abs(dot(N, V));
 	float3 R = 2 * dot(V, N) * N - V;
 	float3 PrefilteredColor = EnvMap.SampleLevel(EnvSampler, R, MipLevels - RoughnessToMipLevel(Roughness, MipLevels)).rgb;
-	float2 EnvBRDF = saturate(LUT.SampleLevel(EnvSampler, saturate(float2(Roughness - 0.001, NoV - 0.001)), 0));
+	float2 EnvBRDF = saturate(LUT.SampleLevel(EnvSampler, saturate(float2(Roughness - 0.002, NoV - 0.002)), 0));
 	return PrefilteredColor * (SpecularColor * EnvBRDF.x + EnvBRDF.y);
 }
 
 float3 SpecularIBL(TextureCube EnvMap, SamplerState EnvSampler, float3 SpecularColor, float Roughness, float3 N, float3 V)
 {
 	float3 SpecularLighting = 0;
-	const uint NumSamples = 1024;
+	const uint NumSamples = ENV_MAP_SAMPLES;
 
 	for (uint i = 0; i < NumSamples; i++)
 	{

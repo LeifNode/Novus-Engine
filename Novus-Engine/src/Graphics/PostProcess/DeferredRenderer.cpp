@@ -55,16 +55,16 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		mpDebugOutputShader = renderer->LoadShader(L"../Shaders/Utils/DebugFullscreenTriangle.hlsl", debugShaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, NULL, 0);
 
 		mTestPointLights.clear();
-		mTestPointLights.reserve(1028);
-		for (int i = 0; i < 1028; i++)
+		mTestPointLights.reserve(128);
+		for (int i = 0; i < 128; i++)
 		{
 			PointLight light;
-			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
-			light.Intensity = Math::RandF(0.3f, 0.7f) * 0.1f;
+			//light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
+			light.Color = Vector3(1.0f, 1.0f, 1.0f);
+			light.Intensity = Math::RandF(0.3f, 0.7f) * 10.1f;
 			light.Radius = 0.0f;
 			
-			//if (i > 100)
-				//light.Intensity = 0.0f;
+			
 			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
 			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), 0.0f, Math::RandF(-1.0f, 1.0f)) * 15.0f;
@@ -94,10 +94,10 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 	mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
 	mpEnvMap->Init(renderer, L"../Textures/sunsetcube1024.dds");
 
-	mLightBuffer.Init(renderer, 1028, D3D11_BIND_SHADER_RESOURCE, true);
+	mLightBuffer.Init(renderer, 128, D3D11_BIND_SHADER_RESOURCE, true);
 
 	mpBRDFLUT = NE_NEW Texture2D();
-	mpBRDFLUT->Init(renderer, 512, 512, DXGI_FORMAT_R16G16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
+	mpBRDFLUT->Init(renderer, 256, 256, DXGI_FORMAT_R16G16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
 	mpBRDFLUT->setDebugName("BRDF LUT");
 
 	ID3D11UnorderedAccessView* texUav = mpBRDFLUT->getUnorderedAccessView();
@@ -110,7 +110,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 
 void DeferredRenderer::Update(float dt)
 {
-	for (int i = 0; i < 1028; i++)
+	for (int i = 0; i < 128; i++)
 	{
 		mTestPointLights[i].PositionWorld = Matrix3::RotateY(dt * 0.02f) * mTestPointLights[i].PositionWorld;
 	}
@@ -125,7 +125,7 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 
 	//Upload view-space lights
 	PointLight* lightBufferPtr = mLightBuffer.Map(renderer);
-	for (int i = 0; i < 1028; i++)
+	for (int i = 0; i < 128; i++)
 	{
 		PointLight light = mTestPointLights[i];
 		light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);

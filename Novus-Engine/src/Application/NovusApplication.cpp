@@ -148,6 +148,9 @@ bool NovusApplication::Init()
 	if (!InitConsole())
 		return false;
 
+	mpLogSerializer = NE_NEW ConsoleLogSerializer();
+	Logger::getInstance()->AddSerializer(mpLogSerializer, LogLevel::All, "");
+
 	if (!InitWindow())
 		return false;
 
@@ -156,9 +159,6 @@ bool NovusApplication::Init()
 
 	if (!mpFontManager->Init())
 		return false;
-
-	mpLogSerializer = NE_NEW ConsoleLogSerializer();
-	Logger::getInstance()->AddSerializer(mpLogSerializer, LogLevel::All, "");
 
 	//LineRenderer::Initialize();
 
