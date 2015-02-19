@@ -110,7 +110,7 @@ bool Font::LoadCharacter(int charCode, int pointSize, FontType::Type type)
 	int glyphIndex = FT_Get_Char_Index(mFaces[type], charCode);
 	assert(glyphIndex != 0);
 
-	error = FT_Load_Glyph(mFaces[type], glyphIndex, FT_LOAD_MONOCHROME);
+	error = FT_Load_Glyph(mFaces[type], glyphIndex, FT_LOAD_DEFAULT);
 	assert(error == 0);
 
 	FT_Render_Glyph(mFaces[type]->glyph, FT_RENDER_MODE_NORMAL);
