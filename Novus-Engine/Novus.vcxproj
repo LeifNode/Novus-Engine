@@ -219,6 +219,9 @@
     <ClInclude Include="src\Resources\Font\Font.h" />
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
+    <ClInclude Include="src\Resources\Model\AssetTypes.h" />
+    <ClInclude Include="src\Resources\Model\IModelLoader.h" />
+    <ClInclude Include="src\Resources\Model\OBJLoader.h" />
     <ClInclude Include="src\Resources\ResourceManager.h" />
     <ClInclude Include="src\Utils\Containers\PointList.h" />
     <ClInclude Include="src\Utils\dxerr.h" />
@@ -268,6 +271,7 @@
     <ClCompile Include="src\Resources\DDSTextureLoader.cpp" />
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
+    <ClCompile Include="src\Resources\Model\OBJLoader.cpp" />
     <ClCompile Include="src\Utils\Containers\PointList.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />

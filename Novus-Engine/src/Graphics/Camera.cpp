@@ -91,7 +91,7 @@ void Camera::OnMouseDown(novus::IEventDataPtr eventData)
 {
 	auto dataPtr = static_pointer_cast<EventData_MouseDown>(eventData);
 
-	ShowCursor(false);
+	//ShowCursor(false);
 
 	if (dataPtr->getButton() == MouseButton::Left)
 		mReadingMouse = true;
@@ -103,7 +103,7 @@ void Camera::OnMouseUp(novus::IEventDataPtr eventData)
 {
 	auto dataPtr = static_pointer_cast<EventData_MouseUp>(eventData);
 
-	ShowCursor(true);
+	//ShowCursor(true);
 
 	if (dataPtr->getButton() == MouseButton::Left)
 		mReadingMouse = false;

@@ -84,6 +84,9 @@
     <Filter Include="Source Files\Utils\Containers">
       <UniqueIdentifier>{6409badd-74a1-40d0-8232-77a1f3a3db9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources\Model">
+      <UniqueIdentifier>{bc6d5e4a-115d-4bcb-ac69-06763dc37f49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -293,6 +296,15 @@
     <ClInclude Include="src\Graphics\TextRenderer.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Resources\Model\AssetTypes.h">
+      <Filter>Source Files\Resources\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Model\IModelLoader.h">
+      <Filter>Source Files\Resources\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Model\OBJLoader.h">
+      <Filter>Source Files\Resources\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -411,6 +423,9 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\TextRenderer.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Model\OBJLoader.cpp">
+      <Filter>Source Files\Resources\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

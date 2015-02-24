@@ -61,13 +61,13 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			PointLight light;
 			//light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
 			light.Color = Vector3(1.0f, 1.0f, 1.0f);
-			light.Intensity = Math::RandF(0.3f, 0.7f) * 10.1f;
+			light.Intensity = Math::RandF(0.3f, 0.7f) * 0.1f;
 			light.Radius = 0.0f;
 			
 			
 			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
-			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), 0.0f, Math::RandF(-1.0f, 1.0f)) * 15.0f;
+			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), 0.0f, Math::RandF(-1.0f, 1.0f)) * 10.0f;
 			light.PositionWorld.y = Math::RandF(-4.9f, -3.0f);
 
 			mTestPointLights.push_back(light);
@@ -88,7 +88,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		renderer->device()->CreateSamplerState(&samDesc, &mpEnvironmentSampler);
 
 		mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
-		mpEnvMap->Init(renderer, L"../Textures/sunsetcube1024.dds");
+		mpEnvMap->Init(renderer, L"../Textures/grasscube1024.dds");
 
 		mLightBuffer.Init(renderer, 128, D3D11_BIND_SHADER_RESOURCE, true);
 

@@ -81,7 +81,7 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
-	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
+	mpSkyboxRenderer->Init(L"../Textures/grasscube1024.dds");
 
 	return true;
 }
@@ -114,7 +114,7 @@ void TestApplication::InitMesh()
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 
-	GeometryGenerator::CreateGrid(100.0f, 100.0f, 4, 4, mesh);
+	GeometryGenerator::CreateGrid(1000.0f, 1000.0f, 4, 4, mesh);
 
 	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
