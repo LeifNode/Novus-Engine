@@ -140,7 +140,7 @@ namespace assettypes
 
 		Vector3* mBitengents;
 
-		Vector3* mTextureCoords;
+		Vector2* mTextureCoords;
 
 		Face* mFaces;
 

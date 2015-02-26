@@ -18,6 +18,14 @@ namespace novus
 
 class OBJLoader : public IModelLoader
 {
+	struct OBJFace
+	{
+		Vector3i Vertices[4];
+		unsigned char VertexCount;
+		bool HasNormals;
+		bool HasTexCoords;
+	};
+
 public:
 	OBJLoader();
 
@@ -30,6 +38,16 @@ public:
 private:
 	OBJLoader(const OBJLoader& other) {}
 	OBJLoader& operator= (const OBJLoader& other) { return *this; }
+
+	inline Vector2 ParseVector2(const char* str);
+	inline Vector3 ParseVector3(const char* str);
+	OBJFace ParseFace(const char* str);
+	void StoreMesh(const std::vector<Vector3>& pos,
+				   const std::vector<Vector2>& tex,
+				   const std::vector<Vector3>& norm,
+				   const std::vector<OBJFace>& faces,
+				   unsigned int vertexCount,
+				   assettypes::Mesh* meshOut);
 
 private:
 	std::istream* mpFile;

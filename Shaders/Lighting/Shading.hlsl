@@ -49,7 +49,7 @@ float2 Hammersley(uint i, uint N) {
 	return float2(float(i) / float(N), RadicalInverse_VdC(i));
 }
 
-float Diffuse_OrenNayer(float r2, float3 N, float3 L, float3 V, float3 NoL, float3 NoV)
+float Diffuse_OrenNayer(float r2, float3 N, float3 L, float3 V, float NoL, float NoV)
 {
 	float A = 1.0 - 0.5 * (r2 / (r2 + 0.57));
 	float B = 0.45 * (r2 / (r2 + 0.09));

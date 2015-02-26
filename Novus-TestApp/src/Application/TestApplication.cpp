@@ -11,6 +11,7 @@
 #include <Graphics/PostProcess/DeferredRenderer.h>
 #include <Graphics/Textures/Texture2D.h>
 #include <Graphics/SkyboxRenderer.h>
+#include <Resources/Model/OBJLoader.h>
 
 using namespace novus;
 
@@ -82,6 +83,12 @@ bool TestApplication::Init()
 
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/grasscube1024.dds");
+
+	OBJLoader* loader = NE_NEW OBJLoader();
+
+	loader->Load(L"../Models/buddha.obj");
+
+	NE_DELETE(loader);
 
 	return true;
 }
