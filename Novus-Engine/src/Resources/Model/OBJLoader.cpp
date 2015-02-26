@@ -204,14 +204,20 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 
 	for (size_t i = 0; i < faces.size(); ++i)
 	{
+		assettypes::Face face;
+		face.mIndexCount = faces[i].VertexCount;
+		face.mIndices = NE_NEW unsigned int[face.mIndexCount];
+
 		for (int v = 0; v < faces[i].VertexCount; v++)
 		{
 			int vertIndex = faces[i].Vertices[v].x;
+			face.mIndices[v] = currentVertex;
 
 			if (vertIndex < 0)
 				vertIndex = pos.size() + vertIndex;
 
 			meshOut->mVertices[currentVertex] = pos[vertIndex];
+			
 
 			if (faces[i].HasTexCoords)
 			{
@@ -234,6 +240,8 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 
 			currentVertex++;
 		}
+
+		meshOut->mFaces[i] = face;
 	}
 }
 

@@ -49,7 +49,7 @@ float2 Hammersley(uint i, uint N) {
 	return float2(float(i) / float(N), RadicalInverse_VdC(i));
 }
 
-float Diffuse_OrenNayer(float r2, float3 N, float3 L, float3 V, float NoL, float NoV)
+float Diffuse_OrenNayar(float r2, float3 N, float3 L, float3 V, float NoL, float NoV)
 {
 	float A = 1.0 - 0.5 * (r2 / (r2 + 0.57));
 	float B = 0.45 * (r2 / (r2 + 0.09));
@@ -62,7 +62,7 @@ float Diffuse_OrenNayer(float r2, float3 N, float3 L, float3 V, float NoL, float
 	float beta = min(angleNoL, angleNoV);
 	float gamma = dot(V - N * dot(V, N), L - N * dot(L, N));
 
-	return (A + (B * max(0, gamma) * sin(alpha) * tan(beta)));
+	return (A + B * max(0.0, gamma) * sin(alpha) * tan(beta)) * saturate(NoL);
 }
 
 float D_GGX(float a, float NoH)
@@ -269,7 +269,7 @@ void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout 
 	float oneOverDistSq = rcp(distanceSq);
 
 	//float diffuseContrib = saturate(NoL);
-	float diffuseContrib = saturate(Diffuse_OrenNayer(roughness2, surface.Normal, toLight, toEye, NoL, NoV));
+	float diffuseContrib = saturate(Diffuse_OrenNayar(roughness2, surface.Normal, toLight, toEye, NoL, NoV));
 
 	float D = D_GGX(roughness2, NoH);
 	float G = G_Smith(surface.Roughness, NoV, NoL);
