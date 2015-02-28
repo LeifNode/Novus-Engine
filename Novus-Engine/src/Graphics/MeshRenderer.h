@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Application/Common.h"
+#include "D3DRenderer.h"
 
 namespace novus
 {

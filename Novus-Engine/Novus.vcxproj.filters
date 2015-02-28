@@ -305,6 +305,12 @@
     <ClInclude Include="src\Resources\Model\OBJLoader.h">
       <Filter>Source Files\Resources\Model</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\StaticMesh.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\IRenderable.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -426,6 +432,9 @@
     </ClCompile>
     <ClCompile Include="src\Resources\Model\OBJLoader.cpp">
       <Filter>Source Files\Resources\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\StaticMesh.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

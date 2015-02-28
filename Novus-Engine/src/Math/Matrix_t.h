@@ -15,15 +15,15 @@ namespace novus
 	template <typename T> struct Matrix3x3_t;
 	template <typename T> struct Matrix4x4_t;
 
-	typedef Matrix3x3_t<float>     FMatrix3x3;
-	typedef Matrix3x3_t<double>    DMatrix3x3;
-	typedef FMatrix3x3             Matrix3x3;
-	typedef FMatrix3x3             Matrix3;
+	typedef Matrix3x3_t<float>     Matrix3x3f;
+	typedef Matrix3x3_t<double>    Matrix3x3d;
+	typedef Matrix3x3f             Matrix3x3;
+	typedef Matrix3x3f             Matrix3;
 
-	typedef Matrix4x4_t<float>     FMatrix4x4;
-	typedef Matrix4x4_t<double>    DMatrix4x4;
-	typedef FMatrix4x4             Matrix4x4;
-	typedef FMatrix4x4             Matrix4;
+	typedef Matrix4x4_t<float>     Matrix4x4f;
+	typedef Matrix4x4_t<double>    Matrix4x4d;
+	typedef Matrix4x4f             Matrix4x4;
+	typedef Matrix4x4f             Matrix4;
 }
 
 #endif

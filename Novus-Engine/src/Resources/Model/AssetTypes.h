@@ -15,248 +15,255 @@
 
 namespace novus
 {
-namespace assettypes
-{
-	namespace TextureType
+	namespace assettypes
 	{
-		enum Type
+		namespace TextureType
 		{
-			Unknown = -1,
-			None,
-			Diffuse,
-			Specular,
-			Emissive,
-			Height,
-			Normal,
-			Roughness,
-			Shininess,
-			Lightmap,
-			Mask,
+			enum Type
+			{
+				Unknown = -1,
+				None,
+				Diffuse,
+				Specular,
+				Emissive,
+				Height,
+				Normal,
+				Roughness,
+				Shininess,
+				Lightmap,
+				Mask,
+			};
+		}
+
+		struct Bone
+		{
+			unsigned mId;
+			Matrix4 mOffset;
 		};
-	}
 
-	struct Bone
-	{
-		unsigned mId;
-		Matrix4 mOffset;
-	};
-
-	struct VertexWeight
-	{
-		unsigned mVertexId;
-	};
-
-	struct BoneVertexWeights
-	{
-		//Unsigned is bone ID, float is weight
-		std::vector<std::pair<unsigned, float>> boneWeights;
-	};
-
-	struct Material
-	{
-		Vector4 ambient;
-		Vector4 emissive;
-		Vector4 diffuse;
-		Vector4 specular;
-		float specularPow;
-
-		std::map<TextureType::Type, std::string> texturePaths;
-	};
-
-	struct Face
-	{
-		unsigned mIndexCount;
-		unsigned* mIndices;
-
-		Face()
-			:mIndexCount(0),
-			mIndices(NULL)
+		struct VertexWeight
 		{
-		}
+			unsigned mVertexId;
+		};
 
-		~Face()
+		struct BoneVertexWeights
 		{
-			NE_DELETEARR(mIndices);
-		}
+			//Unsigned is bone ID, float is weight
+			std::vector<std::pair<unsigned, float>> boneWeights;
+		};
 
-		Face(const Face& other)
-			:mIndices(NULL)
+		struct Material
 		{
-			*this = other;
-		}
+			Vector4 ambient;
+			Vector4 emissive;
+			Vector4 diffuse;
+			Vector4 specular;
+			float specularPow;
 
-		Face& operator= (const Face& other)
+			std::map<TextureType::Type, std::string> texturePaths;
+		};
+
+		struct Face
 		{
-			if (&other == this)
+			unsigned mIndexCount;
+			unsigned mIndices[4];
+
+			Face()
+				:mIndexCount(0)
+			{
+			}
+
+			~Face()
+			{
+				//NE_DELETEARR(mIndices);
+			}
+
+			Face(const Face& other)
+			{
+				*this = other;
+			}
+
+			Face& operator= (const Face& other)
+			{
+				/*if (&other == this)
 				return *this;
 
-			NE_DELETEARR(mIndices);
-			mIndexCount = other.mIndexCount;
+				NE_DELETEARR(mIndices);
+				mIndexCount = other.mIndexCount;
 
-			if (mIndexCount)
-			{
+				if (mIndexCount)
+				{
 				mIndices = NE_NEW unsigned[mIndexCount];
 				memcpy(mIndices, other.mIndices, mIndexCount * sizeof(unsigned));
-			}
-			else
+				}
+				else
 				mIndices = NULL;
 
-			return *this;
-		}
+				return *this;*/
 
-		bool operator== (const Face& other)
-		{
-			if (mIndices == other.mIndices)return true;
-			else if (mIndices && mIndexCount == other.mIndexCount)
-			{
-				for (unsigned int i = 0; i < this->mIndexCount; ++i)
-				if (mIndices[i] != other.mIndices[i])
-					return false;
-				return true;
+				if (&other == this)
+					return *this;
+
+				mIndexCount = other.mIndexCount;
+
+				memcpy(mIndices, other.mIndices, mIndexCount * sizeof(unsigned int));
+
 			}
-			return false;
-		}
 
-		bool operator!= (const Face& other)
-		{
-			return !(*this == other);
-		}
-	};
-
-	struct Mesh
-	{
-		std::string mMeshId;
-
-		unsigned mMaterialId;
-
-		unsigned mVertexCount;
-		unsigned mFaceCount;
-
-		Vector3* mVertices;
-
-		Vector3* mNormals;
-
-		Vector3* mTangents;
-
-		Vector3* mBitengents;
-
-		Vector2* mTextureCoords;
-
-		Face* mFaces;
-
-		Mesh()
-			:mVertexCount(0),
-			mFaceCount(0),
-			mVertices(NULL),
-			mNormals(NULL),
-			mTangents(NULL),
-			mBitengents(NULL),
-			mTextureCoords(NULL),
-			mFaces(NULL)
-		{
-		}
-
-		~Mesh()
-		{
-			NE_DELETEARR(mVertices);
-			NE_DELETEARR(mNormals);
-			NE_DELETEARR(mTangents);
-			NE_DELETEARR(mBitengents);
-			NE_DELETEARR(mTextureCoords);
-			NE_DELETEARR(mFaces);
-		}
-
-		bool hasPositions() const { return mVertices != NULL && mVertexCount > 0; }
-		bool hasFaces() const { return mFaces != NULL && mFaceCount > 0; }
-		bool hasNormals() const { return mNormals != NULL && mVertexCount > 0; }
-		bool hasTangentsAndBitangents() const { return mTangents != NULL && mBitengents != NULL && mVertexCount > 0; }
-		bool hasTextureCoords() const { return mTextureCoords != NULL && mVertexCount > 0; }
-	};
-
-	struct Node
-	{
-		std::string mName;
-
-		Node* mpParent;
-
-		Node** mpChildren;
-		unsigned mNumChildren;
-
-		Matrix4 mTransform;
-
-		unsigned mNumMeshes;
-
-		//Array of indices to meshes
-		unsigned* mpMeshes;
-
-		Node()
-			:mpParent(NULL),
-			mpChildren(NULL),
-			mNumChildren(0),
-			mNumMeshes(0),
-			mpMeshes(NULL)
-		{}
-
-		~Node()
-		{
-			if (mpChildren != NULL)
+			bool operator== (const Face& other)
 			{
-				for (unsigned int i = 0; i < mNumChildren; i++)
+				if (mIndices == other.mIndices)return true;
+				else if (mIndices && mIndexCount == other.mIndexCount)
 				{
-					NE_DELETE(mpChildren[i]);
+					for (unsigned int i = 0; i < this->mIndexCount; ++i)
+					if (mIndices[i] != other.mIndices[i])
+						return false;
+					return true;
 				}
-
-				NE_DELETEARR(mpChildren);
-				NE_DELETEARR(mpMeshes);
+				return false;
 			}
-		}
-	};
 
-	struct DirectionalLight
-	{
-		Vector3 direction;
-		Vector3 diffuse;
-		Vector3 ambient;
-	};
+			bool operator!= (const Face& other)
+			{
+				return !(*this == other);
+			}
+		};
 
-	struct PointLight
-	{
-		Vector3 position;
-		Vector3 diffuse;
-		Vector3 ambient;
-		float falloffLinear, falloffSquare;
-		float range;
-	};
-
-	struct SpotLight
-	{
-
-	};
-
-	struct Scene
-	{
-		Node* mpRootNode;
-
-		std::vector<Mesh*> mMeshes;
-		std::vector<Material*> mMaterials;
-
-		Scene()
-			:mpRootNode(NULL)
+		struct Mesh
 		{
-		}
+			std::string mMeshId;
 
-		~Scene()
+			unsigned mMaterialId;
+
+			unsigned mVertexCount;
+			unsigned mFaceCount;
+
+			Vector3* mVertices;
+
+			Vector3* mNormals;
+
+			Vector3* mTangents;
+
+			Vector3* mBitengents;
+
+			Vector2* mTextureCoords;
+
+			Face* mFaces;
+
+			Mesh()
+				:mVertexCount(0),
+				mFaceCount(0),
+				mMaterialId(0),
+				mVertices(NULL),
+				mNormals(NULL),
+				mTangents(NULL),
+				mBitengents(NULL),
+				mTextureCoords(NULL),
+				mFaces(NULL)
+			{
+			}
+
+			~Mesh()
+			{
+				NE_DELETEARR(mVertices);
+				NE_DELETEARR(mNormals);
+				NE_DELETEARR(mTangents);
+				NE_DELETEARR(mBitengents);
+				NE_DELETEARR(mTextureCoords);
+				NE_DELETEARR(mFaces);
+			}
+
+			bool hasPositions() const { return mVertices != NULL && mVertexCount > 0; }
+			bool hasFaces() const { return mFaces != NULL && mFaceCount > 0; }
+			bool hasNormals() const { return mNormals != NULL && mVertexCount > 0; }
+			bool hasTangentsAndBitangents() const { return mTangents != NULL && mBitengents != NULL && mVertexCount > 0; }
+			bool hasTextureCoords() const { return mTextureCoords != NULL && mVertexCount > 0; }
+		};
+
+		struct Node
 		{
-			NE_DELETE(mpRootNode);
+			std::string mName;
 
-			for (int i = 0; i < mMeshes.size(); i++)
-				NE_DELETE(mMeshes[i]);
+			Node* mpParent;
 
-			for (int i = 0; i < mMaterials.size(); i++)
-				NE_DELETE(mMaterials[i]);
-		}
-	};
-} //namespace assettypes
+			Node** mpChildren;
+			unsigned mNumChildren;
+
+			Matrix4 mTransform;
+
+			unsigned mNumMeshes;
+
+			//Array of indices to meshes
+			unsigned* mpMeshes;
+
+			Node()
+				:mpParent(NULL),
+				mpChildren(NULL),
+				mNumChildren(0),
+				mNumMeshes(0),
+				mpMeshes(NULL)
+			{}
+
+			~Node()
+			{
+				if (mpChildren != NULL)
+				{
+					for (unsigned int i = 0; i < mNumChildren; i++)
+					{
+						NE_DELETE(mpChildren[i]);
+					}
+
+					NE_DELETEARR(mpChildren);
+					NE_DELETEARR(mpMeshes);
+				}
+			}
+		};
+
+		struct DirectionalLight
+		{
+			Vector3 direction;
+			Vector3 diffuse;
+			Vector3 ambient;
+		};
+
+		struct PointLight
+		{
+			Vector3 position;
+			Vector3 diffuse;
+			Vector3 ambient;
+			float falloffLinear, falloffSquare;
+			float range;
+		};
+
+		struct SpotLight
+		{
+
+		};
+
+		struct Scene
+		{
+			Node* mpRootNode;
+
+			std::vector<Mesh*> mMeshes;
+			std::vector<Material*> mMaterials;
+
+			Scene()
+				:mpRootNode(NULL)
+			{
+			}
+
+			~Scene()
+			{
+				NE_DELETE(mpRootNode);
+
+				for (int i = 0; i < mMeshes.size(); i++)
+					NE_DELETE(mMeshes[i]);
+
+				for (int i = 0; i < mMaterials.size(); i++)
+					NE_DELETE(mMaterials[i]);
+			}
+		};
+	} //namespace assettypes
 } //namespace novus
 
 #endif

@@ -153,7 +153,7 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 		Vector3(0.0f, 1.0f, 0.0f)	 // -Z
 	};
 	
-
+	//Loop through cube faces
 	for (int i = 0; i < 6; i++)
 	{
 		Vector2i dim = Vector2i(mpSourceTexture->getWidth(), mpSourceTexture->getHeight());
@@ -161,6 +161,8 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 		filterBuffer.Forward = targets[i];
 		filterBuffer.Up = ups[i];
 
+		//Loop through mip levels
+		//TODO: determine maxMipFilterLevel dynamically so I don't assume 1028x1028 textures
 		for (int mip = 0; mip < maxMipFilterLevel; mip++)
 		{
 			filterBuffer.SourceDimensions = dim;

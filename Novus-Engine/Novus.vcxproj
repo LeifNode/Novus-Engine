@@ -185,6 +185,7 @@
     <ClInclude Include="src\Graphics\Debug\GBufferRenderer.h" />
     <ClInclude Include="src\Graphics\GBuffer.h" />
     <ClInclude Include="src\Graphics\Geometry.h" />
+    <ClInclude Include="src\Graphics\IRenderable.h" />
     <ClInclude Include="src\Graphics\Lights.h" />
     <ClInclude Include="src\Graphics\LineRenderer.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="src\Graphics\Shaders\Shader.h" />
     <ClInclude Include="src\Graphics\Shaders\VertexShader.h" />
     <ClInclude Include="src\Graphics\SkyboxRenderer.h" />
+    <ClInclude Include="src\Graphics\StaticMesh.h" />
     <ClInclude Include="src\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Graphics\TextRenderer.h" />
     <ClInclude Include="src\Graphics\Textures\Texture2D.h" />
@@ -257,6 +259,7 @@
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp" />
     <ClCompile Include="src\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Graphics\SkyboxRenderer.cpp" />
+    <ClCompile Include="src\Graphics\StaticMesh.cpp" />
     <ClCompile Include="src\Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture2D.cpp" />
     <ClCompile Include="src\Input\InputSystem.cpp" />

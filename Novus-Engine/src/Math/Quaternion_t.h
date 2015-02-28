@@ -14,9 +14,9 @@ namespace novus
 
 template <typename T> struct Quaternion_t;
 
-typedef Quaternion_t<float>     FQuaternion;
-typedef Quaternion_t<double>    DQuaternion;
-typedef FQuaternion              Quaternion;
+typedef Quaternion_t<float>     Quaternionf;
+typedef Quaternion_t<double>    Quaterniond;
+typedef Quaternionf              Quaternion;
 
 template <typename T>
 struct Quaternion_t

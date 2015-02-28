@@ -21,10 +21,6 @@
 #include <crtdbg.h>
 #endif
 
-#ifndef DEBUG_MEMORY_ALLOC
-#define DEBUG_MEMORY_ALLOC
-#endif
-
 #include <Windows.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>

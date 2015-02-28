@@ -1,4 +1,5 @@
 #include "OBJLoader.h"
+#include "Utils/GameTimer.h"
 
 
 namespace novus
@@ -19,6 +20,11 @@ bool OBJLoader::Load(const std::wstring& path)
 {
 	NE_DELETE(mpFile);
 	NE_DELETE(mpScene);
+
+
+	GameTimer timer;
+	timer.Start();
+	float totalTime = 0.0f;
 
 	mpFile = NE_NEW std::ifstream(path);
 
@@ -52,18 +58,23 @@ bool OBJLoader::Load(const std::wstring& path)
 			if (readingFaces)
 			{
 				readingFaces = false;
-				vertexCount = 0;
 
 				StoreMesh(vertices, vertexTexCoords, vertexNormals, faces, vertexCount, currentMesh);
 
-				vertices.clear();
+				/*vertices.clear();
 				vertexTexCoords.clear();
-				vertexNormals.clear();
+				vertexNormals.clear();*/
 				faces.clear();
+
+				vertexCount = 0;
 
 				mpScene->mMeshes.push_back(currentMesh);
 
 				currentMesh = NE_NEW assettypes::Mesh();
+
+				timer.Tick();
+				std::cout << "Model:" << timer.DeltaTime() << "\n";
+				totalTime += (float)timer.DeltaTime();
 			}
 
 			if (line[1] == ' ')
@@ -89,6 +100,10 @@ bool OBJLoader::Load(const std::wstring& path)
 
 	}
 
+	StoreMesh(vertices, vertexTexCoords, vertexNormals, faces, vertexCount, currentMesh);
+	mpScene->mMeshes.push_back(currentMesh);
+
+
 	NE_DELETE(mpFile);
 
 	return true;
@@ -100,7 +115,7 @@ Vector2 OBJLoader::ParseVector2(const char* str)
 
 	while (*str != ' ') str++;
 	parsedVec.x = static_cast<float>(atof(str));
-	str++;
+	while (*str == ' ') str++;
 	while (*str != ' ') str++;
 	parsedVec.y = static_cast<float>(atof(str));
 
@@ -113,10 +128,10 @@ Vector3 OBJLoader::ParseVector3(const char* str)
 
 	while (*str != ' ') str++;
 	parsedVec.x = static_cast<float>(atof(str));
-	str++;
+	while (*str == ' ') str++;
 	while (*str != ' ') str++;
 	parsedVec.y = static_cast<float>(atof(str));
-	str++;
+	while (*str == ' ') str++;
 	while (*str != ' ') str++;
 	parsedVec.z = static_cast<float>(atof(str));
 
@@ -200,30 +215,34 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 		meshOut->mNormals = NE_NEW Vector3[vertexCount];
 	}
 
-	unsigned int currentVertex;
+	unsigned int currentVertex = 0;
 
-	for (size_t i = 0; i < faces.size(); ++i)
+	for (unsigned int i = 0; i < faces.size(); ++i)
 	{
-		assettypes::Face face;
-		face.mIndexCount = faces[i].VertexCount;
-		face.mIndices = NE_NEW unsigned int[face.mIndexCount];
+		assettypes::Face* currentFace = &meshOut->mFaces[i];
+
+		unsigned int indexCount = faces[i].VertexCount;
+		//unsigned int* indices = NE_NEW unsigned int[faces[i].VertexCount];
 
 		for (int v = 0; v < faces[i].VertexCount; v++)
 		{
 			int vertIndex = faces[i].Vertices[v].x;
-			face.mIndices[v] = currentVertex;
+			currentFace->mIndices[v] = currentVertex;
 
 			if (vertIndex < 0)
 				vertIndex = pos.size() + vertIndex;
+			else
+				vertIndex--;
 
 			meshOut->mVertices[currentVertex] = pos[vertIndex];
-			
 
 			if (faces[i].HasTexCoords)
 			{
 				int texIndex = faces[i].Vertices[v].y;
 				if (texIndex < 0)
 					texIndex = tex.size() + texIndex;
+				else
+					texIndex--;
 
 				meshOut->mTextureCoords[currentVertex] = tex[texIndex];
 			}
@@ -234,6 +253,8 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 				int normIndex = faces[i].Vertices[v].z;
 				if (normIndex < 0)
 					normIndex = norm.size() + normIndex;
+				else
+					normIndex--;
 
 				meshOut->mNormals[currentVertex] = norm[normIndex];
 			}
@@ -241,7 +262,7 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 			currentVertex++;
 		}
 
-		meshOut->mFaces[i] = face;
+		meshOut->mFaces[i].mIndexCount = indexCount;
 	}
 }
 

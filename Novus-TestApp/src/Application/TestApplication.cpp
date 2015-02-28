@@ -12,6 +12,7 @@
 #include <Graphics/Textures/Texture2D.h>
 #include <Graphics/SkyboxRenderer.h>
 #include <Resources/Model/OBJLoader.h>
+#include <Graphics/StaticMesh.h>
 
 using namespace novus;
 
@@ -39,15 +40,18 @@ TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
 	mpMainShader(NULL),
-	mpSkyboxRenderer(NULL)
+	mpStaticMeshShader(NULL),
+	mpSkyboxRenderer(NULL),
+	mpMesh(NULL)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.0.51";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, -4.9f, 1.4f));
+	mpCamera->setVelocity(3.0f);
 
 	mpCamera->setPosition(Vector3(-3.6f, -4.0f, 1.7f));
-	mpCamera->setRotation(Quaternion::AxisAngle((Vector3(0.5f, 1.0f, 0.0f)), Math::Pi * 0.3f));
+	mpCamera->setRotation(Quaternion::AxisAngle((Normalize(Vector3(0.5f, 1.0f, 0.0f))), Math::Pi * 0.3f));
 }
 
 TestApplication::~TestApplication()
@@ -55,6 +59,7 @@ TestApplication::~TestApplication()
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
 	NE_DELETE(mpSkyboxRenderer);
+	NE_DELETE(mpMesh);
 }
 
 bool TestApplication::Init()
@@ -88,6 +93,9 @@ bool TestApplication::Init()
 
 	loader->Load(L"../Models/buddha.obj");
 
+	mpMesh = NE_NEW StaticMesh();
+	mpMesh->Init(loader->getScene());
+
 	NE_DELETE(loader);
 
 	return true;
@@ -111,6 +119,16 @@ void TestApplication::InitShader()
 	};
 
 	mpMainShader = mpRenderer->LoadShader(L"../Shaders/GenericShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vertexDescription, ARRAYSIZE(vertexDescription));
+
+	D3D11_INPUT_ELEMENT_DESC staticMeshVertexDescription[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	mpStaticMeshShader = mpRenderer->LoadShader(L"../Shaders/StaticMeshShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, staticMeshVertexDescription, ARRAYSIZE(staticMeshVertexDescription));
 }
 
 void TestApplication::InitMesh()
@@ -236,6 +254,19 @@ void TestApplication::Render()
 	perObject.Material.Roughness = 0.15f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);
+
+
+	mpRenderer->setShader(mpStaticMeshShader);
+	mpRenderer->BindPerFrameBuffer();
+	perObject.World = Matrix4::Scale(1.0f) * Matrix4::RotateY(Math::Pi) * Matrix4::Translate(0.0f, -4.65f, 0.0f);
+	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.27f);
+	perObject.Material.Metallic = 1.0f;
+	perObject.Material.Roughness = 0.7f;
+	mpRenderer->setPerObjectBuffer(perObject);
+	mpMesh->Render(mpRenderer);
 
 	mpSkyboxRenderer->Render(mpRenderer);
 

@@ -34,6 +34,7 @@ public:
 
 	void setRotation(const Quaternion& q);
 
+	void setVelocity(float velocity);
 	float getVelocity() const { return mVelocity; }
 
 	float getNear() const { return mNear; }

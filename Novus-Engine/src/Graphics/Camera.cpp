@@ -54,6 +54,11 @@ void Camera::setRotation(const Quaternion& q)
 	mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
 }
 
+void Camera::setVelocity(float velocity)
+{
+	mVelocity = velocity;
+}
+
 Vector3 Camera::getForward() const
 {
 	return Vector3(Vector4(0.0f, 0.0f, -1.0f, 0.0f) * Quaternion::ToMatrix(mRotation));

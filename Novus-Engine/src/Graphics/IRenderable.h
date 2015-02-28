@@ -7,28 +7,24 @@
 
 #pragma once
 
-
-#ifndef NOVUS_IMODEL_LOADER_H
-#define NOVUS_IMODEL_LOADER_H
-
-#include "AssetTypes.h"
+#ifndef NOVUS_IRENDERABLE
+#define NOVUS_IRENDERABLE
 
 namespace novus
 {
 
-class IModelLoader
+class D3DRenderer;
+
+class IRenderable
 {
 public:
-	IModelLoader() {}
-	virtual ~IModelLoader() {}
+	virtual ~IRenderable() {}
 
-	virtual bool Load(const std::wstring& path)=0;
-
-	virtual assettypes::Scene* getScene() const=0;
+	virtual void PreRender(novus::D3DRenderer* renderer) {}
+	virtual void Render(novus::D3DRenderer* renderer) = 0;
+	virtual void PostRender(novus::D3DRenderer* renderer) {}
 };
 
 }
 
-
 #endif
-

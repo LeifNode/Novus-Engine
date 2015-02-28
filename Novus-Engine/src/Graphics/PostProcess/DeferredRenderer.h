@@ -35,6 +35,8 @@ public:
 	class Texture2D* getHDRRenderTarget() const { return mpHDRRenderTarget; }
 
 private:
+	int mMaxLightCount;
+
 	class Shader* mpTiledDeferredShader;
 	class Shader* mpLUTShader;
 	class Shader* mpDebugOutputShader;
