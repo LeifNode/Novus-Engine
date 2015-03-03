@@ -43,9 +43,6 @@ void FilterEnvMapCS(uint3 groupID          : SV_GroupID,
 
 	float3 color = PrefilterEnvMap(EnvironmentMap, EnvSampler, MipLevelToRoughness(gCurrentMip, gMipCount), normal);
 
-	//OutputTexture[globalCoords] = float4((normal + 1.0f) * 0.5f, 0.0f);
 	if (globalCoords.x < uint(gSourceDimensions.x) && globalCoords.y < uint(gSourceDimensions.y))
 		OutputTexture[globalCoords] = float4(color, 1.0f);
-
-	//OutputTexture[globalCoords] = float4(IntegrateBRDF(sampleCoords.x, sampleCoords.y), 0.0, 1.0);
 }

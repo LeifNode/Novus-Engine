@@ -21,58 +21,61 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 	std::vector<StaticMeshVertex> vertices;
 	std::vector<unsigned int> indices;
 
-	for (auto it = meshes->mMeshes.cbegin(); it != meshes->mMeshes.cend(); ++it)
+	if (meshes != NULL)
 	{
-		vertices.clear();
-		indices.clear();
-
-		vertices.reserve((*it)->mVertexCount);
-		
-		for (unsigned int i = 0; i < (*it)->mVertexCount; i++)
+		for (auto it = meshes->mMeshes.cbegin(); it != meshes->mMeshes.cend(); ++it)
 		{
-			StaticMeshVertex vertex;
+			vertices.clear();
+			indices.clear();
 
-			vertex.Position = (*it)->mVertices[i];
+			vertices.reserve((*it)->mVertexCount);
 
-			if ((*it)->hasNormals())
-				vertex.Normal = (*it)->mNormals[i];
-			else
-				vertex.Normal = Vector3(0.0f);
-
-			if ((*it)->hasTextureCoords())
-				vertex.TexCoord = (*it)->mTextureCoords[i];
-			else
-				vertex.TexCoord = Vector2(0.0f);
-
-			if ((*it)->mTangents != NULL)
-				vertex.Tangent = (*it)->mTangents[i];
-			else
-				vertex.Tangent = Vector3(0.0f);
-
-			vertices.push_back(vertex);
-		}
-
-		for (unsigned int i = 0; i < (*it)->mFaceCount; i++)
-		{
-			if ((*it)->mFaces[i].mIndexCount == 3)
+			for (unsigned int i = 0; i < (*it)->mVertexCount; i++)
 			{
-				indices.push_back((*it)->mFaces[i].mIndices[0]);
-				indices.push_back((*it)->mFaces[i].mIndices[1]);
-				indices.push_back((*it)->mFaces[i].mIndices[2]);
+				StaticMeshVertex vertex;
+
+				vertex.Position = (*it)->mVertices[i];
+
+				if ((*it)->hasNormals())
+					vertex.Normal = (*it)->mNormals[i];
+				else
+					vertex.Normal = Vector3(0.0f);
+
+				if ((*it)->hasTextureCoords())
+					vertex.TexCoord = (*it)->mTextureCoords[i];
+				else
+					vertex.TexCoord = Vector2(0.0f);
+
+				if ((*it)->mTangents != NULL)
+					vertex.Tangent = (*it)->mTangents[i];
+				else
+					vertex.Tangent = Vector3(0.0f);
+
+				vertices.push_back(vertex);
 			}
-			else if ((*it)->mFaces[i].mIndexCount == 4)
+
+			for (unsigned int i = 0; i < (*it)->mFaceCount; i++)
 			{
-				indices.push_back((*it)->mFaces[i].mIndices[0]);
-				indices.push_back((*it)->mFaces[i].mIndices[1]);
-				indices.push_back((*it)->mFaces[i].mIndices[2]);
+				if ((*it)->mFaces[i].mIndexCount == 3)
+				{
+					indices.push_back((*it)->mFaces[i].mIndices[0]);
+					indices.push_back((*it)->mFaces[i].mIndices[1]);
+					indices.push_back((*it)->mFaces[i].mIndices[2]);
+				}
+				else if ((*it)->mFaces[i].mIndexCount == 4)
+				{
+					indices.push_back((*it)->mFaces[i].mIndices[0]);
+					indices.push_back((*it)->mFaces[i].mIndices[1]);
+					indices.push_back((*it)->mFaces[i].mIndices[2]);
 
-				indices.push_back((*it)->mFaces[i].mIndices[3]);
-				indices.push_back((*it)->mFaces[i].mIndices[0]);
-				indices.push_back((*it)->mFaces[i].mIndices[2]);
+					indices.push_back((*it)->mFaces[i].mIndices[3]);
+					indices.push_back((*it)->mFaces[i].mIndices[0]);
+					indices.push_back((*it)->mFaces[i].mIndices[2]);
+				}
 			}
-		}
 
-		AddMesh(vertices, indices);
+			AddMesh(vertices, indices);
+		}
 	}
 }
 

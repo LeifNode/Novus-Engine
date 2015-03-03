@@ -87,7 +87,7 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
-	mpSkyboxRenderer->Init(L"../Textures/grasscube1024.dds");
+	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
 
 	OBJLoader* loader = NE_NEW OBJLoader();
 
@@ -258,13 +258,13 @@ void TestApplication::Render()
 
 	mpRenderer->setShader(mpStaticMeshShader);
 	mpRenderer->BindPerFrameBuffer();
-	perObject.World = Matrix4::Scale(1.0f) * Matrix4::RotateY(Math::Pi) * Matrix4::Translate(0.0f, -4.65f, 0.0f);
+	perObject.World = Matrix4::Scale(1.0f) * Matrix4::RotateY(Math::Pi) * Matrix4::Translate(0.0f, -4.65f, 1.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.27f);
-	perObject.Material.Metallic = 1.0f;
-	perObject.Material.Roughness = 0.7f;
+	perObject.Material.Metallic = 0.0f;
+	perObject.Material.Roughness = 0.12f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mpMesh->Render(mpRenderer);
 
