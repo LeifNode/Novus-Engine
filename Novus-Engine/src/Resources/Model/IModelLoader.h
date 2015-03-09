@@ -22,7 +22,8 @@ public:
 	IModelLoader() {}
 	virtual ~IModelLoader() {}
 
-	virtual bool Load(const std::wstring& path)=0;
+	virtual bool Load(void* data, size_t size)=0;
+	//virtual bool Load(const std::wstring& path)=0;
 
 	virtual assettypes::Scene* getScene() const=0;
 };

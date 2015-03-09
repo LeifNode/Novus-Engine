@@ -42,6 +42,8 @@ public:
 
 	Vector3 getForward() const;
 
+	void LookAt(const Vector3& position);
+
 	void OnResize(int width, int height);
 
 	void Update(float dt);

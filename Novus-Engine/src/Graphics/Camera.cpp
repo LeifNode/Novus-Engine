@@ -51,7 +51,7 @@ void Camera::setPosition(const Vector3& p)
 void Camera::setRotation(const Quaternion& q)
 {
 	mRotation = q;
-	mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
+	mDirection = Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation));
 }
 
 void Camera::setVelocity(float velocity)
@@ -62,6 +62,15 @@ void Camera::setVelocity(float velocity)
 Vector3 Camera::getForward() const
 {
 	return Vector3(Vector4(0.0f, 0.0f, -1.0f, 0.0f) * Quaternion::ToMatrix(mRotation));
+}
+
+void Camera::LookAt(const Vector3& position)
+{
+	Matrix3 lookAtMat = Matrix3(Matrix4::LookAt(mPosition, position, Vector3(0.0f, 1.0f, 0.0f)));
+
+	Quaternion lookAtQuat = Quaternion(lookAtMat);
+
+	setRotation(lookAtQuat);
 }
 
 void Camera::OnMouseMove(IEventDataPtr eventData)

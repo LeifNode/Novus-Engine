@@ -14,6 +14,44 @@ namespace novus
 		: x(a), y(b), z(c), w(d)
 	{}
 
+	//http://www.gamasutra.com/view/feature/131686/rotating_objects_using_quaternions.php
+	template <typename T>
+	Quaternion_t<T>::Quaternion_t(const Matrix3x3_t<T>& m)
+	{
+		//Move to own function
+		T  tr, s, q[4];
+		int    i, j, k;
+		int nxt[3] = { 1, 2, 0 };
+		tr = m[0][0] + m[1][1] + m[2][2];
+		// check the diagonal
+		if (tr > static_cast<T>(0.0)) {
+			s = sqrt(tr + static_cast<T>(1.0));
+			this->w = s / static_cast<T>(2.0);
+			s = static_cast<T>(0.5) / s;
+			this->x = (m[1][2] - m[2][1]) * s;
+			this->y = (m[2][0] - m[0][2]) * s;
+			this->z = (m[0][1] - m[1][0]) * s;
+		}
+		else {
+			// diagonal is negative
+			i = 0;
+			if (m[1][1] > m[0][0]) i = 1;
+			if (m[2][2] > m[i][i]) i = 2;
+			j = nxt[i];
+			k = nxt[j];
+			s = sqrt((m[i][i] - (m[j][j] + m[k][k])) + static_cast<T>(1.0));
+			q[i] = s * static_cast<T>(0.5);
+			if (s != static_cast<T>(0.0)) s = static_cast<T>(0.5) / s;
+			q[3] = (m[j][k] - m[k][j]) * s;
+			q[j] = (m[i][j] + m[j][i]) * s;
+			q[k] = (m[i][k] + m[k][i]) * s;
+			this->x = q[0];
+			this->y = q[1];
+			this->z = q[2];
+			this->w = q[3];
+		}
+	}
+
 	template <typename T>
 	template <typename B>
 	Quaternion_t<T>::Quaternion_t(const Quaternion_t<B>& q)

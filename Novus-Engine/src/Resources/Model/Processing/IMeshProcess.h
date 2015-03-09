@@ -7,20 +7,21 @@
 
 #pragma once
 
-#ifndef NOVUS_RESOURCE_MANAGER_H
-#define NOVUS_RESOURCE_MANAGER_H
+#ifndef NOVUS_MESH_PROCESS_H
+#define NOVUS_MESH_PROCESS_H
+
+#include "Resources/Model/AssetTypes.h"
 
 namespace novus
 {
 
-class ResourceManager
+class IMeshProcess
 {
 public:
-	ResourceManager();
-	~ResourceManager();
+	IMeshProcess() {};
+	virtual ~IMeshProcess() {};
 
-	void Register
-
+	virtual void Execute(assettypes::Mesh* mesh)=0;
 };
 
 }

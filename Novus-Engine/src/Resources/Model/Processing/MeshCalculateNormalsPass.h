@@ -7,22 +7,24 @@
 
 #pragma once
 
-#ifndef NOVUS_RESOURCE_MANAGER_H
-#define NOVUS_RESOURCE_MANAGER_H
+#ifndef NOVUS_CALCULATE_NORMALS_PASS_H
+#define NOVUS_CALCULATE_NORMALS_PASS_H
+
+#include "IMeshProcess.h"
+#include "Resources/Model/AssetTypes.h"
 
 namespace novus
 {
 
-class ResourceManager
+class MeshCalculateNormalsPass : public IMeshProcess
 {
-public:
-	ResourceManager();
-	~ResourceManager();
+	MeshCalculateNormalsPass();
+	~MeshCalculateNormalsPass();
 
-	void Register
-
+	virtual void Execute(assettypes::Mesh* mesh) override;
 };
 
 }
 
 #endif
+

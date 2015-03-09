@@ -31,7 +31,8 @@ public:
 
 	~OBJLoader() override;
 
-	bool Load(const std::wstring& path) override;
+	bool Load(const std::wstring& path);
+	bool Load(void* data, size_t size) override;
 
 	assettypes::Scene* getScene() const override;
 

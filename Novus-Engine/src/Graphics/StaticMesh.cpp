@@ -54,6 +54,8 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 				vertices.push_back(vertex);
 			}
 
+			bool indexWarnTriggered = false;
+
 			for (unsigned int i = 0; i < (*it)->mFaceCount; i++)
 			{
 				if ((*it)->mFaces[i].mIndexCount == 3)
@@ -64,6 +66,12 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 				}
 				else if ((*it)->mFaces[i].mIndexCount == 4)
 				{
+					if (!indexWarnTriggered)
+					{
+						NE_WARN("StaticMesh triangulation is depricated use MeshTriangulatePass during model loading instead", "StaticMesh");
+						indexWarnTriggered = true;
+					}
+					
 					indices.push_back((*it)->mFaces[i].mIndices[0]);
 					indices.push_back((*it)->mFaces[i].mIndices[1]);
 					indices.push_back((*it)->mFaces[i].mIndices[2]);

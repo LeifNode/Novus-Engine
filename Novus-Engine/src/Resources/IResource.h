@@ -24,6 +24,8 @@ class IResource
 	virtual size_t getSize() const = 0;
 
 	virtual void Free();
+
+	virtual unsigned int getTypeId() const = 0;
 };
 }
 

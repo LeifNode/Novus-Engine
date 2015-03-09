@@ -7,19 +7,23 @@
 
 #pragma once
 
-#ifndef NOVUS_RESOURCE_MANAGER_H
-#define NOVUS_RESOURCE_MANAGER_H
+#ifndef NOVUS_IRESOURCE_CACHE_H
+#define NOVUS_IRESOURCE_CACHE_H
+
+#include "IResource.h"
+#include "IResourceLoader.h"
 
 namespace novus
 {
 
-class ResourceManager
+class ResourceCache
 {
 public:
-	ResourceManager();
-	~ResourceManager();
+	ResourceCache() {};
+	virtual ~ResourceCache() {};
 
-	void Register
+
+private:
 
 };
 

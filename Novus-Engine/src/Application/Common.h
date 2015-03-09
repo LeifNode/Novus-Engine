@@ -36,6 +36,7 @@
 #include <list>
 #include <string>
 #include <algorithm>
+#include <stdint.h>
 
 #include "Utils/dxerr.h"
 

@@ -50,8 +50,9 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpCamera->setPosition(Vector3(0.0f, -4.9f, 1.4f));
 	mpCamera->setVelocity(3.0f);
 
-	mpCamera->setPosition(Vector3(-3.6f, -4.0f, 1.7f));
-	mpCamera->setRotation(Quaternion::AxisAngle((Normalize(Vector3(0.5f, 1.0f, 0.0f))), Math::Pi * 0.3f));
+	mpCamera->setPosition(Vector3(-3.6f, -4.0f, 3.6f));
+	mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
+	//mpCamera->setRotation(Quaternion::AxisAngle((Normalize(Vector3(0.5f, 1.0f, 0.0f))), Math::Pi * 0.3f));
 }
 
 TestApplication::~TestApplication()
@@ -173,7 +174,10 @@ void TestApplication::OnResize()
 
 void TestApplication::Update(float dt)
 {
+
+	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 	mpCamera->Update(dt);
+	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 
 	mCurrentRotation = Quaternion::AxisAngle(Normalize(Vector3(1.0f, 1.0f, 1.0f)), dt) * mCurrentRotation;
 	mCurrentRotation = Quaternion::Normalize(mCurrentRotation);
@@ -264,7 +268,7 @@ void TestApplication::Render()
 	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.27f);
 	perObject.Material.Metallic = 0.0f;
-	perObject.Material.Roughness = 0.12f;
+	perObject.Material.Roughness = 0.2f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mpMesh->Render(mpRenderer);
 

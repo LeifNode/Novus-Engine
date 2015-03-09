@@ -15,7 +15,7 @@ namespace novus
 		mpEnvironmentSampler(NULL),
 		mpEnvMap(NULL),
 		mpBRDFLUT(NULL),
-		mMaxLightCount(1024)
+		mMaxLightCount(512)
 {
 	mpHDRRenderTarget = NE_NEW Texture2D();
 }
@@ -62,7 +62,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			PointLight light;
 			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
 			//light.Color = Vector3(1.0f, 1.0f, 1.0f);
-			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.2f;
+			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.4f;
 			light.Radius = 0.0f;
 			
 			/*if (i > 256)

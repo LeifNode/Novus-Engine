@@ -87,6 +87,9 @@
     <Filter Include="Source Files\Resources\Model">
       <UniqueIdentifier>{bc6d5e4a-115d-4bcb-ac69-06763dc37f49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources\Model\Processing">
+      <UniqueIdentifier>{4159d942-1e85-448f-96f6-019f161c2fcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -311,6 +314,24 @@
     <ClInclude Include="src\Graphics\IRenderable.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Resources\IResourceLoader.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\ResourceCache.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Model\Processing\MeshCalculateNormalsPass.h">
+      <Filter>Source Files\Resources\Model\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Model\Processing\MeshTriangulatePass.h">
+      <Filter>Source Files\Resources\Model\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Model\Processing\IMeshProcess.h">
+      <Filter>Source Files\Resources\Model\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\MeshResourceLoader.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -435,6 +456,15 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\StaticMesh.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Objects\Type.cpp">
+      <Filter>Source Files\Utils\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Model\Processing\MeshCalculateNormalsPass.cpp">
+      <Filter>Source Files\Resources\Model\Processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Model\Processing\MeshTriangulatePass.cpp">
+      <Filter>Source Files\Resources\Model\Processing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

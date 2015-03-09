@@ -7,20 +7,22 @@
 
 #pragma once
 
-#ifndef NOVUS_RESOURCE_MANAGER_H
-#define NOVUS_RESOURCE_MANAGER_H
+#ifndef NOVUS_MESH_TRIANGULATE_PASS_H
+#define NOVUS_MESH_TRIANGULATE_PASS_H
+
+#include "IMeshProcess.h"
+#include "Resources/Model/AssetTypes.h"
 
 namespace novus
 {
 
-class ResourceManager
+class MeshTriangulatePass : public IMeshProcess
 {
 public:
-	ResourceManager();
-	~ResourceManager();
+	MeshTriangulatePass();
+	~MeshTriangulatePass();
 
-	void Register
-
+	virtual void Execute(assettypes::Mesh* mesh) override;
 };
 
 }

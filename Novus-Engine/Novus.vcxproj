@@ -221,6 +221,12 @@
     <ClInclude Include="src\Resources\Font\Font.h" />
     <ClInclude Include="src\Resources\Font\FontManager.h" />
     <ClInclude Include="src\Resources\IResource.h" />
+    <ClInclude Include="src\Resources\MeshResourceLoader.h" />
+    <ClInclude Include="src\Resources\Model\Processing\IMeshProcess.h" />
+    <ClInclude Include="src\Resources\Model\Processing\MeshCalculateNormalsPass.h" />
+    <ClInclude Include="src\Resources\Model\Processing\MeshTriangulatePass.h" />
+    <ClInclude Include="src\Resources\ResourceCache.h" />
+    <ClInclude Include="src\Resources\IResourceLoader.h" />
     <ClInclude Include="src\Resources\Model\AssetTypes.h" />
     <ClInclude Include="src\Resources\Model\IModelLoader.h" />
     <ClInclude Include="src\Resources\Model\OBJLoader.h" />
@@ -275,6 +281,8 @@
     <ClCompile Include="src\Resources\Font\Font.cpp" />
     <ClCompile Include="src\Resources\Font\FontManager.cpp" />
     <ClCompile Include="src\Resources\Model\OBJLoader.cpp" />
+    <ClCompile Include="src\Resources\Model\Processing\MeshCalculateNormalsPass.cpp" />
+    <ClCompile Include="src\Resources\Model\Processing\MeshTriangulatePass.cpp" />
     <ClCompile Include="src\Utils\Containers\PointList.cpp" />
     <ClCompile Include="src\Utils\dxerr.cpp" />
     <ClCompile Include="src\Utils\GameTimer.cpp" />
@@ -282,6 +290,7 @@
     <ClCompile Include="src\Utils\Logging\Logger.cpp" />
     <ClCompile Include="src\Utils\Memory\MallocTracker.cpp" />
     <ClCompile Include="src\Utils\Memory\Memory.cpp" />
+    <ClCompile Include="src\Utils\Objects\Type.cpp" />
     <ClCompile Include="src\Utils\Primitives\LineSegment.cpp" />
     <ClCompile Include="src\Utils\RectangleBinPacker.cpp" />
     <ClCompile Include="src\Utils\StringUtils.cpp" />

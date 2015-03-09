@@ -13,15 +13,15 @@
 #endif
 
 #ifndef MAX_LIGHTS
-#define MAX_LIGHTS 1024
+#define MAX_LIGHTS 256
 #endif
 
 #ifndef ENV_MAP_SAMPLES
-#define ENV_MAP_SAMPLES 1024
+#define ENV_MAP_SAMPLES 256
 #endif
 
 #ifndef BRDF_SAMPLES
-#define BRDF_SAMPLES 512
+#define BRDF_SAMPLES 256
 #endif
 
 #define COMPUTE_SHADER_TILE_GROUP_DIM 16

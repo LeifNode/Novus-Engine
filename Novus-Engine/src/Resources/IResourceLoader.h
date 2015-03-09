@@ -7,21 +7,26 @@
 
 #pragma once
 
-#ifndef NOVUS_RESOURCE_MANAGER_H
-#define NOVUS_RESOURCE_MANAGER_H
+#ifndef NOVUS_IRESOURCE_LOADER_H
+#define NOVUS_IRESOURCE_LOADER_H
+
+#include <string>
+#include "IResource.h"
 
 namespace novus
 {
 
-class ResourceManager
-{
-public:
-	ResourceManager();
-	~ResourceManager();
+	class IResourceLoader
+	{
+	public:
+		IResourceLoader();
+		virtual ~IResourceLoader();
 
-	void Register
+		virtual IResource* Load(const std::wstring& path) = 0;
+		virtual IResource* Load(void* memory, size_t size) = 0;
 
-};
+
+	};
 
 }
 

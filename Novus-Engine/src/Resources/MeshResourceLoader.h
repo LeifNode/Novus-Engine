@@ -7,20 +7,23 @@
 
 #pragma once
 
-#ifndef NOVUS_RESOURCE_MANAGER_H
-#define NOVUS_RESOURCE_MANAGER_H
+
+#ifndef NOVUS_MESH_RESOURCE_LOADER
+#define NOVUS_MESH_RESOURCE_LOADER
+
+#include "IResourceLoader.h"
 
 namespace novus
 {
 
-class ResourceManager
+class MeshResourceLoader : public IResourceLoader
 {
 public:
-	ResourceManager();
-	~ResourceManager();
+	MeshResourceLoader();
+	~MeshResourceLoader();
 
-	void Register
-
+	//virtual IResource* Load(const std::wstring& path) override;
+	virtual IResource* Load(void* memory, size_t size) override;
 };
 
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Vector_t.h"
+#include "Matrix_t.h"
 
 namespace novus
 {
@@ -26,6 +27,8 @@ struct Quaternion_t
 	Quaternion_t();
 
 	Quaternion_t(const T& a, const T& b, const T& c, const T& d);
+
+	Quaternion_t(const Matrix3x3_t<T>& rotationMat);
 
 	template <typename B>
 	Quaternion_t(const Quaternion_t<B>& q);
