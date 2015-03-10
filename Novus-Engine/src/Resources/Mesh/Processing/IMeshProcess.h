@@ -7,29 +7,23 @@
 
 #pragma once
 
+#ifndef NOVUS_MESH_PROCESS_H
+#define NOVUS_MESH_PROCESS_H
 
-#ifndef NOVUS_IMODEL_LOADER_H
-#define NOVUS_IMODEL_LOADER_H
-
-#include "AssetTypes.h"
+#include "Resources/Mesh/AssetTypes.h"
 
 namespace novus
 {
 
-class IModelLoader
+class IMeshProcess
 {
 public:
-	IModelLoader() {}
-	virtual ~IModelLoader() {}
+	IMeshProcess() {};
+	virtual ~IMeshProcess() {};
 
-	virtual bool Load(void* data, size_t size)=0;
-	//virtual bool Load(const std::wstring& path)=0;
-
-	virtual assettypes::Scene* getScene() const=0;
+	virtual void Execute(assettypes::Mesh* mesh)=0;
 };
 
 }
 
-
 #endif
-

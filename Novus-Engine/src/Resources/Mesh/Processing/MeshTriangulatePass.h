@@ -11,7 +11,7 @@
 #define NOVUS_MESH_TRIANGULATE_PASS_H
 
 #include "IMeshProcess.h"
-#include "Resources/Model/AssetTypes.h"
+#include "Resources/Mesh/AssetTypes.h"
 
 namespace novus
 {

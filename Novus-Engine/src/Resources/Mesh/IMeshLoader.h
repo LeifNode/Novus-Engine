@@ -7,24 +7,29 @@
 
 #pragma once
 
-#ifndef NOVUS_CALCULATE_NORMALS_PASS_H
-#define NOVUS_CALCULATE_NORMALS_PASS_H
 
-#include "IMeshProcess.h"
-#include "Resources/Model/AssetTypes.h"
+#ifndef NOVUS_IMODEL_LOADER_H
+#define NOVUS_IMODEL_LOADER_H
+
+#include "AssetTypes.h"
 
 namespace novus
 {
 
-class MeshCalculateNormalsPass : public IMeshProcess
+class IMeshLoader
 {
-	MeshCalculateNormalsPass();
-	~MeshCalculateNormalsPass();
+public:
+	IMeshLoader() {}
+	virtual ~IMeshLoader() {}
 
-	virtual void Execute(assettypes::Mesh* mesh) override;
+	virtual bool Load(void* data, size_t size)=0;
+	//virtual bool Load(const std::wstring& path)=0;
+
+	virtual assettypes::Scene* getScene() const=0;
 };
 
 }
+
 
 #endif
 

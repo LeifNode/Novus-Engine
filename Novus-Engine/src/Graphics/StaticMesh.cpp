@@ -68,7 +68,7 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 				{
 					if (!indexWarnTriggered)
 					{
-						NE_WARN("StaticMesh triangulation is depricated use MeshTriangulatePass during model loading instead", "StaticMesh");
+						//NE_WARN("StaticMesh triangulation is depricated use MeshTriangulatePass during model loading instead", "StaticMesh");
 						indexWarnTriggered = true;
 					}
 					

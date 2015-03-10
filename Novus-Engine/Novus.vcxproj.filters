@@ -84,10 +84,10 @@
     <Filter Include="Source Files\Utils\Containers">
       <UniqueIdentifier>{6409badd-74a1-40d0-8232-77a1f3a3db9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resources\Model">
+    <Filter Include="Source Files\Resources\Mesh">
       <UniqueIdentifier>{bc6d5e4a-115d-4bcb-ac69-06763dc37f49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resources\Model\Processing">
+    <Filter Include="Source Files\Resources\Mesh\Processing">
       <UniqueIdentifier>{4159d942-1e85-448f-96f6-019f161c2fcd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -299,15 +299,6 @@
     <ClInclude Include="src\Graphics\TextRenderer.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\Model\AssetTypes.h">
-      <Filter>Source Files\Resources\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Model\IModelLoader.h">
-      <Filter>Source Files\Resources\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Model\OBJLoader.h">
-      <Filter>Source Files\Resources\Model</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\StaticMesh.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
@@ -320,17 +311,26 @@
     <ClInclude Include="src\Resources\ResourceCache.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\Model\Processing\MeshCalculateNormalsPass.h">
-      <Filter>Source Files\Resources\Model\Processing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Model\Processing\MeshTriangulatePass.h">
-      <Filter>Source Files\Resources\Model\Processing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Model\Processing\IMeshProcess.h">
-      <Filter>Source Files\Resources\Model\Processing</Filter>
-    </ClInclude>
     <ClInclude Include="src\Resources\MeshResourceLoader.h">
       <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\OBJLoader.h">
+      <Filter>Source Files\Resources\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\AssetTypes.h">
+      <Filter>Source Files\Resources\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\IMeshLoader.h">
+      <Filter>Source Files\Resources\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\Processing\MeshCalculateNormalsPass.h">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\Processing\MeshTriangulatePass.h">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\Processing\IMeshProcess.h">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -451,20 +451,20 @@
     <ClCompile Include="src\Graphics\TextRenderer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\Model\OBJLoader.cpp">
-      <Filter>Source Files\Resources\Model</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\StaticMesh.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\Objects\Type.cpp">
       <Filter>Source Files\Utils\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\Model\Processing\MeshCalculateNormalsPass.cpp">
-      <Filter>Source Files\Resources\Model\Processing</Filter>
+    <ClCompile Include="src\Resources\Mesh\OBJLoader.cpp">
+      <Filter>Source Files\Resources\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\Model\Processing\MeshTriangulatePass.cpp">
-      <Filter>Source Files\Resources\Model\Processing</Filter>
+    <ClCompile Include="src\Resources\Mesh\Processing\MeshTriangulatePass.cpp">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateNormalsPass.cpp">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

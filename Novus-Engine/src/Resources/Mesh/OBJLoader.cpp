@@ -18,132 +18,40 @@ OBJLoader::~OBJLoader()
 
 bool OBJLoader::Load(const std::wstring& path)
 {
-	NE_DELETE(mpFile);
-	NE_DELETE(mpScene);
+	std::ifstream file = std::ifstream(path, std::ios::ate);
+	size_t fileSize = file.tellg();
 
+	char* fileContents = NE_NEW char[fileSize];
 
-	GameTimer timer;
-	timer.Start();
-	float totalTime = 0.0f;
+	file.seekg(std::ios::beg);
 
-	mpFile = NE_NEW std::ifstream(path);
+	file.read(fileContents, fileSize);
 
-	if (!mpFile->good())
-	{
-		NE_DELETE(mpFile);
-		return false;
-	}
+	file.close();
 
-	char line[128];
+	bool result = this->Load(fileContents, fileSize);
 
-	mpScene = NE_NEW assettypes::Scene;
-	assettypes::Mesh* currentMesh = NE_NEW assettypes::Mesh();
-	unsigned int vertexCount = 0;
-	bool newMesh = false;
-	bool readingFaces = false;
+	NE_DELETEARR(fileContents);
 
-	std::vector<Vector3> vertices;
-	std::vector<Vector2> vertexTexCoords;
-	std::vector<Vector3> vertexNormals;
-
-	std::vector<OBJFace> faces;
-
-	while (mpFile->good())
-	{
-		mpFile->getline(line, 128);
-
-		if (line[0] == 'v')
-		{
-			//Done with previous mesh so clear face data and start again
-			if (readingFaces)
-			{
-				readingFaces = false;
-
-				StoreMesh(vertices, vertexTexCoords, vertexNormals, faces, vertexCount, currentMesh);
-
-				/*vertices.clear();
-				vertexTexCoords.clear();
-				vertexNormals.clear();*/
-				faces.clear();
-
-				vertexCount = 0;
-
-				mpScene->mMeshes.push_back(currentMesh);
-
-				currentMesh = NE_NEW assettypes::Mesh();
-
-				timer.Tick();
-				std::cout << "Model:" << timer.DeltaTime() << "\n";
-				totalTime += (float)timer.DeltaTime();
-			}
-
-			if (line[1] == ' ')
-			{
-				vertices.push_back(ParseVector3(line));
-			}
-			else if (line[1] == 't')
-			{
-				vertexTexCoords.push_back(ParseVector2(line));
-			}
-			else if (line[1] == 'n')
-			{
-				vertexNormals.push_back(ParseVector3(line));
-			}
-		}
-		else if (line[0] == 'f')
-		{
-			readingFaces = true;
-
-			faces.push_back(ParseFace(line));
-			vertexCount += faces.back().VertexCount;
-		}
-		//Unhandled obj arguments
-		else if (line[0] == '#' || //Comment
-			line[0] == ' ' ||
-			line[0] == '\0' ||
-			line[0] == '\n' ||
-			line[0] == 'g' || //Group
-			line[0] == 's' || //Smoothing group
-			line[0] == 'm' || //Materials
-			line[0] == 'o')
-		{}
-		else //Not a valid obj file
-		{
-			NE_DELETE(mpFile);
-			NE_DELETE(currentMesh);
-			NE_DELETE(mpScene);
-			return false;
-		}
-
-	}
-
-	StoreMesh(vertices, vertexTexCoords, vertexNormals, faces, vertexCount, currentMesh);
-	mpScene->mMeshes.push_back(currentMesh);
-
-
-	NE_DELETE(mpFile);
-
-	return true;
+	return result;
 }
 
 bool OBJLoader::Load(void* data, size_t size)
 {
 	NE_DELETE(mpScene);
 
-
 	GameTimer timer;
 	timer.Start();
 	float totalTime = 0.0f;
 
-	mpFile = NE_NEW std::ifstream(path);
-
-	if (!mpFile->good())
+	if (data == NULL || size == 0)
 	{
-		NE_DELETE(mpFile);
 		return false;
 	}
 
 	char line[128];
+	bool reading = true;
+	size_t index = 0;
 
 	mpScene = NE_NEW assettypes::Scene;
 	assettypes::Mesh* currentMesh = NE_NEW assettypes::Mesh();
@@ -157,9 +65,35 @@ bool OBJLoader::Load(void* data, size_t size)
 
 	std::vector<OBJFace> faces;
 
-	while (mpFile->good())
+	while (reading)
 	{
-		mpFile->getline(line, 128);
+		//TODO: Factor out into utility function
+		
+		//Read file line by line
+		bool newLine = false;
+		for (int c = 0; c < 128; c++)
+		{
+			if (index >= size)
+			{
+				reading = false;
+				line[c] = '\0';
+			}
+			else if (newLine || !reading)
+			{
+				line[c] = '\0';
+			}
+			else
+			{
+				line[c] = reinterpret_cast<char*>(data)[index];
+				index++;
+
+				if (line[c] == '\n')
+				{
+					line[c] = '\0';
+					newLine = true;
+				}
+			}
+		}
 
 		if (line[0] == 'v')
 		{
@@ -181,9 +115,9 @@ bool OBJLoader::Load(void* data, size_t size)
 
 				currentMesh = NE_NEW assettypes::Mesh();
 
-				timer.Tick();
-				std::cout << "Model:" << timer.DeltaTime() << "\n";
-				totalTime += (float)timer.DeltaTime();
+				//timer.Tick();
+				//std::cout << "Model:" << timer.DeltaTime() << "\n";
+				//totalTime += (float)timer.DeltaTime();
 			}
 
 			if (line[1] == ' ')
@@ -213,13 +147,15 @@ bool OBJLoader::Load(void* data, size_t size)
 			line[0] == '\n' ||
 			line[0] == 'g' || //Group
 			line[0] == 's' || //Smoothing group
-			line[0] == 'm' || //Materials
-			line[0] == 'o')
+			line[0] == 'm' || //Materials and merging groups
+			line[0] == 'u' || //Usemtl
+			line[0] == 'o') //Object name
 		{
 		}
 		else //Not a valid obj file
 		{
-			NE_DELETE(mpFile);
+			std::cout << line[0] << std::endl;
+
 			NE_DELETE(currentMesh);
 			NE_DELETE(mpScene);
 			return false;
@@ -230,8 +166,8 @@ bool OBJLoader::Load(void* data, size_t size)
 	StoreMesh(vertices, vertexTexCoords, vertexNormals, faces, vertexCount, currentMesh);
 	mpScene->mMeshes.push_back(currentMesh);
 
-
-	NE_DELETE(mpFile);
+	timer.Tick();
+	std::cout << "Total time: " << timer.DeltaTime() << std::endl;
 
 	return true;
 }

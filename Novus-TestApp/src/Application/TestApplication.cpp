@@ -11,7 +11,7 @@
 #include <Graphics/PostProcess/DeferredRenderer.h>
 #include <Graphics/Textures/Texture2D.h>
 #include <Graphics/SkyboxRenderer.h>
-#include <Resources/Model/OBJLoader.h>
+#include <Resources/Mesh/OBJLoader.h>
 #include <Graphics/StaticMesh.h>
 
 using namespace novus;
@@ -92,7 +92,12 @@ bool TestApplication::Init()
 
 	OBJLoader* loader = NE_NEW OBJLoader();
 
-	loader->Load(L"../Models/buddha.obj");
+	if (loader->Load(L"../Models/hairball.obj"))
+	{
+		std::cout << "Loaded\n";
+	}
+	else
+		std::cout << "Failed to load.\n";
 
 	mpMesh = NE_NEW StaticMesh();
 	mpMesh->Init(loader->getScene());

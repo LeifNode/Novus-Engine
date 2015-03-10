@@ -14,7 +14,7 @@
 #include "MeshRenderer.h"
 #include "IRenderable.h"
 #include "Shaders/Shader.h"
-#include "Resources/Model/AssetTypes.h"
+#include "Resources/Mesh/AssetTypes.h"
 
 namespace novus
 {

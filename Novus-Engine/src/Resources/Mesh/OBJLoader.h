@@ -11,12 +11,12 @@
 #ifndef NOVUS_OBJ_LOADER_H
 #define NOVUS_OBJ_LOADER_H
 
-#include "IModelLoader.h"
+#include "IMeshLoader.h"
 
 namespace novus
 {
 
-class OBJLoader : public IModelLoader
+class OBJLoader : public IMeshLoader
 {
 	struct OBJFace
 	{

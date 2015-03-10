@@ -67,7 +67,21 @@ void MallocTracker::DumpTrackedMemory()
 	{
 		std::stringstream debugString;
 
-		debugString << "Size: " << it->second.size << "B, File: " << it->second.fileName << ", Function: " << it->second.functionName << ", Line: " << it->second.lineNum << std::endl;
+		//debugString << "Size: " << it->second.size << "B, File: " << it->second.fileName << ", Function: " << it->second.functionName << ", Line: " << it->second.lineNum << std::endl;
+		std::string sizeType = "B";
+		float adjustedSize = static_cast<float>(it->second.size);
+		if (adjustedSize > 512.0f)
+		{
+			adjustedSize /= 1024.0f;
+			sizeType = "KB";
+		}
+		if (adjustedSize > 512.0f)
+		{
+			adjustedSize /= 1024.0f;
+			sizeType = "MB";
+		}
+
+		debugString << it->second.fileName << "(" << it->second.lineNum << "): " << adjustedSize << sizeType << " allocated in function " << it->second.functionName << std::endl;
 
 		OutputDebugStringA(debugString.str().c_str());
 	}

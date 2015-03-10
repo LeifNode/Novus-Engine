@@ -10,7 +10,7 @@
 #ifndef NOVUS_MEMORY_H
 #define NOVUS_MEMORY_H
 
-//#define DEBUG_MEMORY_ALLOC
+#define DEBUG_MEMORY_ALLOC
 
 void * operator new(size_t size, const char* fileName, const char* functionName, int line);
 void * operator new[](size_t size, const char* fileName, const char* functionName, int line);
@@ -25,7 +25,7 @@ void allocTracker_free(void * p, const char* fileName, const char* functionName,
 	#define NE_NEW new(__FILE__, __FUNCTION__, __LINE__)
 
 	#define NE_DELETE(ptr) allocTracker_free(ptr, __FILE__, __FUNCTION__, __LINE__), delete ptr, ptr = 0
-	#define NE_DELETEARR(ptr) allocTracker_free(ptr, __FILE__, __FUNCTION__, __LINE__), delete[] ptr, ptr = 0
+	#define NE_DELETEARR(ptr) allocTracker_free(ptr, __FILE__, __FUNCTION__, __LINE__), delete [] ptr, ptr = 0
 #else
 	#define NE_NEW new
 	//#define NE_DELETE delete

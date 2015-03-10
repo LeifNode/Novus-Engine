@@ -7,23 +7,24 @@
 
 #pragma once
 
-#ifndef NOVUS_MESH_PROCESS_H
-#define NOVUS_MESH_PROCESS_H
+#ifndef NOVUS_CALCULATE_NORMALS_PASS_H
+#define NOVUS_CALCULATE_NORMALS_PASS_H
 
-#include "Resources/Model/AssetTypes.h"
+#include "IMeshProcess.h"
+#include "Resources/Mesh/AssetTypes.h"
 
 namespace novus
 {
 
-class IMeshProcess
+class MeshCalculateNormalsPass : public IMeshProcess
 {
-public:
-	IMeshProcess() {};
-	virtual ~IMeshProcess() {};
+	MeshCalculateNormalsPass();
+	~MeshCalculateNormalsPass();
 
-	virtual void Execute(assettypes::Mesh* mesh)=0;
+	virtual void Execute(assettypes::Mesh* mesh) override;
 };
 
 }
 
 #endif
+
