@@ -13,6 +13,7 @@
 #include <Graphics/SkyboxRenderer.h>
 #include <Resources/Mesh/OBJLoader.h>
 #include <Graphics/StaticMesh.h>
+#include <Resources/MeshResourceLoader.h>
 
 using namespace novus;
 
@@ -90,17 +91,15 @@ bool TestApplication::Init()
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
 
-	OBJLoader* loader = NE_NEW OBJLoader();
+	MeshResourceLoader* loader = NE_NEW MeshResourceLoader();
+	loader->Init();
 
-	if (loader->Load(L"../Models/hairball.obj"))
-	{
-		std::cout << "Loaded\n";
-	}
+	mpMesh = static_cast<StaticMesh*>(loader->Load(L"../Models/sibenik.obj"));
+
+	if (mpMesh)
+		std::cout << "Loaded mesh.\n";
 	else
-		std::cout << "Failed to load.\n";
-
-	mpMesh = NE_NEW StaticMesh();
-	mpMesh->Init(loader->getScene());
+		std::cout << "Failed to load mesh.\n";
 
 	NE_DELETE(loader);
 
@@ -179,7 +178,6 @@ void TestApplication::OnResize()
 
 void TestApplication::Update(float dt)
 {
-
 	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 	mpCamera->Update(dt);
 	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
@@ -240,7 +238,7 @@ void TestApplication::Render()
 		{
 			perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 			perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
-			perObject.Material.Metallic = z;
+			perObject.Material.Metallic = static_cast<float>(z);
 
 			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) *
 				Matrix4::Translate(static_cast<float>(x) / 2.0f, -4.9f, static_cast<float>(z) / 2.0f);

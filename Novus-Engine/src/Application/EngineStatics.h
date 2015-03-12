@@ -20,6 +20,7 @@ class NovusApplication;
 class InputSystem;
 class EventSystem;
 class FontManager;
+class FileSystem;
 
 class EngineStatics
 {
@@ -31,6 +32,7 @@ public:
 	static InputSystem* getInputSystem();
 	static EventSystem* getEventSystem();
 	static FontManager* getFontManager();
+	static FileSystem* getFileSystem();
 
 private:
 	static NovusApplication* mspApplication;
@@ -38,6 +40,7 @@ private:
 	static InputSystem* mspInputSystem;
 	static EventSystem* mspEventSystem;
 	static FontManager* mspFontManager;
+	static FileSystem* mspFileSystem;
 };
 
 }

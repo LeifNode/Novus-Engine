@@ -15,7 +15,7 @@ namespace novus
 		mpEnvironmentSampler(NULL),
 		mpEnvMap(NULL),
 		mpBRDFLUT(NULL),
-		mMaxLightCount(512)
+		mMaxLightCount(1024)
 {
 	mpHDRRenderTarget = NE_NEW Texture2D();
 }
@@ -71,7 +71,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 				light.Radius = 0.0f;
 			}*/
 			
-			light.Range = sqrt(light.Intensity / 0.004f) - 1.0f + light.Radius;
+			light.Range = sqrt(light.Intensity / 0.002f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
 			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 85.0f;
 			light.PositionWorld.y = Math::RandF(-4.8f, -3.5f);
@@ -89,7 +89,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 
 		renderer->device()->CreateSamplerState(&samDesc, &mpPointSampler);
 
-		samDesc.Filter = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+		samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 
 		renderer->device()->CreateSamplerState(&samDesc, &mpEnvironmentSampler);
 

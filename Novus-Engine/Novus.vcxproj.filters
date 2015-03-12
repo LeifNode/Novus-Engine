@@ -90,6 +90,12 @@
     <Filter Include="Source Files\Resources\Mesh\Processing">
       <UniqueIdentifier>{4159d942-1e85-448f-96f6-019f161c2fcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utils\MetaData">
+      <UniqueIdentifier>{7d85574e-d80f-4c0c-9253-e199c36cc596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils\FileSystem">
+      <UniqueIdentifier>{9335991f-ba79-4c1b-a5c1-c61b6b184b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -174,9 +180,6 @@
       <Filter>Source Files\Math\Matrix</Filter>
     </ClInclude>
     <ClInclude Include="src\Resources\IResource.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\ResourceManager.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Resources\Font\Font.h">
@@ -320,9 +323,6 @@
     <ClInclude Include="src\Resources\Mesh\AssetTypes.h">
       <Filter>Source Files\Resources\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\Mesh\IMeshLoader.h">
-      <Filter>Source Files\Resources\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\Resources\Mesh\Processing\MeshCalculateNormalsPass.h">
       <Filter>Source Files\Resources\Mesh\Processing</Filter>
     </ClInclude>
@@ -331,6 +331,30 @@
     </ClInclude>
     <ClInclude Include="src\Resources\Mesh\Processing\IMeshProcess.h">
       <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\Processing\MeshCalculateAABBPass.h">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\ResourceManager.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\MeshLoader.h">
+      <Filter>Source Files\Resources\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Object.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\MetaData\MetaData.h">
+      <Filter>Source Files\Utils\MetaData</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\TextureResourceLoader.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\FileSystem\FileSystem.h">
+      <Filter>Source Files\Utils\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\FileSystem\File.h">
+      <Filter>Source Files\Utils\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +489,24 @@
     </ClCompile>
     <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateNormalsPass.cpp">
       <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateAABBPass.cpp">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\MeshResourceLoader.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Mesh\MeshLoader.cpp">
+      <Filter>Source Files\Resources\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\TextureResourceLoader.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\FileSystem\FileSystem.cpp">
+      <Filter>Source Files\Utils\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\FileSystem\File.cpp">
+      <Filter>Source Files\Utils\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,10 +22,20 @@ public:
 	ResourceCache() {};
 	virtual ~ResourceCache() {};
 
+	template <IResource T>
+	T* getResource(const std::wstring& resourcePath);
 
 private:
 
 };
+
+template <class T>
+T* ResourceCache::getResource(const std::wstring& resourcePath)
+{
+	T* resource = NULL;
+
+	
+}
 
 }
 

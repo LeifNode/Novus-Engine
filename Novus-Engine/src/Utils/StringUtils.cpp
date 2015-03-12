@@ -48,6 +48,21 @@
 
 using std::string;
 
+std::wstring ParseExtensionFromString(const std::wstring& src)
+{
+	std::wstring::const_iterator extensionStart = src.cend();
+
+	for (auto it = src.cbegin(); it != src.cend(); it++)
+	{
+		if ((*it) == '.')
+		{
+			extensionStart = it;
+		}
+	}
+
+	return std::wstring(extensionStart, src.cend());
+}
+
 // Remove all leading whitespace
 void TrimLeft(std::wstring &s)
 {

@@ -263,7 +263,7 @@ void PhysicsTestApplication::Update(float dt)
 		}
 
 		Vector3 planetScaledPosition = Vector3(mSelectionArray[mSelectedPlanet]->getPosition() * RENDERER_SCALING);
-		float planetScaledRadius = mSelectionArray[mSelectedPlanet]->getRadius() * RENDERER_SCALING;
+		float planetScaledRadius = static_cast<float>(mSelectionArray[mSelectedPlanet]->getRadius() * RENDERER_SCALING);
 		Vector3 cameraPosition = planetScaledPosition - mpCamera->getForward() * planetScaledRadius * mSelectedDistance;
 
 		Vector3 cameraInterpPosition = Math::Lerp(mLastCameraPosition, cameraPosition, mCameraInterpAmount);
@@ -319,7 +319,7 @@ void PhysicsTestApplication::Render()
 	{
 		mpRenderer->setShader(mpMainShader);
 
-		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius()) * RENDERER_SCALING) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() * RENDERER_SCALING));
+		perObject.World = Matrix4::Scale(static_cast<float>((*it)->getRadius() * RENDERER_SCALING)) * Matrix4::Translate(static_cast<Vector3>((*it)->getPosition() * RENDERER_SCALING));
 		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 		perObject.Material.Roughness = 0.5f;

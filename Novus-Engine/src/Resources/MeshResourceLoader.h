@@ -12,6 +12,9 @@
 #define NOVUS_MESH_RESOURCE_LOADER
 
 #include "IResourceLoader.h"
+#include "Mesh/MeshLoader.h"
+#include "Mesh/Processing/IMeshProcess.h"
+#include <map>
 
 namespace novus
 {
@@ -22,8 +25,20 @@ public:
 	MeshResourceLoader();
 	~MeshResourceLoader();
 
-	//virtual IResource* Load(const std::wstring& path) override;
-	virtual IResource* Load(void* memory, size_t size) override;
+	void Init();
+
+	virtual IResource* Load(const std::wstring& path) override;
+	//virtual IResource* Load(void* memory, size_t size) override;
+
+private:
+	void InitMeshLoaders();
+	void InitProcessingPipeline();
+
+	void ProcessSceneMeshes(assettypes::Scene* scene);
+
+private:
+	std::map<std::wstring, MeshLoader*> mMeshLoaders;
+	std::vector<IMeshProcess*> mProcesses;
 };
 
 }

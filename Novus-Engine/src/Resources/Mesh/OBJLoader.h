@@ -11,12 +11,13 @@
 #ifndef NOVUS_OBJ_LOADER_H
 #define NOVUS_OBJ_LOADER_H
 
-#include "IMeshLoader.h"
+#include "MeshLoader.h"
+#include "Utils/FileSystem/File.h"
 
 namespace novus
 {
 
-class OBJLoader : public IMeshLoader
+class OBJLoader : public MeshLoader
 {
 	struct OBJFace
 	{
@@ -31,10 +32,7 @@ public:
 
 	~OBJLoader() override;
 
-	bool Load(const std::wstring& path);
-	bool Load(void* data, size_t size) override;
-
-	assettypes::Scene* getScene() const override;
+	bool Load(File* file) override;
 
 private:
 	OBJLoader(const OBJLoader& other) {}
@@ -50,10 +48,11 @@ private:
 				   unsigned int vertexCount,
 				   assettypes::Mesh* meshOut);
 
+	void LoadMatLib(const std::wstring& path);
+	//assettypes::Material ParseMaterial(const char* str);
+
 private:
 	std::istream* mpFile;
-
-	assettypes::Scene* mpScene;
 };
 
 }

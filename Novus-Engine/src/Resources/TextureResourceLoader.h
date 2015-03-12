@@ -7,22 +7,22 @@
 
 #pragma once
 
-#ifndef NOVUS_IRESOURCE_LOADER_H
-#define NOVUS_IRESOURCE_LOADER_H
 
-#include <string>
-#include "IResource.h"
+#ifndef NOVUS_TEXTURE_RESOURCE_LOADER_H
+#define NOVUS_TEXTURE_RESOURCE_LOADER_H
+
+#include "IResourceLoader.h"
 
 namespace novus
 {
 
-	class IResourceLoader
-	{
-	public:
-		virtual IResource* Load(const std::wstring& path) = 0;
-		//virtual IResource* Load(void* memory, size_t size) = 0;
-	};
+class TextureResouceLoader : public IResourceLoader
+{
+public:
+	IResource* Load(const std::wstring& path) override;
+};
 
 }
+
 
 #endif

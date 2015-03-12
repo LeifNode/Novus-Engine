@@ -40,7 +40,10 @@
 #include <vector>
 #include <Windows.h>
 
-//TODO: Replace with my own implementation
+//TODO: Replace with my own implementation\
+
+//Parses the extension from a string
+extern std::wstring ParseExtensionFromString(const std::wstring& src);
 
 
 #define MAX_DIGITS_IN_INT 12  // max number of digits in an int (-2147483647 = 11 digits, +1 for the '\0')

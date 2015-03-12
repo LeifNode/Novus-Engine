@@ -6,8 +6,7 @@ namespace novus
 {
 
 OBJLoader::OBJLoader()
-	: mpFile(NULL),
-	mpScene(NULL)
+	: mpFile(NULL)
 {}
 
 OBJLoader::~OBJLoader()
@@ -16,27 +15,7 @@ OBJLoader::~OBJLoader()
 	NE_DELETE(mpScene);
 }
 
-bool OBJLoader::Load(const std::wstring& path)
-{
-	std::ifstream file = std::ifstream(path, std::ios::ate);
-	size_t fileSize = file.tellg();
-
-	char* fileContents = NE_NEW char[fileSize];
-
-	file.seekg(std::ios::beg);
-
-	file.read(fileContents, fileSize);
-
-	file.close();
-
-	bool result = this->Load(fileContents, fileSize);
-
-	NE_DELETEARR(fileContents);
-
-	return result;
-}
-
-bool OBJLoader::Load(void* data, size_t size)
+bool OBJLoader::Load(File* file)
 {
 	NE_DELETE(mpScene);
 
@@ -44,14 +23,13 @@ bool OBJLoader::Load(void* data, size_t size)
 	timer.Start();
 	float totalTime = 0.0f;
 
-	if (data == NULL || size == 0)
+	if (!file->good())
 	{
 		return false;
 	}
 
-	char line[128];
-	bool reading = true;
-	size_t index = 0;
+	const int maxLineLength = 128;
+	char line[maxLineLength];
 
 	mpScene = NE_NEW assettypes::Scene;
 	assettypes::Mesh* currentMesh = NE_NEW assettypes::Mesh();
@@ -65,35 +43,9 @@ bool OBJLoader::Load(void* data, size_t size)
 
 	std::vector<OBJFace> faces;
 
-	while (reading)
+	while (file->good())
 	{
-		//TODO: Factor out into utility function
-		
-		//Read file line by line
-		bool newLine = false;
-		for (int c = 0; c < 128; c++)
-		{
-			if (index >= size)
-			{
-				reading = false;
-				line[c] = '\0';
-			}
-			else if (newLine || !reading)
-			{
-				line[c] = '\0';
-			}
-			else
-			{
-				line[c] = reinterpret_cast<char*>(data)[index];
-				index++;
-
-				if (line[c] == '\n')
-				{
-					line[c] = '\0';
-					newLine = true;
-				}
-			}
-		}
+		file->ReadLine(line, maxLineLength);
 
 		if (line[0] == 'v')
 		{
@@ -104,9 +56,6 @@ bool OBJLoader::Load(void* data, size_t size)
 
 				StoreMesh(vertices, vertexTexCoords, vertexNormals, faces, vertexCount, currentMesh);
 
-				/*vertices.clear();
-				vertexTexCoords.clear();
-				vertexNormals.clear();*/
 				faces.clear();
 
 				vertexCount = 0;
@@ -114,30 +63,26 @@ bool OBJLoader::Load(void* data, size_t size)
 				mpScene->mMeshes.push_back(currentMesh);
 
 				currentMesh = NE_NEW assettypes::Mesh();
-
-				//timer.Tick();
-				//std::cout << "Model:" << timer.DeltaTime() << "\n";
-				//totalTime += (float)timer.DeltaTime();
 			}
 
 			if (line[1] == ' ')
 			{
-				vertices.push_back(ParseVector3(line));
+				vertices.push_back(ParseVector3((char*)line));
 			}
 			else if (line[1] == 't')
 			{
-				vertexTexCoords.push_back(ParseVector2(line));
+				vertexTexCoords.push_back(ParseVector2((char*)line));
 			}
 			else if (line[1] == 'n')
 			{
-				vertexNormals.push_back(ParseVector3(line));
+				vertexNormals.push_back(ParseVector3((char*)line));
 			}
 		}
 		else if (line[0] == 'f')
 		{
 			readingFaces = true;
 
-			faces.push_back(ParseFace(line));
+			faces.push_back(ParseFace((char*)line));
 			vertexCount += faces.back().VertexCount;
 		}
 		//Unhandled obj arguments
@@ -154,7 +99,7 @@ bool OBJLoader::Load(void* data, size_t size)
 		}
 		else //Not a valid obj file
 		{
-			std::cout << line[0] << std::endl;
+			std::cout << static_cast<unsigned int>(line[0]) << std::endl;
 
 			NE_DELETE(currentMesh);
 			NE_DELETE(mpScene);
@@ -262,7 +207,7 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 						  unsigned int vertexCount,
 						  assettypes::Mesh* meshOut)
 {
-	meshOut->mFaceCount = faces.size();
+	meshOut->mFaceCount = static_cast<unsigned int>(faces.size());
 	meshOut->mFaces = NE_NEW assettypes::Face[faces.size()];
 	meshOut->mVertices = NE_NEW Vector3[vertexCount];
 	meshOut->mVertexCount = vertexCount;
@@ -290,7 +235,7 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 			currentFace->mIndices[v] = currentVertex;
 
 			if (vertIndex < 0)
-				vertIndex = pos.size() + vertIndex;
+				vertIndex = static_cast<int>(pos.size()) + vertIndex;
 			else
 				vertIndex--;
 
@@ -300,7 +245,7 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 			{
 				int texIndex = faces[i].Vertices[v].y;
 				if (texIndex < 0)
-					texIndex = tex.size() + texIndex;
+					texIndex = static_cast<int>(tex.size()) + texIndex;
 				else
 					texIndex--;
 
@@ -312,7 +257,7 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 
 				int normIndex = faces[i].Vertices[v].z;
 				if (normIndex < 0)
-					normIndex = norm.size() + normIndex;
+					normIndex = static_cast<int>(norm.size()) + normIndex;
 				else
 					normIndex--;
 
@@ -326,9 +271,14 @@ void OBJLoader::StoreMesh(const std::vector<Vector3>& pos,
 	}
 }
 
-assettypes::Scene* OBJLoader::getScene() const
+void OBJLoader::LoadMatLib(const std::wstring& path)
 {
-	return mpScene;
+
 }
+
+//assettypes::Material OBJLoader::ParseMaterial(const char* str)
+//{
+//
+//}
 
 }

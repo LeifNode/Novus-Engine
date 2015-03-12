@@ -10,6 +10,8 @@
 #ifndef NOVUS_RESOURCE_MANAGER_H
 #define NOVUS_RESOURCE_MANAGER_H
 
+#include "IResource.h"
+
 namespace novus
 {
 
@@ -19,7 +21,9 @@ public:
 	ResourceManager();
 	~ResourceManager();
 
-	void Register
+	virtual void Register(IResource* resource);
+
+protected:
 
 };
 

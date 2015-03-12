@@ -18,10 +18,14 @@ namespace novus
 
 class MeshCalculateNormalsPass : public IMeshProcess
 {
-	MeshCalculateNormalsPass();
+public:
+	MeshCalculateNormalsPass(bool ignoreExistingNormals = false);
 	~MeshCalculateNormalsPass();
 
 	virtual void Execute(assettypes::Mesh* mesh) override;
+
+private:
+	bool mIgnoreExistingNormals;
 };
 
 }

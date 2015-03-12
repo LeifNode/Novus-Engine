@@ -7,21 +7,31 @@
 
 #pragma once
 
-#ifndef NOVUS_IRESOURCE_LOADER_H
-#define NOVUS_IRESOURCE_LOADER_H
+
+#ifndef NOVUS_FILE_SYSTEM_H
+#define NOVUS_FILE_SYSTEM_H
 
 #include <string>
-#include "IResource.h"
 
 namespace novus
 {
 
-	class IResourceLoader
-	{
-	public:
-		virtual IResource* Load(const std::wstring& path) = 0;
-		//virtual IResource* Load(void* memory, size_t size) = 0;
-	};
+class File;
+
+class FileSystem
+{
+	friend class NovusApplication;
+
+public:
+	File* OpenFile(const wchar_t* path);
+
+private:
+	FileSystem(const wchar_t* relativePath);
+	~FileSystem();
+
+private:
+	std::wstring mRelativePath;
+};
 
 }
 

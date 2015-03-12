@@ -108,6 +108,7 @@ namespace novus
 
 				memcpy(mIndices, other.mIndices, mIndexCount * sizeof(unsigned int));
 
+				return *this;
 			}
 
 			bool operator== (const Face& other)

@@ -7,22 +7,24 @@
 
 #pragma once
 
-#ifndef NOVUS_IRESOURCE_LOADER_H
-#define NOVUS_IRESOURCE_LOADER_H
+#ifndef NOVUS_CALCULATE_AABB_PASS_H
+#define NOVUS_CALCULATE_AABB_PASS_H
 
-#include <string>
-#include "IResource.h"
+#include "IMeshProcess.h"
+#include "Resources/Mesh/AssetTypes.h"
 
 namespace novus
 {
 
-	class IResourceLoader
+	class MeshCalculateAABBPass : public IMeshProcess
 	{
-	public:
-		virtual IResource* Load(const std::wstring& path) = 0;
-		//virtual IResource* Load(void* memory, size_t size) = 0;
+		MeshCalculateAABBPass();
+		~MeshCalculateAABBPass();
+
+		virtual void Execute(assettypes::Mesh* mesh) override;
 	};
 
 }
 
 #endif
+

@@ -10,7 +10,6 @@
 #ifndef NOVUS_TYPE_H
 #define NOVUS_TYPE_H
 
-#include <string>
 #include <stdint.h>
 
 namespace novus
@@ -18,17 +17,18 @@ namespace novus
 class Type
 {
 public:
-	Type(const std::string& className);
-	Type(uint32_t classNameHash);
+	Type(const char* className);
 	~Type();
 
 	uint32_t getTypeHash() const { return mTypeHash; }
+	const char* getTypeName() const { return mTypeName; }
 
-	bool operator ==(const Type& other);
-	bool operator !=(const Type& other);
+	bool operator ==(const Type& other) const;
+	bool operator !=(const Type& other) const;
 
 private:
 	uint32_t mTypeHash;
+	const char* mTypeName;
 };
 
 }

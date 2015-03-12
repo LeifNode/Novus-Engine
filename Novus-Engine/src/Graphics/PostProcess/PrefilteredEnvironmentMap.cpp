@@ -184,11 +184,6 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 			dim /= 2;
 		}
 	}
-
-	/*for (float r = 0.0f; r <= 1.0f; r += 0.1f)
-	{
-		std::cout << "Current Roughness: " << r << ", Corresponding mip: " << maxMipFilterLevel - 6 - 1.15 * log2f(r) << std::endl;
-	}*/
 }
 
 }

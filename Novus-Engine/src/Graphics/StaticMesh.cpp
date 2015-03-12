@@ -1,8 +1,11 @@
 #include "StaticMesh.h"
 #include "Application/EngineStatics.h"
+#include "Utils/StringUtils.h"
 
 namespace novus
 {
+
+Type StaticMesh::msType = Type("StaticMesh");
 
 StaticMesh::StaticMesh()
 {
@@ -10,10 +13,22 @@ StaticMesh::StaticMesh()
 
 StaticMesh::~StaticMesh()
 {
+	this->Free();
+}
+
+void StaticMesh::Free()
+{
 	for (auto it = mMeshes.begin(); it != mMeshes.end(); ++it)
 	{
-		NE_DELETE((*it));
+		NE_DELETE(*it);
 	}
+
+	mMeshes.clear();
+}
+
+const Type* StaticMesh::getStaticType() const
+{
+	return &msType;
 }
 
 void StaticMesh::Init(assettypes::Scene* meshes)
@@ -68,7 +83,7 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 				{
 					if (!indexWarnTriggered)
 					{
-						//NE_WARN("StaticMesh triangulation is depricated use MeshTriangulatePass during model loading instead", "StaticMesh");
+						NE_WARN("StaticMesh triangulation is depricated use MeshTriangulatePass during model loading instead", "StaticMesh");
 						indexWarnTriggered = true;
 					}
 					

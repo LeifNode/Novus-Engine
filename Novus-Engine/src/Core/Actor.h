@@ -10,6 +10,11 @@
 #ifndef NOVUS_ACTOR_H
 #define NOVUS_ACTOR_H
 
+#include <map>
+#include <vector>
+
+typedef unsigned ComponentId;
+
 namespace novus
 {
 class ActorComponent;
@@ -21,30 +26,42 @@ public:
 	Actor();
 	virtual ~Actor();
 
-	virtual void Destroy() = 0;
+	virtual void PreDestroy() {};
+	virtual void Destroy() {};
+	virtual void PostDestroy() {};
 
 	bool addComponent(ActorComponent* component);
 	//void addComponent(ComponentId id, ObjectComponent* component); //Do I want to let the id be precalculated?
 
-	virtual void Init();
+	virtual void Init() {};
 
-	virtual void Update(float dt);
+	virtual void Update(float dt) {};
 
-	virtual void PreRender(D3DRenderer* renderer);
-	virtual void Render(D3DRenderer* renderer);
-	virtual void PostRender(D3DRenderer* renderer);
+	virtual void PreRender(D3DRenderer* renderer) {};
+	virtual void Render(D3DRenderer* renderer) {};
+	virtual void PostRender(D3DRenderer* renderer) {};
 
-	template <class T>
-	T* getComponent(ComponentId id);
+	void AddComponent(ActorComponent* component);
 
-	template <class T>
-	T* getComponent(const char *name);
+	template <class ComponentT>
+	ComponentT* getComponent(unsigned index = 0);
+
+	template <class ComponentT>
+	std::vector<ComponentT*>& getComponents();
+
+	/*template <class T>
+	T* getComponent(const char *name);*/
 
 protected:
 	void deleteComponents();
+	
+	void renderComponents();
+	void renderChildren();
+
+	void deleteChildren();
 
 private:
-	std::map<ComponentId, ActorComponent*> mComponents;
+	std::multimap<ComponentId, ActorComponent*> mComponents;
 };
 }
 

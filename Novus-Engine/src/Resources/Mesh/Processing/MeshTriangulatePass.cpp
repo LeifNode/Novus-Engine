@@ -17,7 +17,7 @@ void MeshTriangulatePass::Execute(assettypes::Mesh* mesh)
 	std::vector<assettypes::Face> newFaces;
 	newFaces.reserve(faceCount); //We will always have at least this many faces
 
-	for (int face = 0; face < faceCount; face++)
+	for (unsigned int face = 0; face < faceCount; face++)
 	{
 		if (faces[face].mIndexCount == 3)
 			newFaces.push_back(faces[face]);
@@ -53,9 +53,10 @@ void MeshTriangulatePass::Execute(assettypes::Mesh* mesh)
 	{
 		NE_DELETEARR(mesh->mFaces);
 
-		mesh->mFaceCount = newFaces.size();
+		mesh->mFaceCount = static_cast<unsigned int>(newFaces.size());
 		mesh->mFaces = NE_NEW assettypes::Face[newFaces.size()];
-		std::copy(newFaces.begin(), newFaces.end(), mesh->mFaces);
+		memcpy(mesh->mFaces, &newFaces[0], newFaces.size() * sizeof(assettypes::Face));
+		//std::copy(newFaces.begin(), newFaces.end(), mesh->mFaces); 
 	}
 }
 

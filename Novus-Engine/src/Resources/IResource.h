@@ -10,6 +10,8 @@
 #ifndef NOVUS_IRESOURCE_H
 #define NOVUS_IRESOURCE_H
 
+#include "Utils/Objects/Type.h"
+
 namespace novus
 {
 class IResource
@@ -23,9 +25,7 @@ class IResource
 	//Get amount of RAM used by this resource
 	virtual size_t getSize() const = 0;
 
-	virtual void Free();
-
-	virtual unsigned int getTypeId() const = 0;
+	virtual const Type* getStaticType() const = 0; 
 };
 }
 

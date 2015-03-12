@@ -7,29 +7,17 @@
 
 #pragma once
 
-
-#ifndef NOVUS_IMODEL_LOADER_H
-#define NOVUS_IMODEL_LOADER_H
-
-#include "AssetTypes.h"
+#ifndef NOVUS_OBJECT_H
+#define NOVUS_OBJECT_H
 
 namespace novus
 {
 
-class IMeshLoader
+class Object
 {
-public:
-	IMeshLoader() {}
-	virtual ~IMeshLoader() {}
 
-	virtual bool Load(void* data, size_t size)=0;
-	//virtual bool Load(const std::wstring& path)=0;
-
-	virtual assettypes::Scene* getScene() const=0;
 };
 
 }
 
-
 #endif
-
