@@ -11,11 +11,12 @@
 #define NOVUS_TEXTURE_H
 
 #include "Application/Common.h"
+#include "Resources/Resource.h"
 
 namespace novus
 {
 
-class Texture2D
+class Texture2D : public Resource
 {
 	friend class D3DRenderer;
 

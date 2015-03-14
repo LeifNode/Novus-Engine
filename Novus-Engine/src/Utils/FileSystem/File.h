@@ -34,7 +34,11 @@ public:
 
 	bool good() const { return mGood; }
 
+	const std::wstring& getPath() const { return mFilePath; }
+
 private:
+	std::wstring mFilePath;
+
 	size_t mCursorPos;
 
 	char* mMemoryBlock;

@@ -18,7 +18,7 @@ namespace novus
 	template <typename T>
 	Quaternion_t<T>::Quaternion_t(const Matrix3x3_t<T>& m)
 	{
-		//Move to own function
+		//TODO: Move to own function
 		T  tr, s, q[4];
 		int    i, j, k;
 		int nxt[3] = { 1, 2, 0 };

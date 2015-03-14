@@ -15,7 +15,7 @@ namespace novus
 		mpEnvironmentSampler(NULL),
 		mpEnvMap(NULL),
 		mpBRDFLUT(NULL),
-		mMaxLightCount(1024)
+		mMaxLightCount(128)
 {
 	mpHDRRenderTarget = NE_NEW Texture2D();
 }
@@ -60,9 +60,9 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		for (int i = 0; i < mMaxLightCount; i++)
 		{
 			PointLight light;
-			light.Color = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f));
+			light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
 			//light.Color = Vector3(1.0f, 1.0f, 1.0f);
-			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.4f;
+			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.3f;
 			light.Radius = 0.0f;
 			
 			/*if (i > 256)
@@ -71,10 +71,10 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 				light.Radius = 0.0f;
 			}*/
 			
-			light.Range = sqrt(light.Intensity / 0.002f) - 1.0f + light.Radius;
+			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
-			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 85.0f;
-			light.PositionWorld.y = Math::RandF(-4.8f, -3.5f);
+			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 20.0f;
+			light.PositionWorld.y = Math::RandF(-4.8f, 5.5f);
 
 			mTestPointLights.push_back(light);
 		}

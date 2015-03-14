@@ -13,7 +13,7 @@
 #include <Graphics/SkyboxRenderer.h>
 #include <Resources/Mesh/OBJLoader.h>
 #include <Graphics/StaticMesh.h>
-#include <Resources/MeshResourceLoader.h>
+#include <Resources/MeshResourceManager.h>
 
 using namespace novus;
 
@@ -45,7 +45,7 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpSkyboxRenderer(NULL),
 	mpMesh(NULL)
 {
-	mMainWndCaption = L"Novus Engine Test App v0.0.51";
+	mMainWndCaption = L"Novus Engine Test App v0.1.65";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, -4.9f, 1.4f));
@@ -91,7 +91,7 @@ bool TestApplication::Init()
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
 
-	MeshResourceLoader* loader = NE_NEW MeshResourceLoader();
+	MeshResourceManager* loader = NE_NEW MeshResourceManager();
 	loader->Init();
 
 	mpMesh = static_cast<StaticMesh*>(loader->Load(L"../Models/sibenik.obj"));
@@ -144,7 +144,7 @@ void TestApplication::InitMesh()
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 
-	GeometryGenerator::CreateGrid(1000.0f, 1000.0f, 4, 4, mesh);
+	GeometryGenerator::CreatePlane(1000.0f, 1000.0f, 4, 4, mesh);
 
 	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
@@ -271,7 +271,7 @@ void TestApplication::Render()
 	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.27f);
 	perObject.Material.Metallic = 0.0f;
-	perObject.Material.Roughness = 0.2f;
+	perObject.Material.Roughness = 0.3f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mpMesh->Render(mpRenderer);
 

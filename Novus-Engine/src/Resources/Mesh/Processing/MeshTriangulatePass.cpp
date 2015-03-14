@@ -1,4 +1,5 @@
 #include "MeshTriangulatePass.h"
+#include "Application/Common.h"
 
 namespace novus
 {
@@ -51,10 +52,10 @@ void MeshTriangulatePass::Execute(assettypes::Mesh* mesh)
 
 	if (newFaces.size() != faceCount)//Part of this mesh was triangulated
 	{
-		NE_DELETEARR(mesh->mFaces);
+		delete [] mesh->mFaces;
 
 		mesh->mFaceCount = static_cast<unsigned int>(newFaces.size());
-		mesh->mFaces = NE_NEW assettypes::Face[newFaces.size()];
+		mesh->mFaces = new assettypes::Face[newFaces.size()]; //Tracking does not work for Faces.
 		memcpy(mesh->mFaces, &newFaces[0], newFaces.size() * sizeof(assettypes::Face));
 		//std::copy(newFaces.begin(), newFaces.end(), mesh->mFaces); 
 	}

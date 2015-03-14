@@ -12,6 +12,8 @@
 
 #include <map>
 #include <vector>
+#include "Math/Transform.h"
+#include "Object.h"
 
 typedef unsigned ComponentId;
 
@@ -20,28 +22,27 @@ namespace novus
 class ActorComponent;
 class D3DRenderer;
 
-class Actor
+class Actor : public Object
 {
 public:
 	Actor();
 	virtual ~Actor();
 
-	virtual void PreDestroy() {};
-	virtual void Destroy() {};
-	virtual void PostDestroy() {};
-
-	bool addComponent(ActorComponent* component);
-	//void addComponent(ComponentId id, ObjectComponent* component); //Do I want to let the id be precalculated?
+	virtual void Destroy();
 
 	virtual void Init() {};
 
-	virtual void Update(float dt) {};
+	virtual void Update(float dt);
+	virtual void PostUpdate(float dt);
 
-	virtual void PreRender(D3DRenderer* renderer) {};
-	virtual void Render(D3DRenderer* renderer) {};
-	virtual void PostRender(D3DRenderer* renderer) {};
+	virtual void PreRender(D3DRenderer* renderer);
+	virtual void Render(D3DRenderer* renderer);
+	virtual void PostRender(D3DRenderer* renderer);
+
+	void AddChildActor(Actor* actor);
 
 	void AddComponent(ActorComponent* component);
+	void RemoveComponent(ActorComponent* component);
 
 	template <class ComponentT>
 	ComponentT* getComponent(unsigned index = 0);
@@ -49,19 +50,33 @@ public:
 	template <class ComponentT>
 	std::vector<ComponentT*>& getComponents();
 
+	bool IsDestroyed() const { return mDestroyed; }
+
 	/*template <class T>
 	T* getComponent(const char *name);*/
 
-protected:
-	void deleteComponents();
-	
-	void renderComponents();
-	void renderChildren();
+public:
+	Transform transform;
 
-	void deleteChildren();
+protected:
+	void UpdateComponents(float dt);
+	void UpdateChildren(float dt);
+
+	void RenderComponents(D3DRenderer* renderer);
+	void RenderChildren(D3DRenderer* renderer);
 
 private:
+	void CleanupDestroyedActors();
+	void CleanupDestroyedComponents();
+
+private:
+	bool mDestroyed;
+
+	Actor* mpParentActor;
+
 	std::multimap<ComponentId, ActorComponent*> mComponents;
+
+	std::vector<Actor*> mChildActors;
 };
 }
 

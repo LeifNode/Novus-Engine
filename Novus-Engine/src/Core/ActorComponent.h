@@ -10,13 +10,57 @@
 #ifndef NOVUS_ACTOR_COMPONENT_H
 #define NOVUS_ACTOR_COMPONENT_H
 
+#include <vector>
+#include "Math/Transform.h"
+#include "Object.h"
+
 namespace novus
 {
 class Actor;
+class D3DRenderer;
 
-class ActorComponent
+class ActorComponent : public Object
 {
+public:
+	ActorComponent(const char* displayName, Actor* parentActor);
+	virtual ~ActorComponent();
 
+	virtual void Init() {};
+
+	virtual void Destroy();
+
+	virtual void Update(float dt);
+	virtual void PostUpdate(float dt); //Mostly for handling Destroy cleanup
+
+	virtual void PreRender(D3DRenderer* renderer);
+	virtual void Render(D3DRenderer* renderer);
+	virtual void PostRender(D3DRenderer* renderer);
+
+	void AddChildComponent(ActorComponent* component);
+
+	Actor* getParentActor() const { return mpParentActor; }
+	ActorComponent* getParentComponent() const { return mpParentComponent; }
+
+	bool IsDestroyed() const { return mDestroyed; }
+
+	Transform transform;
+
+private:
+	void UpdateChildComponents(float dt);
+	void RenderChildComponents(D3DRenderer* renderer);
+
+	void RemoveChildComponent(ActorComponent* component);
+
+	void CleanupDestroyedComponents();
+
+private:
+	const char* mDisplayName;
+	bool mDestroyed;
+
+	Actor* mpParentActor;
+	ActorComponent* mpParentComponent;
+
+	std::vector<ActorComponent*> mChildComponents;
 };
 }
 

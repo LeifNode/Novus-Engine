@@ -6,7 +6,7 @@ namespace novus
 
 Type::Type(const char* className)
 {
-	mTypeHash = reinterpret_cast<uint32_t>(HashedString::hash_name(className)); //TODO: replace with MurmurHash
+	mTypeHash = reinterpret_cast<TypeId>(HashedString::hash_name(className)); //TODO: replace with MurmurHash
 }
 
 Type::~Type()

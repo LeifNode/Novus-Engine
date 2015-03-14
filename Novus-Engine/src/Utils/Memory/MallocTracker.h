@@ -29,7 +29,7 @@ public:
 	static MallocTracker* getInstance();
 
 	void Alloc(void* p, size_t size, const char* fileName, const char* functionName, int lineNum);
-	bool FreePtr(void* p);
+	bool FreePtr(void* p, const char* fileName, const char* functionName, int lineNum);
 
 	void DumpTrackedMemory();
 

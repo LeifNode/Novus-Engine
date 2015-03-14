@@ -8,10 +8,10 @@
 #pragma once
 
 
-#ifndef NOVUS_MESH_RESOURCE_LOADER
-#define NOVUS_MESH_RESOURCE_LOADER
+#ifndef NOVUS_MESH_RESOURCE_MANAGER_H
+#define NOVUS_MESH_RESOURCE_MANAGER_H
 
-#include "IResourceLoader.h"
+#include "IResourceManager.h"
 #include "Mesh/MeshLoader.h"
 #include "Mesh/Processing/IMeshProcess.h"
 #include <map>
@@ -19,16 +19,15 @@
 namespace novus
 {
 
-class MeshResourceLoader : public IResourceLoader
+class MeshResourceManager : public IResourceManager
 {
 public:
-	MeshResourceLoader();
-	~MeshResourceLoader();
+	MeshResourceManager();
+	~MeshResourceManager();
 
 	void Init();
 
-	virtual IResource* Load(const std::wstring& path) override;
-	//virtual IResource* Load(void* memory, size_t size) override;
+	Resource* Load(const std::wstring& path) override;
 
 private:
 	void InitMeshLoaders();

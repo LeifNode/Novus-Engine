@@ -15,6 +15,11 @@ struct Material
 	float Roughness;
 	float3 Emissive;
 	float Metallic;
+
+	bool HasDiffuseTexture;
+	bool pad1;
+	bool pad2;
+	bool pad3;
 };
 
 struct DirectionalLight

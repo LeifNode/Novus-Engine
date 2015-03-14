@@ -7,6 +7,10 @@
 
 #include "Common.hlsl"
 
+Texture2D<float4> gDiffuseTexture   : register(t0);
+
+SamplerState gSamplerState          : register(s0);
+
 struct VS_INPUT
 {
 	float3 PosL  : POSITION;
@@ -40,11 +44,11 @@ PS_INPUT VS(VS_INPUT vin)
 	vout.Tangent = mul((float3x3)gWorldInvTranspose, tangent);
 	vout.Bitangent = mul((float3x3)gWorldInvTranspose, cross(norm, tangent));
 
-	vout.Tex = mul(gTextureTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
+	//vout.Tex = mul(gTextureTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
+	vout.Tex = vin.Tex;
 
 	return vout;
 }
-
 
 //float4 PS(PS_INPUT pin) : SV_Target
 //{
@@ -53,5 +57,11 @@ PS_INPUT VS(VS_INPUT vin)
 
 PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
-	return PackGBuffer(gMaterial.Diffuse, normalize(pin.Normal), gMaterial.SpecularColor, gMaterial.Roughness, gMaterial.Metallic, gMaterial.Emissive);
+	float4 diffuseColor = gMaterial.Diffuse;
+
+	[flatten]
+	if (gMaterial.HasDiffuseTexture)
+		diffuseColor = gDiffuseTexture.Sample(gSamplerState, pin.Tex);
+
+	return PackGBuffer(diffuseColor, normalize(pin.Normal), gMaterial.SpecularColor, gMaterial.Roughness, gMaterial.Metallic, gMaterial.Emissive);
 }

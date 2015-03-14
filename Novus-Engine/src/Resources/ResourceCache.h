@@ -10,8 +10,8 @@
 #ifndef NOVUS_IRESOURCE_CACHE_H
 #define NOVUS_IRESOURCE_CACHE_H
 
-#include "IResource.h"
-#include "IResourceLoader.h"
+#include "Resource.h"
+#include "ResourceManager.h"
 
 namespace novus
 {

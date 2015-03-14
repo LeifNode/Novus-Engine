@@ -15,7 +15,7 @@
 #include "IRenderable.h"
 #include "Shaders/Shader.h"
 #include "Resources/Mesh/AssetTypes.h"
-#include "Resources/IResource.h"
+#include "Resources/Resource.h"
 #include "Utils/Objects/Type.h"
 
 namespace novus
@@ -30,14 +30,14 @@ struct StaticMeshVertex
 
 //TODO: Move storage into a managed resource class
 // so that I don't have to reload the resource every time I query it
-class StaticMesh : public IRenderable, public IResource
+class StaticMesh : public IRenderable, public Resource
 {
 public:
 	StaticMesh();
 	virtual ~StaticMesh();
 
 	void Init(novus::assettypes::Scene* meshes);
-	void AddMesh(std::vector<StaticMeshVertex>& vertices, std::vector<unsigned int>& indices);
+	MeshRenderer<StaticMeshVertex>* AddMesh(std::vector<StaticMeshVertex>& vertices, std::vector<unsigned int>& indices);
 
 	void Render(D3DRenderer* renderer) override;
 
@@ -47,7 +47,7 @@ public:
 
 	void Free();
 
-	const Type* getStaticType() const override;
+	const Type* getStaticType() const;
 
 private:
 	StaticMesh(const StaticMesh& other) {}
@@ -57,6 +57,7 @@ private:
 	static Type msType;
 
 	std::vector<MeshRenderer<StaticMeshVertex>*> mMeshes;
+	std::map<MeshRenderer<StaticMeshVertex>*, Material> mMeshMaterials;
 };
 }
 

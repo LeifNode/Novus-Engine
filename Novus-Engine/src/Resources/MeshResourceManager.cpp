@@ -1,20 +1,21 @@
-#include "MeshResourceLoader.h"
+#include "MeshResourceManager.h"
 #include "Utils/StringUtils.h"
 #include "Graphics/StaticMesh.h"
 #include "Mesh/AssetTypes.h"
 #include "Mesh/OBJLoader.h"
 #include "Mesh/Processing/MeshTriangulatePass.h"
 #include "Mesh/Processing/MeshCalculateNormalsPass.h"
+#include "Mesh/Processing/MeshCalculateTangentsPass.h"
 #include "Utils/FileSystem/File.h"
 
 namespace novus
 {
 
-MeshResourceLoader::MeshResourceLoader()
+MeshResourceManager::MeshResourceManager()
 {
 }
 
-MeshResourceLoader::~MeshResourceLoader()
+MeshResourceManager::~MeshResourceManager()
 {
 	for (auto it = mMeshLoaders.begin(); it != mMeshLoaders.end(); ++it)
 	{
@@ -27,24 +28,25 @@ MeshResourceLoader::~MeshResourceLoader()
 	}
 }
 
-void MeshResourceLoader::Init()
+void MeshResourceManager::Init()
 {
 	InitMeshLoaders();
 	InitProcessingPipeline();
 }
 
-void MeshResourceLoader::InitMeshLoaders()
+void MeshResourceManager::InitMeshLoaders()
 {
 	mMeshLoaders.insert(std::make_pair(L".obj", NE_NEW OBJLoader()));
 }
 
-void MeshResourceLoader::InitProcessingPipeline()
+void MeshResourceManager::InitProcessingPipeline()
 {
 	mProcesses.push_back(NE_NEW MeshTriangulatePass());
 	mProcesses.push_back(NE_NEW MeshCalculateNormalsPass(false));
+	mProcesses.push_back(NE_NEW MeshCalculateTangentsPass());
 }
 
-void MeshResourceLoader::ProcessSceneMeshes(assettypes::Scene* scene)
+void MeshResourceManager::ProcessSceneMeshes(assettypes::Scene* scene)
 {
 	for (auto it = scene->mMeshes.cbegin(); it != scene->mMeshes.cend(); ++it)
 	{
@@ -53,7 +55,7 @@ void MeshResourceLoader::ProcessSceneMeshes(assettypes::Scene* scene)
 	}
 }
 
-IResource* MeshResourceLoader::Load(const std::wstring& path)
+Resource* MeshResourceManager::Load(const std::wstring& path)
 {
 	std::wstring extension = ParseExtensionFromString(path);
 
@@ -76,7 +78,7 @@ IResource* MeshResourceLoader::Load(const std::wstring& path)
 
 	assettypes::Scene* loadedScene = NULL;
 
-	File* meshFile = new File();
+	File* meshFile = NE_NEW File();
 	meshFile->Load(path);
 
 	//Load scene from file

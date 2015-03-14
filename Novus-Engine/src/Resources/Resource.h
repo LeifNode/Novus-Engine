@@ -14,18 +14,18 @@
 
 namespace novus
 {
-class IResource
+class Resource
 {
 	//Get amount of space resource takes on the HDD
-	virtual size_t getDiskSize() const = 0;
+	virtual size_t getDiskSize() const { return 0; }
 
 	//Get amount of GPU memory this resource occupies
-	virtual size_t getGPUSize() const = 0;
+	virtual size_t getGPUSize() const { return 0; }
 
 	//Get amount of RAM used by this resource
-	virtual size_t getSize() const = 0;
+	virtual size_t getSize() const { return 0; }
 
-	virtual const Type* getStaticType() const = 0; 
+	//virtual const Type* getStaticType() const = 0; 
 };
 }
 

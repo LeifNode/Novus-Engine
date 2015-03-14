@@ -7,21 +7,21 @@
 
 #pragma once
 
-#ifndef NOVUS_OBJECT_H
-#define NOVUS_OBJECT_H
+#ifndef NOVUS_IRESOURCE_MANAGER_H
+#define NOVUS_IRESOURCE_MANAGER_H
+
+#include <string>
+#include "Resource.h"
 
 namespace novus
 {
 
-class Class;
-
-class Object
-{
-public:
-	bool IsA(const Class& t);
-
-	virtual Class* GetStaticClass() const = 0;
-};
+	class IResourceManager
+	{
+	public:
+		virtual Resource* Load(const std::wstring& path) = 0;
+		//virtual IResource* Load(void* memory, size_t size) = 0;
+	};
 
 }
 

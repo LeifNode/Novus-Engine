@@ -141,7 +141,7 @@ public:
 	/// Creates an mxn grid in the xz-plane with m rows and n columns, centered
 	/// at the origin with the specified width and depth.
 	///</summary>
-	static void CreateGrid(float width, float depth, UINT m, UINT n, Mesh& mesh);
+	static void CreatePlane(float width, float depth, UINT m, UINT n, Mesh& mesh);
 
 	///<summary>
 	/// Creates a quad covering the screen in NDC coordinates.  This is useful for

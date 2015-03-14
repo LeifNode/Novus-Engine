@@ -33,6 +33,8 @@ namespace LogLevel
 
 class Logger
 {
+	friend class NovusApplication;
+
 public:
 	struct LogEntry
 	{

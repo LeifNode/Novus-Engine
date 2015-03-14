@@ -54,7 +54,7 @@ void LineRenderer::generateIndices(UINT** ppArrayOut, UINT* pIndexCount)
 	{
 		if (points.list.size() > 1)
 		{
-			for (int i = 0; i < points.list.size() - 1; i += 2)
+			for (unsigned int i = 0; i < points.list.size() - 1; i += 2)
 			{
 				if (i > 0)
 					indexArray[i * 2] = i - 2; //Change to 2 for smoothing

@@ -65,8 +65,10 @@ NovusApplication::~NovusApplication()
 
 	Logger::getInstance()->RemoveSerializer(mpLogSerializer, LogLevel::All, "");
 	NE_DELETE(mpLogSerializer);
+	NE_DELETE(Logger::mspInstance);
 
 	novus::MallocTracker::getInstance()->DumpTrackedMemory();
+
 }
 
 int NovusApplication::getClientWidth() const

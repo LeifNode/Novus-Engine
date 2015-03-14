@@ -1,7 +1,7 @@
 #include "Texture2D.h"
 #include "Application/Common.h"
 #include "Graphics/D3DRenderer.h"
-#include "Resources/DDSTextureLoader.h"
+#include "Resources/Texture/DDSTextureLoader.h"
 
 namespace novus
 {
@@ -112,7 +112,7 @@ void Texture2D::Load(D3DRenderer* renderer, const wchar_t* filePath)
 		NE_CRITICAL("Invalid texture dimension.", "Texture2D");
 	}
 
-	mpTexture = reinterpret_cast<ID3D11Texture2D*>(textureResource);
+	mpTexture = static_cast<ID3D11Texture2D*>(textureResource);
 	mpResourceView = textureSRV;
 
 	D3D11_TEXTURE2D_DESC texDesc;

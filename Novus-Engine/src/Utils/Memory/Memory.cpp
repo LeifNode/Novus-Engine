@@ -23,19 +23,19 @@ void* operator new[](size_t size, const char* fileName, const char* functionName
 
 void operator delete(void * p, const char* fileName, const char* functionName, int line)
 {
-	MallocTracker::getInstance()->FreePtr(p);
+	MallocTracker::getInstance()->FreePtr(p, fileName, functionName, line);
 
 	::operator delete(p);
 }
 
 void operator delete[](void * p, const char* fileName, const char* functionName, int line)
 {
-	MallocTracker::getInstance()->FreePtr(p);
+	MallocTracker::getInstance()->FreePtr(p, fileName, functionName, line);
 
 	::operator delete[](p);
 }
 
 void allocTracker_free(void * p, const char* fileName, const char* functionName, int line)
 {
-	MallocTracker::getInstance()->FreePtr(p);
+	MallocTracker::getInstance()->FreePtr(p, fileName, functionName, line);
 }

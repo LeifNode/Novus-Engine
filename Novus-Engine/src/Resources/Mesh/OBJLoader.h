@@ -49,10 +49,11 @@ private:
 				   assettypes::Mesh* meshOut);
 
 	void LoadMatLib(const std::wstring& path);
-	//assettypes::Material ParseMaterial(const char* str);
+	void ParseMaterials(File* file);
 
 private:
 	std::istream* mpFile;
+	std::map<std::string, int> mMaterialRefMap;
 };
 
 }

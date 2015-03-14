@@ -12,6 +12,8 @@
 
 #include <stdint.h>
 
+typedef unsigned int TypeId;
+
 namespace novus
 {
 class Type
@@ -20,14 +22,14 @@ public:
 	Type(const char* className);
 	~Type();
 
-	uint32_t getTypeHash() const { return mTypeHash; }
-	const char* getTypeName() const { return mTypeName; }
+	TypeId GetTypeId() const { return mTypeHash; }
+	const char* GetTypeName() const { return mTypeName; }
 
 	bool operator ==(const Type& other) const;
 	bool operator !=(const Type& other) const;
 
 private:
-	uint32_t mTypeHash;
+	TypeId mTypeHash;
 	const char* mTypeName;
 };
 

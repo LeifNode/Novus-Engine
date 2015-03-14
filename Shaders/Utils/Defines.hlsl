@@ -13,7 +13,7 @@
 #endif
 
 #ifndef MAX_LIGHTS
-#define MAX_LIGHTS 1024
+#define MAX_LIGHTS 128
 #endif
 
 #ifndef ENV_MAP_SAMPLES

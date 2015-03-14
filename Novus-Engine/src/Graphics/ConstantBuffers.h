@@ -23,6 +23,11 @@ struct Material
 	float Roughness;
 	Vector3 Emissive;
 	float Metallic;
+
+	int HasDiffuseTexture;
+	int pad1;
+	int pad2; 
+	int pad3;
 };
 
 struct CBPerFrame

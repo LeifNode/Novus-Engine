@@ -40,6 +40,8 @@ bool File::Load(const std::wstring& path)
 
 	file.close();
 
+	mFilePath = path;
+
 	return true;
 }
 

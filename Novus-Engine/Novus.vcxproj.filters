@@ -96,6 +96,9 @@
     <Filter Include="Source Files\Utils\FileSystem">
       <UniqueIdentifier>{9335991f-ba79-4c1b-a5c1-c61b6b184b35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources\Texture">
+      <UniqueIdentifier>{ae16820d-5714-4726-9a50-c300f886d846}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -178,9 +181,6 @@
     </ClInclude>
     <ClInclude Include="src\Math\Matrix3x3_t.h">
       <Filter>Source Files\Math\Matrix</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\IResource.h">
-      <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Resources\Font\Font.h">
       <Filter>Source Files\Resources\Font</Filter>
@@ -290,9 +290,6 @@
     <ClInclude Include="src\Graphics\Shaders\Shader.h">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\DDSTextureLoader.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\SkyboxRenderer.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
@@ -308,13 +305,7 @@
     <ClInclude Include="src\Graphics\IRenderable.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\IResourceLoader.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="src\Resources\ResourceCache.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\MeshResourceLoader.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Resources\Mesh\OBJLoader.h">
@@ -347,14 +338,32 @@
     <ClInclude Include="src\Utils\MetaData\MetaData.h">
       <Filter>Source Files\Utils\MetaData</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\TextureResourceLoader.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utils\FileSystem\FileSystem.h">
       <Filter>Source Files\Utils\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\FileSystem\File.h">
       <Filter>Source Files\Utils\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\MeshResourceManager.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\IResourceManager.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Texture\DDSTextureLoader.h">
+      <Filter>Source Files\Resources\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\TextureResourceManager.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Resource.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Primitives\AABB.h">
+      <Filter>Source Files\Utils\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Mesh\Processing\MeshCalculateTangentsPass.h">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -463,9 +472,6 @@
     <ClCompile Include="src\Graphics\Shaders\Shader.cpp">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\DDSTextureLoader.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\SkyboxRenderer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -493,20 +499,32 @@
     <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateAABBPass.cpp">
       <Filter>Source Files\Resources\Mesh\Processing</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\MeshResourceLoader.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resources\Mesh\MeshLoader.cpp">
       <Filter>Source Files\Resources\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resources\TextureResourceLoader.cpp">
-      <Filter>Source Files\Resources</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\FileSystem\FileSystem.cpp">
       <Filter>Source Files\Utils\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\FileSystem\File.cpp">
       <Filter>Source Files\Utils\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\ActorComponent.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Actor.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\MeshResourceManager.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Texture\DDSTextureLoader.cpp">
+      <Filter>Source Files\Resources\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\TextureResourceManager.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateTangentsPass.cpp">
+      <Filter>Source Files\Resources\Mesh\Processing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

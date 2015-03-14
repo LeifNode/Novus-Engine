@@ -32,12 +32,12 @@ void MallocTracker::Alloc(void* p, size_t size, const char* fileName, const char
 	memAlloc.functionName = functionName;
 	memAlloc.lineNum = lineNum;
 
-	mAllocations[p] = memAlloc;
+	mAllocations.insert(std::pair<void*, MemAllocation>(p, memAlloc));
 
 	mTotalMemory += static_cast<unsigned int>(size);
 }
 
-bool MallocTracker::FreePtr(void* p)
+bool MallocTracker::FreePtr(void* p, const char* fileName, const char* functionName, int lineNum)
 {
 	auto it = mAllocations.find(p);
 
@@ -48,6 +48,14 @@ bool MallocTracker::FreePtr(void* p)
 		mAllocations.erase(it);
 
 		return true;
+	}
+	else if (p != NULL)
+	{
+		char error[256];
+		sprintf(error, "%s(%i): Could not find matching allocation %x.\n", fileName, lineNum, p);
+
+		NE_WARN(error, "MallocTracker");
+		OutputDebugStringA(error);
 	}
 
 	return false;

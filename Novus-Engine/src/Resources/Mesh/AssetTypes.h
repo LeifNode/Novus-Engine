@@ -54,28 +54,32 @@ namespace novus
 
 		struct Material
 		{
-			Vector4 ambient;
-			Vector4 emissive;
+			Vector3 ambient;
+			Vector3 emissive;
 			Vector4 diffuse;
-			Vector4 specular;
+			Vector3 specular;
 			float specularPow;
 
-			std::map<TextureType::Type, std::string> texturePaths;
+			std::string name;
+			std::map<TextureType::Type, std::wstring> texturePaths;
 		};
 
 		struct Face
 		{
-			unsigned mIndexCount;
-			unsigned mIndices[4];
+			unsigned int mIndexCount;
+			unsigned int mIndices[4];
 
 			Face()
 				:mIndexCount(0)
 			{
+				mIndices[0] = 0;
+				mIndices[1] = 0;
+				mIndices[2] = 0;
+				mIndices[3] = 0;
 			}
 
 			~Face()
 			{
-				//NE_DELETEARR(mIndices);
 			}
 
 			Face(const Face& other)
@@ -85,22 +89,6 @@ namespace novus
 
 			Face& operator= (const Face& other)
 			{
-				/*if (&other == this)
-				return *this;
-
-				NE_DELETEARR(mIndices);
-				mIndexCount = other.mIndexCount;
-
-				if (mIndexCount)
-				{
-				mIndices = NE_NEW unsigned[mIndexCount];
-				memcpy(mIndices, other.mIndices, mIndexCount * sizeof(unsigned));
-				}
-				else
-				mIndices = NULL;
-
-				return *this;*/
-
 				if (&other == this)
 					return *this;
 
@@ -113,12 +101,13 @@ namespace novus
 
 			bool operator== (const Face& other)
 			{
-				if (mIndices == other.mIndices)return true;
-				else if (mIndices && mIndexCount == other.mIndexCount)
+				if (mIndices && mIndexCount == other.mIndexCount)
 				{
 					for (unsigned int i = 0; i < this->mIndexCount; ++i)
-					if (mIndices[i] != other.mIndices[i])
-						return false;
+					{
+						if (mIndices[i] != other.mIndices[i])
+							return false;
+					}
 					return true;
 				}
 				return false;
@@ -134,7 +123,7 @@ namespace novus
 		{
 			std::string mMeshId;
 
-			unsigned mMaterialId;
+			int mMaterialId;
 
 			unsigned mVertexCount;
 			unsigned mFaceCount;
@@ -145,8 +134,6 @@ namespace novus
 
 			Vector3* mTangents;
 
-			Vector3* mBitengents;
-
 			Vector2* mTextureCoords;
 
 			Face* mFaces;
@@ -154,11 +141,10 @@ namespace novus
 			Mesh()
 				:mVertexCount(0),
 				mFaceCount(0),
-				mMaterialId(0),
+				mMaterialId(-1),
 				mVertices(NULL),
 				mNormals(NULL),
 				mTangents(NULL),
-				mBitengents(NULL),
 				mTextureCoords(NULL),
 				mFaces(NULL)
 			{
@@ -169,15 +155,14 @@ namespace novus
 				NE_DELETEARR(mVertices);
 				NE_DELETEARR(mNormals);
 				NE_DELETEARR(mTangents);
-				NE_DELETEARR(mBitengents);
 				NE_DELETEARR(mTextureCoords);
-				NE_DELETEARR(mFaces);
+				delete [] mFaces; //Tracking does not work correctly on Faces
 			}
 
 			bool hasPositions() const { return mVertices != NULL && mVertexCount > 0; }
 			bool hasFaces() const { return mFaces != NULL && mFaceCount > 0; }
 			bool hasNormals() const { return mNormals != NULL && mVertexCount > 0; }
-			bool hasTangentsAndBitangents() const { return mTangents != NULL && mBitengents != NULL && mVertexCount > 0; }
+			bool hasTangents() const { return mTangents != NULL && mVertexCount > 0; }
 			bool hasTextureCoords() const { return mTextureCoords != NULL && mVertexCount > 0; }
 		};
 
@@ -257,10 +242,10 @@ namespace novus
 			{
 				NE_DELETE(mpRootNode);
 
-				for (int i = 0; i < mMeshes.size(); i++)
+				for (unsigned int i = 0; i < mMeshes.size(); i++)
 					NE_DELETE(mMeshes[i]);
 
-				for (int i = 0; i < mMaterials.size(); i++)
+				for (unsigned int i = 0; i < mMaterials.size(); i++)
 					NE_DELETE(mMaterials[i]);
 			}
 		};

@@ -606,7 +606,7 @@ void GeometryGenerator::BuildCylinderBottomCap(float bottomRadius, float topRadi
 	}
 }
 
-void GeometryGenerator::CreateGrid(float width, float depth, UINT m, UINT n, Mesh& mesh)
+void GeometryGenerator::CreatePlane(float width, float depth, UINT m, UINT n, Mesh& mesh)
 {
 	UINT vertexCount = m*n;
 	UINT faceCount = (m - 1)*(n - 1) * 2;

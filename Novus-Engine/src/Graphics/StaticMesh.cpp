@@ -97,24 +97,52 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 				}
 			}
 
-			AddMesh(vertices, indices);
+			MeshRenderer<StaticMeshVertex>* newMesh = AddMesh(vertices, indices);
+
+			if ((*it)->mMaterialId != -1)
+			{
+				Material mat;
+
+				mat.Diffuse = meshes->mMaterials[(*it)->mMaterialId]->diffuse;
+				mat.SpecularColor = meshes->mMaterials[(*it)->mMaterialId]->specular;
+				mat.Emissive = meshes->mMaterials[(*it)->mMaterialId]->emissive;
+				mat.Roughness = 1.0f - meshes->mMaterials[(*it)->mMaterialId]->specularPow * 0.01f;
+				mat.HasDiffuseTexture = false;
+
+				mMeshMaterials[newMesh] = mat;
+			}
 		}
 	}
 }
 
-void StaticMesh::AddMesh(std::vector<StaticMeshVertex>& vertices, std::vector<unsigned int>& indices)
+MeshRenderer<StaticMeshVertex>* StaticMesh::AddMesh(std::vector<StaticMeshVertex>& vertices, std::vector<unsigned int>& indices)
 {
 	MeshRenderer<novus::StaticMeshVertex>* newMesh = NE_NEW MeshRenderer<novus::StaticMeshVertex>();
 
 	newMesh->Init(EngineStatics::getRenderer(), vertices, indices);
 
 	mMeshes.push_back(newMesh);
+
+	return newMesh;
 }
 
 void StaticMesh::Render(D3DRenderer* renderer)
 {
 	for (auto it = mMeshes.cbegin(); it != mMeshes.cend(); ++it)
 	{
+		const CBPerFrame* perFrame = renderer->getPerFrameBuffer();
+
+		CBPerObject perObject;
+		perObject.World = Matrix4(1.0f);
+		perObject.WorldViewProj = perFrame->ViewProj;
+		perObject.WorldInvTranspose = Matrix4(1.0f);
+
+		auto material = mMeshMaterials.find(*it);
+		if (material != mMeshMaterials.end())
+			perObject.Material = material->second;
+
+		renderer->setPerObjectBuffer(perObject);
+
 		(*it)->Render(renderer);
 	}
 }

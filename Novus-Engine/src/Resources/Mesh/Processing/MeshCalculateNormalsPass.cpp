@@ -26,7 +26,7 @@ void MeshCalculateNormalsPass::Execute(assettypes::Mesh* mesh)
 	{
 		if (mesh->mFaces[face].mIndexCount != 3 && !warnTriggered)
 		{
-			//NE_WARN("Normal calculation assumes that face is a triangle; normals may look incorrect.", "MeshCalculateNormalsPass");
+			NE_WARN("Normal calculation assumes that face is a triangle; normals may look incorrect.", "MeshCalculateNormalsPass");
 			warnTriggered = true;
 		}
 
