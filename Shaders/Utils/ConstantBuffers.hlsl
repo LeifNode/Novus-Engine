@@ -21,7 +21,9 @@ cbuffer cbPerFrame : register(b0)
 	float4x4 gViewProjInv;
 
 	uint2 gScreenDimensions;
+	uint2 gpad4;
 	float2 gClipNearFar;
+	float2 gpad5;
 
 	float3 gHeadPosition;
 	float gpad1;

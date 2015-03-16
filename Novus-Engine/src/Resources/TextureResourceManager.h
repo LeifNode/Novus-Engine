@@ -11,15 +11,16 @@
 #ifndef NOVUS_TEXTURE_RESOURCE_LOADER_H
 #define NOVUS_TEXTURE_RESOURCE_LOADER_H
 
-#include "IResourceManager.h"
+#include "ResourceManager.h"
 #include <map>
 
 namespace novus
 {
 class Texture2D;
 
-class TextureResouceManager : public IResourceManager
+class TextureResouceManager : public ResourceManager
 {
+	NOVUS_OBJECT_DECL(TextureResouceManager);
 public:
 	TextureResouceManager();
 	~TextureResouceManager();
@@ -29,6 +30,8 @@ public:
 private:
 	std::map<std::wstring, Texture2D*> mLoadedTextures;
 };
+
+NOVUS_OBJECT_DEF(TextureResouceManager);
 
 }
 

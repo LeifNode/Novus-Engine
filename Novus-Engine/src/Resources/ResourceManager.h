@@ -10,22 +10,23 @@
 #ifndef NOVUS_RESOURCE_MANAGER_H
 #define NOVUS_RESOURCE_MANAGER_H
 
-#include "IResource.h"
+#include "Resource.h"
+#include "Core/Object.h"
 
 namespace novus
 {
 
-class ResourceManager
+class ResourceManager : public Object
 {
-public:
-	ResourceManager();
-	~ResourceManager();
+	NOVUS_OBJECT_DECL(ResourceManager);
 
-	virtual void Register(IResource* resource);
+	ResourceManager() {}
+	virtual ~ResourceManager() {}
 
-protected:
-
+	virtual Resource* Load(const std::wstring& path)=0;
 };
+
+NOVUS_OBJECT_DEF(ResourceManager);
 
 }
 

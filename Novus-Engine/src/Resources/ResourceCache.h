@@ -12,21 +12,30 @@
 
 #include "Resource.h"
 #include "ResourceManager.h"
+#include "Application/Common.h"
+#include <map>
 
 namespace novus
 {
 
 class ResourceCache
 {
-public:
-	ResourceCache() {};
-	virtual ~ResourceCache() {};
+	friend class NovusApplication;
 
-	template <IResource T>
+public:
+	void Init();
+
+	template <typename T>
 	T* getResource(const std::wstring& resourcePath);
 
 private:
+	ResourceCache() {};
+	virtual ~ResourceCache();
 
+	void InitManagers();
+
+private:
+	std::map<const Type*, ResourceManager*> mResouceManagers;
 };
 
 template <class T>
@@ -34,7 +43,24 @@ T* ResourceCache::getResource(const std::wstring& resourcePath)
 {
 	T* resource = NULL;
 
-	
+	const Type* type = T::GetStaticType();
+
+	auto it = mResouceManagers.find(type);
+	if (it != mResouceManagers.end())
+	{
+		resource = static_cast<T*>(it->second->Load(resourcePath));
+
+		return resource;
+	}
+	else
+	{
+		char error[128];
+		sprintf_s(error, 128, "Could not find resouce manager for type %s.", type->GetTypeName());
+		NE_ERROR(error, "ResourceCache");
+
+		return NULL;
+	}
+
 }
 
 }

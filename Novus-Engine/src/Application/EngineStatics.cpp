@@ -8,6 +8,8 @@ NovusApplication* EngineStatics::mspApplication = NULL;
 InputSystem* EngineStatics::mspInputSystem = NULL;
 EventSystem* EngineStatics::mspEventSystem = NULL;
 FontManager* EngineStatics::mspFontManager = NULL;
+FileSystem* EngineStatics::mspFileSystem = NULL;
+ResourceCache* EngineStatics::mspResourceCache = NULL;
 
 NovusApplication* EngineStatics::getApplication()
 {
@@ -32,6 +34,16 @@ EventSystem* EngineStatics::getEventSystem()
 FontManager* EngineStatics::getFontManager()
 {
 	return mspFontManager;
+}
+
+FileSystem* EngineStatics::getFileSystem()
+{
+	return mspFileSystem;
+}
+
+ResourceCache* EngineStatics::getResourceCache()
+{
+	return mspResourceCache;
 }
 
 }//namespace novus

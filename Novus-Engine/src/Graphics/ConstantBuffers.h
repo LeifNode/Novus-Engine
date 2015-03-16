@@ -25,8 +25,8 @@ struct Material
 	float Metallic;
 
 	int HasDiffuseTexture;
-	int pad1;
-	int pad2; 
+	int HasNormalTexture;
+	int HasSpecularTexture; 
 	int pad3;
 };
 
@@ -40,8 +40,10 @@ struct CBPerFrame
 	Matrix4 ViewProj;
 	Matrix4 ViewProjInv;
 
-	Vector2_t<unsigned int> ScreenResolution;
+	Vector2u ScreenResolution;
+	Vector2u pad4;
 	Vector2 ClipNearFar;
+	Vector2 pad5;
 
 	Vector3 HeadPosition;
 	float pad1;

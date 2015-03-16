@@ -129,6 +129,7 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 {
 	renderer->setShader(mpFilterShader);
 	renderer->setTextureResource(0, mpSourceTexture);
+	renderer->ResetSamplerState();
 
 	CBFilterEnvMap filterBuffer;
 	filterBuffer.MipCount = maxMipFilterLevel;
@@ -148,7 +149,7 @@ void PrefilteredEnvironmentMap::FilterSourceTexture(D3DRenderer* renderer)
 		Vector3(0.0f, 1.0f, 0.0f),  // +X
 		Vector3(0.0f, 1.0f, 0.0f),  // -X
 		Vector3(0.0f, 0.0f, -1.0f), // +Y
-		Vector3(0.0f, 0.0f, +1.0f), // -Y
+		Vector3(0.0f, 0.0f, 1.0f),  // -Y
 		Vector3(0.0f, 1.0f, 0.0f),	 // +Z
 		Vector3(0.0f, 1.0f, 0.0f)	 // -Z
 	};

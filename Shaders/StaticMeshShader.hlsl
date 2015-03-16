@@ -8,6 +8,8 @@
 #include "Common.hlsl"
 
 Texture2D<float4> gDiffuseTexture   : register(t0);
+Texture2D<float4> gNormalTexture    : register(t1);
+Texture2D<float4> gSpecularTexture  : register(t2);
 
 SamplerState gSamplerState          : register(s0);
 
@@ -46,6 +48,7 @@ PS_INPUT VS(VS_INPUT vin)
 
 	//vout.Tex = mul(gTextureTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
 	vout.Tex = vin.Tex;
+	vout.Tex.y = 1.0f - vout.Tex.y;
 
 	return vout;
 }
@@ -57,11 +60,31 @@ PS_INPUT VS(VS_INPUT vin)
 
 PS_GBUFFER_OUT PS(PS_INPUT pin)
 {
+	pin.Normal = normalize(pin.Normal);
+
 	float4 diffuseColor = gMaterial.Diffuse;
+	float3 specularColor = gMaterial.SpecularColor;
 
 	[flatten]
 	if (gMaterial.HasDiffuseTexture)
 		diffuseColor = gDiffuseTexture.Sample(gSamplerState, pin.Tex);
 
-	return PackGBuffer(diffuseColor, normalize(pin.Normal), gMaterial.SpecularColor, gMaterial.Roughness, gMaterial.Metallic, gMaterial.Emissive);
+	[flatten]
+	if (gMaterial.HasSpecularTexture)
+		specularColor = gSpecularTexture.Sample(gSamplerState, pin.Tex);
+
+	[branch]
+	if (gMaterial.HasNormalTexture)
+	{
+		pin.Tangent = normalize(pin.Tangent);
+		pin.Bitangent = normalize(pin.Bitangent);
+
+		float4 bumpSample = gNormalTexture.Sample(gSamplerState, pin.Tex);
+		bumpSample = (bumpSample * 2.0f) - 1.0f;
+
+		pin.Normal += bumpSample.x * pin.Tangent + bumpSample.y * pin.Bitangent;
+		pin.Normal = normalize(pin.Normal);
+	}
+
+	return PackGBuffer(diffuseColor, pin.Normal, gMaterial.SpecularColor, 1.0f - specularColor.x, gMaterial.Metallic, gMaterial.Emissive);
 }

@@ -74,7 +74,7 @@ public:
 	void setBlendState(bool blendingEnabled);
 	void setDepthStencilState(DepthStencilState::Type state);
 
-	void setViewport(int x, int y, int width, int height);
+	void setViewport(int x, int y, int width, int height, int depth = 1);
 
 	const CBPerFrame* getPerFrameBuffer() const { return &mPerFrameData; }
 
@@ -111,11 +111,13 @@ public:
 	void RenderDeferredShading();
 
 	void PushTransform(const Transform& transform);
+	void PushTransform(const Matrix4& transform);
 	void PopTransform();
 	Matrix4 GetTopTransform() const;
 	Matrix4 GetTopTransformInverse() const;
 
 	GBuffer* getGBuffer() const { return mpGBuffer; }
+	ID3D11DepthStencilView* getDepthView() const { return mpDepthStencilView; }
 	DeferredRenderer* getDeferredRenderer() const { return mpDeferredRenderer; }
 	//OVRManager* getHMD() const { return mpOVRManager; }
 	bool isUsingHMD() const;

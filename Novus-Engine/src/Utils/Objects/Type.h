@@ -28,9 +28,11 @@ public:
 	bool operator ==(const Type& other) const;
 	bool operator !=(const Type& other) const;
 
+	bool operator <(const Type& other) const;
+
 private:
 	TypeId mTypeHash;
-	const char* mTypeName;
+	char mTypeName[64];
 };
 
 }

@@ -20,6 +20,7 @@ class D3DRenderer;
 class InputSystem;
 class EventSystem;
 class FontManager;
+class ResourceCache;
 
 class NovusApplication
 {
@@ -56,6 +57,7 @@ protected:
 	InputSystem* mpInputSystem;
 	EventSystem* mpEventSystem;
 	FontManager* mpFontManager;
+	ResourceCache* mpResourceCache;
 
 	std::wstring mMainWndCaptionFull;
 	std::wstring mMainWndCaption;

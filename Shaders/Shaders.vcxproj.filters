@@ -10,6 +10,9 @@
     <Filter Include="Deferred">
       <UniqueIdentifier>{102516e0-9927-4ebe-bc4b-a9fe9824b95f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VXGI">
+      <UniqueIdentifier>{e583225c-3bec-4010-b7b0-4cd467e6e24c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Utils\ConstantBuffers.hlsl">
@@ -59,5 +62,11 @@
     </FxCompile>
     <FxCompile Include="Text.hlsl" />
     <FxCompile Include="StaticMeshShader.hlsl" />
+    <FxCompile Include="VXGI\VoxelizeMesh.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
+    <FxCompile Include="VXGI\DebugRaymarchVolume.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

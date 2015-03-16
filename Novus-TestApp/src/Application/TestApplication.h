@@ -25,6 +25,7 @@ namespace novus
 {
 	class Camera;
 	class Texture2D;
+	class Texture3D;
 	class SkyboxRenderer;
 	class StaticMesh;
 }
@@ -45,7 +46,7 @@ public:
 
 	void OnKeyDown(novus::IEventDataPtr eventData);
 
-	void InitShader();
+	void InitShaders();
 	void InitMesh();
 
 private:
@@ -57,12 +58,18 @@ private:
 
 	novus::Shader* mpMainShader;
 	novus::Shader* mpStaticMeshShader;
+	novus::Shader* mpVoxelizationShader;
+	novus::Shader* mpDebugRaymarchShader;
 
 	novus::CBPerFrame mPerFrameData;
 
 	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
 	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
 	novus::StaticMesh* mpMesh;
+
+	novus::Texture3D* mpVoxelTexture;
+
+	bool mRenderVoxelization;
 };
 
 

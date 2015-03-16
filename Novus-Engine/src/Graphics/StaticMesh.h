@@ -28,10 +28,19 @@ struct StaticMeshVertex
 	Vector2 TexCoord;
 };
 
+struct StaticMeshMaterial
+{
+	Material RenderMaterial;
+
+	std::vector<std::pair<assettypes::TextureType::Type, class Texture2D*>> Textures;
+};
+
 //TODO: Move storage into a managed resource class
 // so that I don't have to reload the resource every time I query it
 class StaticMesh : public IRenderable, public Resource
 {
+	NOVUS_OBJECT_DECL(StaticMesh);
+
 public:
 	StaticMesh();
 	virtual ~StaticMesh();
@@ -47,18 +56,17 @@ public:
 
 	void Free();
 
-	const Type* getStaticType() const;
-
 private:
 	StaticMesh(const StaticMesh& other) {}
 	StaticMesh& operator= (const StaticMesh& other) { return *this; }
 
 private:
-	static Type msType;
-
 	std::vector<MeshRenderer<StaticMeshVertex>*> mMeshes;
-	std::map<MeshRenderer<StaticMeshVertex>*, Material> mMeshMaterials;
+	std::map<MeshRenderer<StaticMeshVertex>*, StaticMeshMaterial*> mMeshMaterials;
 };
+
+NOVUS_OBJECT_DEF(StaticMesh);
+
 }
 
 #endif

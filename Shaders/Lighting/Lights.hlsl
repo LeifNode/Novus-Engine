@@ -17,8 +17,8 @@ struct Material
 	float Metallic;
 
 	bool HasDiffuseTexture;
-	bool pad1;
-	bool pad2;
+	bool HasNormalTexture;
+	bool HasSpecularTexture;
 	bool pad3;
 };
 

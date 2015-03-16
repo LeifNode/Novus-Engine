@@ -11,7 +11,7 @@
 TextureCube         EnvironmentMap : register(t0);
 SamplerState        EnvSampler     : register(s0);
 
-RWTexture2D<float4> OutputTexture  : register(u0);
+RWTexture2DArray<float4> OutputTexture  : register(u0);
 
 cbuffer cbPreFilter : register(b2)
 {
@@ -44,5 +44,5 @@ void FilterEnvMapCS(uint3 groupID          : SV_GroupID,
 	float3 color = PrefilterEnvMap(EnvironmentMap, EnvSampler, MipLevelToRoughness(gCurrentMip, gMipCount), normal);
 
 	if (globalCoords.x < uint(gSourceDimensions.x) && globalCoords.y < uint(gSourceDimensions.y))
-		OutputTexture[globalCoords] = float4(color, 1.0f);
+		OutputTexture[uint3(globalCoords, 0)] = float4(color, 1.0f);
 }

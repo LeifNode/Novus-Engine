@@ -99,6 +99,7 @@ void Texture2D::Load(D3DRenderer* renderer, const wchar_t* filePath)
 	if (textureResource == NULL || textureSRV == NULL)
 	{
 		NE_CRITICAL("Failed to load texture.", "Texture2D");
+		return;
 	}
 
 	D3D11_RESOURCE_DIMENSION dimension;

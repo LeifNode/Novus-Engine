@@ -4,6 +4,7 @@
 #include "Input/InputSystem.h"
 #include "Events/EventSystem.h"
 #include "Resources/Font/FontManager.h"
+#include "Resources/ResourceCache.h"
 #include "Utils/Memory/MallocTracker.h"
 #include "Utils/Logging/ConsoleLogSerializer.h"
 
@@ -47,6 +48,7 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	mpInputSystem = NE_NEW InputSystem();
 	mpEventSystem = NE_NEW EventSystem();
 	mpFontManager = NE_NEW FontManager();
+	mpResourceCache = NE_NEW ResourceCache();
 
 
 	EngineStatics::mspApplication = this;
@@ -54,6 +56,7 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	EngineStatics::mspInputSystem = mpInputSystem;
 	EngineStatics::mspEventSystem = mpEventSystem;
 	EngineStatics::mspFontManager = mpFontManager;
+	EngineStatics::mspResourceCache = mpResourceCache;
 }
 
 NovusApplication::~NovusApplication()
@@ -61,6 +64,7 @@ NovusApplication::~NovusApplication()
 	NE_DELETE(mpFontManager);
 	NE_DELETE(mpInputSystem);
 	NE_DELETE(mpEventSystem);
+	NE_DELETE(mpResourceCache);
 	NE_DELETE(mpRenderer);
 
 	Logger::getInstance()->RemoveSerializer(mpLogSerializer, LogLevel::All, "");
@@ -161,6 +165,8 @@ bool NovusApplication::Init()
 
 	if (!mpFontManager->Init())
 		return false;
+
+	mpResourceCache->Init();
 
 	//LineRenderer::Initialize();
 

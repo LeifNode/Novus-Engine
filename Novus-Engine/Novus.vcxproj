@@ -201,6 +201,7 @@
     <ClInclude Include="src\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Graphics\TextRenderer.h" />
     <ClInclude Include="src\Graphics\Textures\Texture2D.h" />
+    <ClInclude Include="src\Graphics\Textures\Texture3D.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
     <ClInclude Include="src\Input\KeyboardState.h" />
     <ClInclude Include="src\Input\MouseState.h" />
@@ -231,7 +232,6 @@
     <ClInclude Include="src\Resources\Mesh\Processing\MeshCalculateNormalsPass.h" />
     <ClInclude Include="src\Resources\Mesh\Processing\MeshTriangulatePass.h" />
     <ClInclude Include="src\Resources\ResourceCache.h" />
-    <ClInclude Include="src\Resources\IResourceManager.h" />
     <ClInclude Include="src\Resources\ResourceManager.h" />
     <ClInclude Include="src\Resources\TextureResourceManager.h" />
     <ClInclude Include="src\Resources\Texture\DDSTextureLoader.h" />
@@ -263,6 +263,7 @@
     <ClCompile Include="src\Application\NovusApplication.cpp" />
     <ClCompile Include="src\Core\Actor.cpp" />
     <ClCompile Include="src\Core\ActorComponent.cpp" />
+    <ClCompile Include="src\Core\Object.cpp" />
     <ClCompile Include="src\Events\Events.cpp" />
     <ClCompile Include="src\Events\EventSystem.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
@@ -278,6 +279,7 @@
     <ClCompile Include="src\Graphics\StaticMesh.cpp" />
     <ClCompile Include="src\Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture2D.cpp" />
+    <ClCompile Include="src\Graphics\Textures\Texture3D.cpp" />
     <ClCompile Include="src\Input\InputSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardState.cpp" />
     <ClCompile Include="src\Input\MouseState.cpp" />
@@ -296,6 +298,8 @@
     <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateNormalsPass.cpp" />
     <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateTangentsPass.cpp" />
     <ClCompile Include="src\Resources\Mesh\Processing\MeshTriangulatePass.cpp" />
+    <ClCompile Include="src\Resources\ResourceCache.cpp" />
+    <ClCompile Include="src\Resources\ResourceManager.cpp" />
     <ClCompile Include="src\Resources\TextureResourceManager.cpp" />
     <ClCompile Include="src\Resources\Texture\DDSTextureLoader.cpp" />
     <ClCompile Include="src\Utils\Containers\PointList.cpp" />

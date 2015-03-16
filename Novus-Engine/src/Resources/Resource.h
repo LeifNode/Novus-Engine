@@ -11,11 +11,14 @@
 #define NOVUS_IRESOURCE_H
 
 #include "Utils/Objects/Type.h"
+#include "Core/Object.h"
 
 namespace novus
 {
-class Resource
+class Resource : public Object
 {
+	NOVUS_OBJECT_DECL(Resource);
+
 	//Get amount of space resource takes on the HDD
 	virtual size_t getDiskSize() const { return 0; }
 
@@ -24,9 +27,10 @@ class Resource
 
 	//Get amount of RAM used by this resource
 	virtual size_t getSize() const { return 0; }
-
-	//virtual const Type* getStaticType() const = 0; 
 };
+
+NOVUS_OBJECT_DEF(Resource)
+
 }
 
 #endif

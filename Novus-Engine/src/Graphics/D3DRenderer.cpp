@@ -294,7 +294,7 @@ bool D3DRenderer::Init()
 	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.FrontCounterClockwise = true;
 
 	ID3D11RasterizerState* rasterState;
@@ -672,15 +672,15 @@ void D3DRenderer::setTextureResources(ID3D11ShaderResourceView** texArray, int s
 
 void D3DRenderer::UnbindTextureResources()
 {
-	ID3D11ShaderResourceView** arr = NE_NEW ID3D11ShaderResourceView*[8];
-	for (int i = 0; i < 8; i++) arr[i] = NULL;
+	ID3D11ShaderResourceView** arr = NE_NEW ID3D11ShaderResourceView*[9];
+	for (int i = 0; i < 9; i++) arr[i] = NULL;
 
-	mpd3dImmediateContext->VSSetShaderResources(0, 8, arr);
-	mpd3dImmediateContext->PSSetShaderResources(0, 8, arr);
-	mpd3dImmediateContext->GSSetShaderResources(0, 8, arr);
-	mpd3dImmediateContext->CSSetShaderResources(0, 8, arr);
-	mpd3dImmediateContext->HSSetShaderResources(0, 8, arr);
-	mpd3dImmediateContext->DSSetShaderResources(0, 8, arr);
+	mpd3dImmediateContext->VSSetShaderResources(0, 9, arr);
+	mpd3dImmediateContext->PSSetShaderResources(0, 9, arr);
+	mpd3dImmediateContext->GSSetShaderResources(0, 9, arr);
+	mpd3dImmediateContext->CSSetShaderResources(0, 9, arr);
+	mpd3dImmediateContext->HSSetShaderResources(0, 9, arr);
+	mpd3dImmediateContext->DSSetShaderResources(0, 9, arr);
 
 	NE_DELETEARR(arr);
 }
@@ -875,14 +875,14 @@ void D3DRenderer::setDepthStencilState(DepthStencilState::Type state)
 	mpd3dImmediateContext->OMSetDepthStencilState(mpDepthStencilStates[state], 0);
 }
 
-void D3DRenderer::setViewport(int x, int y, int width, int height)
+void D3DRenderer::setViewport(int x, int y, int width, int height, int depth)
 {
 	mScreenViewport.TopLeftX = (float)x;
 	mScreenViewport.TopLeftY = (float)y;
 	mScreenViewport.Width = (float)width;
 	mScreenViewport.Height = (float)height;
 	mScreenViewport.MinDepth = 0.0f;
-	mScreenViewport.MaxDepth = 1.0f;
+	mScreenViewport.MaxDepth = (float)depth;
 
 	mpd3dImmediateContext->RSSetViewports(1, &mScreenViewport);
 }
@@ -965,7 +965,7 @@ void D3DRenderer::ResetSamplerState()
 
 void D3DRenderer::ResetRenderTarget()
 {
-	mpd3dImmediateContext->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
+	mpd3dImmediateContext->OMSetRenderTargetsAndUnorderedAccessViews(1, &mpRenderTarget, mpDepthStencilView, 0, 0, NULL, 0);
 }
 //
 //void D3DRenderer::Clear(RenderTarget* target)
@@ -1027,6 +1027,11 @@ void D3DRenderer::RenderDeferredShading()
 void D3DRenderer::PushTransform(const Transform& transform)
 {
 	mMatrixStack.Push(transform.GetTransform());
+}
+
+void D3DRenderer::PushTransform(const Matrix4& transform)
+{
+	mMatrixStack.Push(transform);
 }
 
 void D3DRenderer::PopTransform()

@@ -11,16 +11,18 @@
 #ifndef NOVUS_MESH_RESOURCE_MANAGER_H
 #define NOVUS_MESH_RESOURCE_MANAGER_H
 
-#include "IResourceManager.h"
+#include "ResourceManager.h"
 #include "Mesh/MeshLoader.h"
 #include "Mesh/Processing/IMeshProcess.h"
 #include <map>
+#include <string>
 
 namespace novus
 {
 
-class MeshResourceManager : public IResourceManager
+class MeshResourceManager : public ResourceManager
 {
+	NOVUS_OBJECT_DECL(MeshResourceManager);
 public:
 	MeshResourceManager();
 	~MeshResourceManager();
@@ -36,9 +38,13 @@ private:
 	void ProcessSceneMeshes(assettypes::Scene* scene);
 
 private:
+	std::map<std::wstring, class StaticMesh*> mLoadedMeshes;
+
 	std::map<std::wstring, MeshLoader*> mMeshLoaders;
 	std::vector<IMeshProcess*> mProcesses;
 };
+
+NOVUS_OBJECT_DEF(MeshResourceManager);
 
 }
 

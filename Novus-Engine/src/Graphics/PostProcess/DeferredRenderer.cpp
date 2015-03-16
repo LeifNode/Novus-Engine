@@ -64,17 +64,11 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			//light.Color = Vector3(1.0f, 1.0f, 1.0f);
 			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.3f;
 			light.Radius = 0.0f;
-			
-			/*if (i > 256)
-			{
-				light.Intensity = 0.0f;
-				light.Radius = 0.0f;
-			}*/
-			
-			light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
+
+			light.Range = sqrt(light.Intensity / 0.005f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
 			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 20.0f;
-			light.PositionWorld.y = Math::RandF(-4.8f, 5.5f);
+			light.PositionWorld.y = Math::RandF(0.8f, 9.5f);
 
 			mTestPointLights.push_back(light);
 		}

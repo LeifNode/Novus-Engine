@@ -10,17 +10,32 @@
 #ifndef NOVUS_OBJECT_H
 #define NOVUS_OBJECT_H
 
+#include "Utils/MetaData/MetaData.h"
+#include "Utils/Objects/Type.h"
+
+#define NOVUS_OBJECT_DECL(type)				  \
+public:										  \
+	static const Type* GetStaticType()		  \
+	{										  \
+		return novus::MetaSingleton<type>::GetType();\
+	}										  \
+											  \
+	const Type* GetType() const				  \
+	{										  \
+		return novus::MetaSingleton<type>::GetType();\
+	}										  \
+
+#define NOVUS_OBJECT_DEF(type) \
+	novus::Type novus::MetaSingleton<type>::mMetaData = novus::Type(#type); \
+
 namespace novus
 {
-
-class Class;
-
 class Object
 {
 public:
-	bool IsA(const Class& t);
+	bool IsA(const Type* t);
 
-	virtual Class* GetStaticClass() const = 0;
+	virtual const Type* GetType() const = 0;
 };
 
 }

@@ -347,9 +347,6 @@
     <ClInclude Include="src\Resources\MeshResourceManager.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resources\IResourceManager.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="src\Resources\Texture\DDSTextureLoader.h">
       <Filter>Source Files\Resources\Texture</Filter>
     </ClInclude>
@@ -364,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="src\Resources\Mesh\Processing\MeshCalculateTangentsPass.h">
       <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Textures\Texture3D.h">
+      <Filter>Source Files\Graphics\Textures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -525,6 +525,18 @@
     </ClCompile>
     <ClCompile Include="src\Resources\Mesh\Processing\MeshCalculateTangentsPass.cpp">
       <Filter>Source Files\Resources\Mesh\Processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Object.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\ResourceManager.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\ResourceCache.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Textures\Texture3D.cpp">
+      <Filter>Source Files\Graphics\Textures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,11 @@ MeshResourceManager::~MeshResourceManager()
 	{
 		NE_DELETE((*it));
 	}
+
+	for (auto it = mLoadedMeshes.begin(); it != mLoadedMeshes.end(); ++it)
+	{
+		NE_DELETE(it->second);
+	}
 }
 
 void MeshResourceManager::Init()
@@ -57,6 +62,10 @@ void MeshResourceManager::ProcessSceneMeshes(assettypes::Scene* scene)
 
 Resource* MeshResourceManager::Load(const std::wstring& path)
 {
+	auto meshIt = mLoadedMeshes.find(path);
+	if (meshIt != mLoadedMeshes.end())
+		return meshIt->second;
+
 	std::wstring extension = ParseExtensionFromString(path);
 
 	MeshLoader* meshLoader = NULL;
@@ -98,6 +107,8 @@ Resource* MeshResourceManager::Load(const std::wstring& path)
 
 	//Load mesh data onto GPU
 	newMesh->Init(loadedScene);
+
+	mLoadedMeshes.insert(std::pair<std::wstring, StaticMesh*>(path, newMesh));
 
 	//Free raw scene data since it is no longer used
 	meshLoader->DeleteScene();

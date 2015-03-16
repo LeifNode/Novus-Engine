@@ -11,27 +11,19 @@
 #define NOVUS_META_DATA_H
 
 #include <string>
-
-typedef unsigned int TypeId;
+#include "Utils/Objects/Type.h"
 
 namespace novus
 {
-
-class MetaData
-{
-public:
-	const char* mName;
-
-};
 
 template <typename T>
 class MetaSingleton
 {
 public:
-	static MetaData* getMeta() const { return &mMetaData; }
+	static const Type* GetType() { return &mMetaData; }
 
 private:
-	static MetaData mMetaData;
+	static Type mMetaData;
 };
 
 template <typename T>
