@@ -264,6 +264,7 @@
     <ClCompile Include="src\Core\Actor.cpp" />
     <ClCompile Include="src\Core\ActorComponent.cpp" />
     <ClCompile Include="src\Core\Object.cpp" />
+    <ClCompile Include="src\Core\World.cpp" />
     <ClCompile Include="src\Events\Events.cpp" />
     <ClCompile Include="src\Events\EventSystem.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />

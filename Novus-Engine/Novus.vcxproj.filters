@@ -538,6 +538,9 @@
     <ClCompile Include="src\Graphics\Textures\Texture3D.cpp">
       <Filter>Source Files\Graphics\Textures</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\World.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Math\Vector3_t.inl">

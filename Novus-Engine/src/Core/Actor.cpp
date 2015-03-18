@@ -8,7 +8,8 @@ namespace novus
 
 Actor::Actor()
 	: mDestroyed(false),
-	mpParentActor(NULL)
+	mpParentActor(NULL),
+	mId(0)
 {
 }
 
@@ -16,8 +17,18 @@ Actor::Actor()
 Actor::~Actor()
 {
 	this->Destroy();
-	this->CleanupDestroyedActors();
-	this->CleanupDestroyedComponents();
+	//this->CleanupDestroyedActors();
+	//this->CleanupDestroyedComponents();
+
+	for (auto it = mChildActors.begin(); it != mChildActors.end(); ++it)
+	{
+		NE_DELETE(*it);
+	}
+
+	for (auto it = mComponents.begin(); it != mComponents.end(); ++it)
+	{
+		NE_DELETE(it->second);
+	}
 }
 
 void Actor::Destroy()

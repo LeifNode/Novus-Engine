@@ -98,7 +98,7 @@ bool TestApplication::Init()
 	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
 
 	mpVoxelTexture = NE_NEW Texture3D();
-	mpVoxelTexture->Init(mpRenderer, 512, 512, 512, DXGI_FORMAT_R8G8B8A8_UNORM, Math::MipMapCount(256, 256), D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS);
+	mpVoxelTexture->Init(mpRenderer, 512, 512, 512, DXGI_FORMAT_R8G8B8A8_UNORM, Math::MipMapCount(512, 512), D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS);
 	mpVoxelTexture->setDebugName("Voxel Volume");
 
 	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");

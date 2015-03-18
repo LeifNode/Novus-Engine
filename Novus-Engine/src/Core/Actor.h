@@ -16,6 +16,7 @@
 #include "Object.h"
 
 typedef unsigned ComponentId;
+typedef unsigned long long ActorId;
 
 namespace novus
 {
@@ -24,6 +25,7 @@ class D3DRenderer;
 
 class Actor : public Object
 {
+	friend class World;
 public:
 	Actor();
 	virtual ~Actor();
@@ -52,6 +54,8 @@ public:
 
 	bool IsDestroyed() const { return mDestroyed; }
 
+	ActorId getId() const { return mId; }
+
 	/*template <class T>
 	T* getComponent(const char *name);*/
 
@@ -70,6 +74,7 @@ private:
 	void CleanupDestroyedComponents();
 
 private:
+	ActorId mId;
 	bool mDestroyed;
 
 	Actor* mpParentActor;
