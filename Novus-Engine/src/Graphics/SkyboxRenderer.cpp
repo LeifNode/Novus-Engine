@@ -45,7 +45,7 @@ void SkyboxRenderer::Init(const wchar_t* cubemapPath)
 	sampDesc.MaxAnisotropy = 1;
 	sampDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	renderer->device()->CreateSamplerState(&sampDesc, &mpSamplerState);
+	HR(renderer->device()->CreateSamplerState(&sampDesc, &mpSamplerState));
 
 	mpSkyboxShader = renderer->getShader("../Shaders/Skybox.hlsl");
 

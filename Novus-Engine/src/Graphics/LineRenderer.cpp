@@ -171,7 +171,7 @@ void LineRenderer::Init()
 	bd.MiscFlags = 0;
 	bd.StructureByteStride = 0;
 
-	renderer->device()->CreateBuffer(&bd, NULL, &mpPerLineBuffer);
+	HR(renderer->device()->CreateBuffer(&bd, NULL, &mpPerLineBuffer));
 }
 
 void LineRenderer::Render(D3DRenderer* renderer)

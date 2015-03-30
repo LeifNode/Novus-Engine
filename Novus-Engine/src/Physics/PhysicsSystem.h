@@ -13,6 +13,9 @@
 #include "Math/Math.h"
 #include "Particle.h"
 #include "ParticleForceGenerator.h"
+#include "ParticleContacts.h"
+#include "ParticleContactGenerators.h"
+#include "Graphics/ConstraintRenderer.h"
 #include <list>
 
 namespace novus
@@ -34,11 +37,25 @@ public:
 	void AddForceGenerator(ParticleForceGenerator* generator);
 	void AddRegistryEntry(Particle* particle, ParticleForceGenerator* generator);
 
+	ConstraintRenderer constraintRenderer;
+
+private:
+	unsigned int GenerateContacts();
+
 private:
 	std::vector<Particle*> mParticles;
 
 	std::list<ParticleForceGenerator*> mForceGenerators;
 	ParticleForceRegistry mForceRegistry;
+
+	std::vector<ParticleContactGenerator*> mContactGenerators;
+
+	ParticleContact* mpContactArr;
+	unsigned mMaxContacts;
+
+	ParticleContactResolver mResolver;
+
+	//ParticleRenderer mParticleRenderer;
 };
 
 }

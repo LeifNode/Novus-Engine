@@ -23,7 +23,7 @@ public:
 
 	virtual void Update(float dt);
 
-	void AddForce(const Vector3d& force);
+	void AddForce(const Vector3& force);
 
 	void Reset();
 
@@ -33,17 +33,19 @@ public:
 	void setInverseMass(float inverseMass);
 	float getInverseMass() const;
 
-	void setPosition(const Vector3d& position);
-	void setVelocity(const Vector3d& velocity);
+	void setDamping(float damping);
 
-	Vector3d getPosition() const;
-	Vector3d getVelocity() const;
-	Vector3d getAcceleration() const;
+	void setPosition(const Vector3& position);
+	void setVelocity(const Vector3& velocity);
+
+	Vector3 getPosition() const;
+	Vector3 getVelocity() const;
+	Vector3 getAcceleration() const;
 
 protected:
-	Vector3d mPosition;
-	Vector3d mVelocity;
-	Vector3d mAcceleration;
+	Vector3 mPosition;
+	Vector3 mVelocity;
+	Vector3 mAcceleration;
 
 	float mDamping;
 	float mInverseMass;

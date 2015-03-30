@@ -16,6 +16,10 @@
 #include <Resources/MeshResourceManager.h>
 #include <Resources/ResourceCache.h>
 #include <Graphics/Textures/Texture3D.h>
+#include <Core/World.h>
+#include <Core/Actor.h>
+#include <Core/Components/StaticMeshComponent.h>
+#include <Graphics/RenderTargets/ShadowMapRenderTarget.h>
 
 using namespace novus;
 
@@ -42,14 +46,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 TestApplication::TestApplication(HINSTANCE instance)
 	:
 	NovusApplication(instance),
-	mpMainShader(NULL),
 	mpStaticMeshShader(NULL),
+	mpDepthPassShader(NULL),
 	mpVoxelizationShader(NULL),
 	mpDebugRaymarchShader(NULL),
 	mpSkyboxRenderer(NULL),
 	mpMesh(NULL),
 	mpVoxelTexture(NULL),
-	mRenderVoxelization(false)
+	mpShadowMap(NULL),
+	mRenderVoxelization(false),
+	mVoxelResolution(512)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.1.65";
 
@@ -68,6 +74,7 @@ TestApplication::~TestApplication()
 	NE_DELETE(mpCamera);
 	NE_DELETE(mpSkyboxRenderer);
 	NE_DELETE(mpVoxelTexture);
+	NE_DELETE(mpShadowMap);
 }
 
 bool TestApplication::Init()
@@ -80,7 +87,6 @@ bool TestApplication::Init()
 	HookInputEvents();
 
 	InitShaders();
-	InitMesh();
 
 	novus::Font* verdana = mpFontManager->LoadFont(
 		"verdana",
@@ -94,11 +100,26 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::Italic);
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
+	mpShadowMap = NE_NEW ShadowMapRenderTarget();
+	mpShadowMap->Init(2048, 2048);
+	mpShadowMap->setDirection(Normalize(Vector3(0.0f, 1.0f, 0.5f)));
+	mpShadowMap->setPosition(Vector3(0.0f, 20.0f, 10.0f));
+	mpShadowMap->setVolumeOrthographicBounds(40.0f, 40.0f, 60.0f);
+
+	mpWorld->RegisterRenderTarget(mpShadowMap);
+
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
 
 	mpVoxelTexture = NE_NEW Texture3D();
-	mpVoxelTexture->Init(mpRenderer, 512, 512, 512, DXGI_FORMAT_R8G8B8A8_UNORM, Math::MipMapCount(512, 512), D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS);
+	mpVoxelTexture->Init(mpRenderer, 
+						 mVoxelResolution, 
+						 mVoxelResolution, 
+						 mVoxelResolution, 
+						 DXGI_FORMAT_R8G8B8A8_UNORM, 
+						 Math::MipMapCount(mVoxelResolution, mVoxelResolution), 
+						 D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS);
+
 	mpVoxelTexture->setDebugName("Voxel Volume");
 
 	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");
@@ -107,6 +128,15 @@ bool TestApplication::Init()
 		std::cout << "Loaded mesh.\n";
 	else
 		std::cout << "Failed to load mesh.\n";
+
+	Actor* meshActor = NE_NEW Actor();
+	StaticMeshComponent* meshComponent = NE_NEW StaticMeshComponent(mpMesh);
+	meshComponent->setDisplayName("Mesh1");
+
+	meshActor->AddComponent(meshComponent);
+	meshActor->transform.SetScale(0.01f);
+
+	mpWorld->AddActor(meshActor);
 
 	return true;
 }
@@ -119,17 +149,6 @@ void TestApplication::InitShaders()
 		{ ShaderType::None, NULL }
 	};
 
-	D3D11_INPUT_ELEMENT_DESC vertexDescription[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	mpMainShader = mpRenderer->LoadShader(L"../Shaders/GenericShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vertexDescription, ARRAYSIZE(vertexDescription));
-
 	D3D11_INPUT_ELEMENT_DESC staticMeshVertexDescription[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -139,6 +158,8 @@ void TestApplication::InitShaders()
 	};
 
 	mpStaticMeshShader = mpRenderer->LoadShader(L"../Shaders/StaticMeshShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, staticMeshVertexDescription, ARRAYSIZE(staticMeshVertexDescription));
+
+	mpDepthPassShader = mpRenderer->LoadShader(L"../Shaders/DepthPassShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, staticMeshVertexDescription, ARRAYSIZE(staticMeshVertexDescription));
 
 	ShaderInfo voxelShaderInfo[] = {
 		{ ShaderType::Vertex, "VS" },
@@ -155,19 +176,6 @@ void TestApplication::InitShaders()
 	};
 
 	mpDebugRaymarchShader = mpRenderer->LoadShader(L"../Shaders/VXGI/DebugRaymarchVolume.hlsl", raymarchShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
-}
-
-void TestApplication::InitMesh()
-{
-	Mesh mesh;
-
-	GeometryGenerator::CreateGeosphere(1.0f, 4, mesh);
-
-	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
-
-	GeometryGenerator::CreatePlane(1000.0f, 1000.0f, 4, 4, mesh);
-
-	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 }
 
 void TestApplication::HookInputEvents()
@@ -205,16 +213,17 @@ void TestApplication::Update(float dt)
 	mpCamera->Update(dt);
 	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 
-	mCurrentRotation = Quaternion::AxisAngle(Normalize(Vector3(1.0f, 1.0f, 1.0f)), dt) * mCurrentRotation;
-	mCurrentRotation = Quaternion::Normalize(mCurrentRotation);
-
 	mpRenderer->getDeferredRenderer()->Update(dt);
+
+	EngineStatics::getWorld()->Update(dt);
 }
 
 void TestApplication::Render()
 {
 	mpRenderer->PreRender();
-	mpRenderer->setShader(mpMainShader);
+
+	mpRenderer->setShader(mpDepthPassShader);
+	mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
 	CBPerFrame perFrame;
 
@@ -231,7 +240,6 @@ void TestApplication::Render()
 	perFrame.ClipNearFar = Vector2(mpCamera->getNear(), mpCamera->getFar());
 	perFrame.Projection = voxelProjection;
 	perFrame.ProjectionInv = Matrix4::Inverse(perFrame.Projection);
-	//perFrame.View = Matrix4::LookToward(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f));
 	perFrame.View = Matrix4(1.0f);
 	perFrame.ViewInv = Matrix4::Inverse(perFrame.View);
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
@@ -243,7 +251,7 @@ void TestApplication::Render()
 
 	ID3D11UnorderedAccessView* voxelUAV = mpVoxelTexture->getUnorderedAccessView();
 	mpRenderer->context()->OMSetRenderTargetsAndUnorderedAccessViews(0, NULL, NULL, 0, 1, &voxelUAV, 0);
-	mpRenderer->setViewport(0, 0, 512, 512);
+	mpRenderer->setViewport(0, 0, mVoxelResolution, mVoxelResolution);
 	mpRenderer->PushTransform(Matrix4::Scale(0.01f));
 	mpMesh->Render(mpRenderer);
 	mpRenderer->PopTransform();
@@ -260,7 +268,7 @@ void TestApplication::Render()
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
 	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
 	perFrame.EyePosition = mpCamera->getPosition();
-
+	
 	mpRenderer->setViewport(0, 0, getClientWidth(), getClientHeight());
 	mpRenderer->setPerFrameBuffer(perFrame);
 	mpRenderer->BindPerFrameBuffer();
@@ -278,37 +286,6 @@ void TestApplication::Render()
 	perObject.Material.HasNormalTexture = false;
 	perObject.Material.HasSpecularTexture = false;
 	perObject.Material.Emissive = Vector3(0.0f);
-
-	/*for (int x = -5; x <= 5; x++)
-	{
-		for (int z = 0; z < 2; z++)
-		{
-			perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-			perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
-			perObject.Material.Metallic = static_cast<float>(z);
-
-			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) *
-				Matrix4::Translate(static_cast<float>(x) / 2.0f, 2.0f, static_cast<float>(z) / 2.0f);
-
-			perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-			perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-
-			mpRenderer->setPerObjectBuffer(perObject);
-
-			mMeshRenderer.Render(mpRenderer);
-		}
-	}*/
-
-	/*perObject.World = Matrix4::Translate(0.0f, -5.0f, 0.0f);
-	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
-	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
-	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	perObject.Material.SpecularColor = Vector3(1.0f, 1.0f, 1.0f);
-	perObject.Material.Metallic = 0.0f;
-	perObject.Material.Roughness = 0.15f;
-	mpRenderer->setPerObjectBuffer(perObject);
-	mPlaneRenderer.Render(mpRenderer);*/
-
 
 	mpSkyboxRenderer->Render(mpRenderer);
 

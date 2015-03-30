@@ -13,6 +13,7 @@
 
 #include "Utils/Defines.hlsl"
 #include "Utils/ConstantBuffers.hlsl"
+#include "Lighting/Shading.hlsl"
 
 struct PS_GBUFFER_OUT
 {

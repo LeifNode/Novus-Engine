@@ -95,10 +95,12 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		PointLight light = gPointLights[lightIndex];
 
 		bool inFrustum = true;
+		float3 lightViewInv;
 		[unroll]
 		for (uint i = 0; i < 6; i++)
 		{
-			float d = dot(frustumPlanes[i], float4(light.PositionView, 1.0f));
+			lightViewInv = float3(light.PositionView.x, light.PositionView.y, -light.PositionView.z);
+			float d = dot(frustumPlanes[i], float4(lightViewInv, 1.0f));
 			inFrustum = inFrustum && (d >= -light.Range);
 		}
 

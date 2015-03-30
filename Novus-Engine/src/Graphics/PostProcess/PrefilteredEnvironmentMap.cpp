@@ -53,7 +53,7 @@ void PrefilteredEnvironmentMap::InitConstantBuffer(D3DRenderer* renderer)
 	bd.MiscFlags = 0;
 	bd.StructureByteStride = 0;
 
-	renderer->device()->CreateBuffer(&bd, NULL, &mpFilterBuffer);
+	HR(renderer->device()->CreateBuffer(&bd, NULL, &mpFilterBuffer));
 }
 
 void PrefilteredEnvironmentMap::InitSourceTexture(D3DRenderer* renderer, const std::wstring& path)

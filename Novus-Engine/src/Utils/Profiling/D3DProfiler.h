@@ -7,31 +7,37 @@
 
 #pragma once
 
-#ifndef PLANET_UI_RENDERER_H
-#define PLANET_UI_RENDERER_H
+#ifndef NOVUS_D3D_PROFILER_H
+#define NOVUS_D3D_PROFILER_H
+
+#include "Graphics/D3DRenderer.h"
+#include "Application/EngineStatics.h"
+
+#define BEGIN_GRAPHICS_PROFILED_SECTION(name) \
+	(\
+		\
+	)\
+
+#define END_GRAPHICS_PROFILED_SECTION(name) \
+	(\
+	\
+	)\
 
 namespace novus
 {
-	class D3DRenderer;
-	class TextRenderer;
-}
 
-class PlanetParticle;
-
-class PlanetUIRenderer
+class D3DProfiler
 {
 public:
-	PlanetUIRenderer();
-	~PlanetUIRenderer();
+	D3DProfiler();
+	~D3DProfiler();
 
-	void Init();
-
-	void SelectPlanet(const PlanetParticle* planet);
-
-	void Render(novus::D3DRenderer* renderer);
+	
 
 private:
-	novus::TextRenderer* mpTextRenderer;
+
 };
+
+}
 
 #endif

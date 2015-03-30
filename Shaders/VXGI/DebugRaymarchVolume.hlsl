@@ -45,7 +45,7 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	up = cross(forward, right);
 
 	float projheight = gProjection[1][1];
-	forward += (clipCoords.x * right - clipCoords.y * up / projheight);
+	forward += (clipCoords.x * right / gProjection[0][0] - clipCoords.y * up / projheight);
 	forward = normalize(forward);
 
 	//Find amount to advance each sample
@@ -59,19 +59,26 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float occlusion = 0.0f;
 
-	[unroll]
+	[loop]
 	for (int i = 0; i < sampleCount; i++)
 	{
 		//sampleColor = gVoxelVolume.SampleLevel(gVolumeSampler, WorldToVolume(samplePosition), 0);
 		sampleColor = gVoxelVolume.Load(int4(WorldToVolume(samplePosition) * volumeDimensions, 0));
 
 		//Average colors if this ray is partially occluded
-		[flatten]
+		[branch]
 		if (occlusion < 1.0f)
 		{
 			finalColor.rgb += sampleColor.rgb * (sampleColor.a + occlusion > 1.0f ? 1.0f - occlusion : sampleColor.a);
 			
 		}
+		else
+		{
+			//gOutputTexture[globalCoords] = finalColor;
+			break;
+		}
+
+
 		occlusion += sampleColor.a;
 		samplePosition += forward;
 	}

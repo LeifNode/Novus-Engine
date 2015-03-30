@@ -11,7 +11,9 @@
 #define NOVUS_WORLD_H
 
 #include <vector>
+#include <unordered_set>
 #include "Actor.h"
+#include "Graphics/RenderTargets/IRenderTarget.h"
 
 namespace novus
 {
@@ -33,16 +35,25 @@ public:
 
 	void AddActor(Actor* actor);
 
+	void RenderScenePass(D3DRenderer* renderer, RenderPass::Type pass);
+
+	void RegisterRenderTarget(IRenderTarget* renderTarget);
+	void UnregisterRenderTarget(IRenderTarget* renderTarget);
+
 private:
 	World(const World&) {}
 	World& operator= (const World&) {}
 
-	ActorId getNextActorId();
+	ActorId GetNextActorId();
+
+	void RenderToRenderTarget(D3DRenderer* renderer, IRenderTarget* renderTarget);
 
 private:
 	std::map<ActorId, Actor*> mActors;
 
 	ActorId mCurrentActorId;
+
+	std::unordered_set<IRenderTarget*> mRenderTargets;//This should probably be a multimap based on the pass type
 };
 
 }

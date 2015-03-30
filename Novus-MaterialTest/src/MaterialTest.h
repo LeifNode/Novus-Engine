@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef PHYSICS_TEST_APPLICATION_H
-#define PHYSICS_TEST_APPLICATION_H
+#ifndef TEST_APPLICATION_H
+#define TEST_APPLICATION_H
 
 #define DEBUG_MEMORY_ALLOC
 
@@ -21,23 +21,20 @@
 #include <Events/EventSystem.h>
 #include <Math/Math.h>
 
-#define RENDERER_SCALING 1.0e-7
-
 namespace novus
 {
 	class Camera;
-	class PhysicsSystem;
-	class Particle;
+	class Texture2D;
+	class Texture3D;
 	class SkyboxRenderer;
-	class LineRenderer;
-	class TextRenderer;
+	class StaticMesh;
 }
 
-class PhysicsTestApplication : public novus::NovusApplication
+class MaterialTest : public novus::NovusApplication
 {
 public:
-	PhysicsTestApplication(HINSTANCE instance);
-	virtual ~PhysicsTestApplication();
+	MaterialTest(HINSTANCE instance);
+	virtual ~MaterialTest();
 
 	virtual bool Init() override;
 	virtual void OnResize() override;
@@ -49,40 +46,20 @@ public:
 
 	void OnKeyDown(novus::IEventDataPtr eventData);
 
-	
-
-private:
-	void InitSolarSystem(); 
-	void InitShader();
+	void InitShaders();
 	void InitMesh();
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
-	novus::PhysicsSystem* mpPhysicsSystem;
-	std::vector<class PlanetParticle*> mPlanets;
-
-	float mTimestep;
-
-	class PlanetParticle* mSelectionArray[10];
-	int mSelectedPlanet;
-	float mSelectedDistance;
-
-	novus::Vector3 mLastCameraPosition;
-	float mCameraInterpAmount;
-
-	class PlanetUIRenderer* mpUIRenderer;
 
 	novus::Camera* mpCamera;
 
 	novus::Shader* mpMainShader;
-	novus::Shader* mpTiledDeferredShader;
 
 	novus::CBPerFrame mPerFrameData;
 
 	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
 	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
-
-	novus::TextRenderer* mpTextRenderer;
 };
 
 

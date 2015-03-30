@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef NOVUS_IRENDERABLE
-#define NOVUS_IRENDERABLE
+#ifndef NOVUS_I_RENDERABLE_H
+#define NOVUS_I_RENDERABLE_H
 
 namespace novus
 {

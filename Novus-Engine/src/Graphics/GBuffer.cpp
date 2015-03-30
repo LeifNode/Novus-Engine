@@ -57,7 +57,7 @@ void GBuffer::Init(int width, int height)
 	desc.FrontFace = stencilMarkOp;
 	desc.BackFace = stencilMarkOp;
 
-	EngineStatics::getRenderer()->device()->CreateDepthStencilState(&desc, &mpDepthStencilState);
+	HR(EngineStatics::getRenderer()->device()->CreateDepthStencilState(&desc, &mpDepthStencilState));
 
 	D3D11_SAMPLER_DESC samDesc;
 	ZeroMemory(&samDesc, sizeof(samDesc));
@@ -67,7 +67,7 @@ void GBuffer::Init(int width, int height)
 	samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	EngineStatics::getRenderer()->device()->CreateSamplerState(&samDesc, &mpSamplerState);
+	HR(EngineStatics::getRenderer()->device()->CreateSamplerState(&samDesc, &mpSamplerState));
 }
 
 void GBuffer::DeInit()
@@ -156,7 +156,7 @@ void GBuffer::OnResize(int width, int height)
 		0
 	};
 
-	renderer->device()->CreateDepthStencilView(mpDepthStencilTexture, &dsvd, &mpDepthStencilTargetView);
+	HR(renderer->device()->CreateDepthStencilView(mpDepthStencilTexture, &dsvd, &mpDepthStencilTargetView));
 
 	D3D11_RENDER_TARGET_VIEW_DESC rtsvd =
 	{
@@ -164,16 +164,16 @@ void GBuffer::OnResize(int width, int height)
 		D3D11_RTV_DIMENSION_TEXTURE2D
 	};
 
-	renderer->device()->CreateRenderTargetView(mpDiffuseTexture, &rtsvd, &mpDiffuseTargetView);
+	HR(renderer->device()->CreateRenderTargetView(mpDiffuseTexture, &rtsvd, &mpDiffuseTargetView));
 
 	rtsvd.Format = normalRenderViewFormat;
-	renderer->device()->CreateRenderTargetView(mpNormalTexture, &rtsvd, &mpNormalTargetView);
+	HR(renderer->device()->CreateRenderTargetView(mpNormalTexture, &rtsvd, &mpNormalTargetView));
 
 	rtsvd.Format = roughnessRenderViewFormat;
-	renderer->device()->CreateRenderTargetView(mpRoughnessTexture, &rtsvd, &mpRoughnessTargetView);
+	HR(renderer->device()->CreateRenderTargetView(mpRoughnessTexture, &rtsvd, &mpRoughnessTargetView));
 
 	rtsvd.Format = emissiveRenderViewFormat;
-	renderer->device()->CreateRenderTargetView(mpEmissiveTexture, &rtsvd, &mpEmissiveTargetView);
+	HR(renderer->device()->CreateRenderTargetView(mpEmissiveTexture, &rtsvd, &mpEmissiveTargetView));
 
 	mWidth = width;
 	mHeight = height;

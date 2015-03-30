@@ -15,7 +15,7 @@
 #include "Math/Transform.h"
 #include "Object.h"
 
-typedef unsigned ComponentId;
+typedef unsigned ComponentTypeId;
 typedef unsigned long long ActorId;
 
 namespace novus
@@ -25,6 +25,8 @@ class D3DRenderer;
 
 class Actor : public Object
 {
+	NOVUS_OBJECT_DECL(Actor);
+
 	friend class World;
 public:
 	Actor();
@@ -56,6 +58,12 @@ public:
 
 	ActorId getId() const { return mId; }
 
+	bool getCastShadow() const { return mCastShadow; }
+	void setCastShadow(bool castShadow) { mCastShadow = castShadow; }
+
+	void setDisplayName(const std::string& name);
+	std::string getDisplayName() const;
+
 	/*template <class T>
 	T* getComponent(const char *name);*/
 
@@ -77,12 +85,20 @@ private:
 	ActorId mId;
 	bool mDestroyed;
 
+	bool mCastShadow;
+
 	Actor* mpParentActor;
 
-	std::multimap<ComponentId, ActorComponent*> mComponents;
+	std::multimap<const Type*, ActorComponent*> mComponents;
 
 	std::vector<Actor*> mChildActors;
+
+	std::string mDisplayName;
 };
+
+
+NOVUS_OBJECT_DEF(Actor);
+
 }
 
 #endif

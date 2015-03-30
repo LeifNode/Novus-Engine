@@ -65,7 +65,7 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.3f;
 			light.Radius = 0.0f;
 
-			light.Range = sqrt(light.Intensity / 0.005f) - 1.0f + light.Radius;
+			light.Range = sqrt(light.Intensity / 0.002f) - 1.0f + light.Radius;
 			light.FalloffPow = 1;
 			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 20.0f;
 			light.PositionWorld.y = Math::RandF(0.8f, 9.5f);
@@ -81,11 +81,11 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 		samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 		samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		renderer->device()->CreateSamplerState(&samDesc, &mpPointSampler);
+		HR(renderer->device()->CreateSamplerState(&samDesc, &mpPointSampler));
 
 		samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 
-		renderer->device()->CreateSamplerState(&samDesc, &mpEnvironmentSampler);
+		HR(renderer->device()->CreateSamplerState(&samDesc, &mpEnvironmentSampler));
 
 		mpEnvMap = NE_NEW PrefilteredEnvironmentMap();
 		mpEnvMap->Init(renderer, L"../Textures/sunsetcube1024.dds");
@@ -129,7 +129,7 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 	{
 		PointLight light = mTestPointLights[i];
 		light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);
-		light.PositionView.z = -light.PositionView.z;
+		//light.PositionView.z = -light.PositionView.z;
 
 		lightBufferPtr[i] = light;
 	}

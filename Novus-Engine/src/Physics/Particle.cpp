@@ -4,7 +4,7 @@ namespace novus
 {
 
 Particle::Particle()
-	: mDamping(0.999f)
+	: mDamping(0.9f)
 {
 
 }
@@ -14,23 +14,23 @@ void Particle::Update(float dt)
 	if (mInverseMass <= 0.0f)
 		return;
 
-	mPosition += mVelocity * static_cast<double>(dt);
-	mVelocity += mAcceleration * static_cast<double>(mInverseMass)* static_cast<double>(dt);
+	mPosition += mVelocity * dt;
+	mVelocity += mAcceleration * mInverseMass * dt;
 
-	//mVelocity *= static_cast<double>(powf(mDamping, dt));
+	mVelocity *= powf(mDamping, dt);
 
-	mAcceleration = Vector3d();
+	mAcceleration = Vector3();
 }
 
-void Particle::AddForce(const Vector3d& force)
+void Particle::AddForce(const Vector3& force)
 {
 	mAcceleration += force;
 }
 
 void Particle::Reset()
 {
-	mVelocity = Vector3d();
-	mAcceleration = Vector3d();
+	mVelocity = Vector3();
+	mAcceleration = Vector3();
 }
 
 void Particle::setMass(float mass)
@@ -55,27 +55,32 @@ float Particle::getInverseMass() const
 	return mInverseMass;
 }
 
-void Particle::setPosition(const Vector3d& position)
+void Particle::setDamping(float damping)
+{
+	mDamping = damping;
+}
+
+void Particle::setPosition(const Vector3& position)
 {
 	mPosition = position;
 }
 
-void Particle::setVelocity(const Vector3d& velocity)
+void Particle::setVelocity(const Vector3& velocity)
 {
 	mVelocity = velocity;
 }
 
-Vector3d Particle::getPosition() const
+Vector3 Particle::getPosition() const
 {
 	return mPosition;
 }
 
-Vector3d Particle::getVelocity() const
+Vector3 Particle::getVelocity() const
 {
 	return mVelocity;
 }
 
-Vector3d Particle::getAcceleration() const
+Vector3 Particle::getAcceleration() const
 {
 	return mAcceleration;
 }

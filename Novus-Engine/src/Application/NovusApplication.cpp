@@ -7,6 +7,7 @@
 #include "Resources/ResourceCache.h"
 #include "Utils/Memory/MallocTracker.h"
 #include "Utils/Logging/ConsoleLogSerializer.h"
+#include "Core/World.h"
 
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")
@@ -49,6 +50,7 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	mpEventSystem = NE_NEW EventSystem();
 	mpFontManager = NE_NEW FontManager();
 	mpResourceCache = NE_NEW ResourceCache();
+	mpWorld = NE_NEW World();
 
 
 	EngineStatics::mspApplication = this;
@@ -57,10 +59,12 @@ NovusApplication::NovusApplication(HINSTANCE hInstance)
 	EngineStatics::mspEventSystem = mpEventSystem;
 	EngineStatics::mspFontManager = mpFontManager;
 	EngineStatics::mspResourceCache = mpResourceCache;
+	EngineStatics::mspWorld = mpWorld;
 }
 
 NovusApplication::~NovusApplication()
 {
+	NE_DELETE(mpWorld);
 	NE_DELETE(mpFontManager);
 	NE_DELETE(mpInputSystem);
 	NE_DELETE(mpEventSystem);

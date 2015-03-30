@@ -151,6 +151,7 @@ void StaticMesh::Render(D3DRenderer* renderer)
 		perObject.World = renderer->GetTopTransform();
 		perObject.WorldViewProj = perObject.World * perFrame->ViewProj;
 		perObject.WorldInvTranspose = Matrix4::Inverse(Matrix4::Transpose(perObject.World));
+		perObject.TextureTransform = Matrix4(1.0f);
 
 		auto material = mMeshMaterials.find(*it);
 		if (material != mMeshMaterials.end())

@@ -10,6 +10,7 @@ EventSystem* EngineStatics::mspEventSystem = NULL;
 FontManager* EngineStatics::mspFontManager = NULL;
 FileSystem* EngineStatics::mspFileSystem = NULL;
 ResourceCache* EngineStatics::mspResourceCache = NULL;
+World* EngineStatics::mspWorld = NULL;
 
 NovusApplication* EngineStatics::getApplication()
 {
@@ -44,6 +45,11 @@ FileSystem* EngineStatics::getFileSystem()
 ResourceCache* EngineStatics::getResourceCache()
 {
 	return mspResourceCache;
+}
+
+World* EngineStatics::getWorld()
+{
+	return mspWorld;
 }
 
 }//namespace novus

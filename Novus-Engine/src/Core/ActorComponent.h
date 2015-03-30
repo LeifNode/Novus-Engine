@@ -21,8 +21,10 @@ class D3DRenderer;
 
 class ActorComponent : public Object
 {
+	friend class Actor;
+
 public:
-	ActorComponent(const char* displayName, Actor* parentActor);
+	ActorComponent();
 	virtual ~ActorComponent();
 
 	virtual void Init() {};
@@ -43,7 +45,10 @@ public:
 
 	bool IsDestroyed() const { return mDestroyed; }
 
-	Transform transform;
+	Transform transform;//TODO: Cache this for to world and from world transforms in the hierarchy 
+
+	void setDisplayName(const char* name);
+	std::string getDisplayName() const { return mDisplayName; }
 
 private:
 	void UpdateChildComponents(float dt);
@@ -54,7 +59,7 @@ private:
 	void CleanupDestroyedComponents();
 
 private:
-	const char* mDisplayName;
+	std::string mDisplayName;
 	bool mDestroyed;
 
 	Actor* mpParentActor;

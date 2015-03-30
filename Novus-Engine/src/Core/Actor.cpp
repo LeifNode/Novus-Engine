@@ -9,7 +9,8 @@ namespace novus
 Actor::Actor()
 	: mDestroyed(false),
 	mpParentActor(NULL),
-	mId(0)
+	mId(0),
+	mCastShadow(true)
 {
 }
 
@@ -97,12 +98,29 @@ void Actor::AddChildActor(Actor* actor)
 
 void Actor::AddComponent(ActorComponent* component)
 {
+	if (component->getParentActor())
+	{
+		NE_ERROR("Cannot add component to actor when it is already attached.", "Actor");
+		return;
+	}
 
+	mComponents.insert(std::make_pair(component->GetType(), component));
+	component->mpParentActor = this;
 }
 
 void Actor::RemoveComponent(ActorComponent* component)
 {
 
+}
+
+void Actor::setDisplayName(const std::string& name)
+{
+	mDisplayName = name;
+}
+
+std::string Actor::getDisplayName() const
+{
+	return mDisplayName;
 }
 
 void Actor::CleanupDestroyedActors()

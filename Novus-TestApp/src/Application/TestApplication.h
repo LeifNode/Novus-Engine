@@ -28,6 +28,7 @@ namespace novus
 	class Texture3D;
 	class SkyboxRenderer;
 	class StaticMesh;
+	class ShadowMapRenderTarget;
 }
 
 class TestApplication : public novus::NovusApplication
@@ -47,29 +48,27 @@ public:
 	void OnKeyDown(novus::IEventDataPtr eventData);
 
 	void InitShaders();
-	void InitMesh();
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
 
-	novus::Quaternion mCurrentRotation;
-
 	novus::Camera* mpCamera;
 
-	novus::Shader* mpMainShader;
 	novus::Shader* mpStaticMeshShader;
 	novus::Shader* mpVoxelizationShader;
 	novus::Shader* mpDebugRaymarchShader;
+	novus::Shader* mpDepthPassShader;
+
+	novus::ShadowMapRenderTarget* mpShadowMap;
 
 	novus::CBPerFrame mPerFrameData;
 
-	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
-	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
 	novus::StaticMesh* mpMesh;
 
 	novus::Texture3D* mpVoxelTexture;
 
 	bool mRenderVoxelization;
+	int mVoxelResolution;
 };
 
 

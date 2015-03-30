@@ -50,7 +50,7 @@ GS_INPUT VS(VS_INPUT vin)
 	return vout;
 }
 
-[maxvertexcount(3)]
+[maxvertexcount(16)]
 void GS(triangle GS_INPUT input[3], inout TriangleStream<PS_INPUT> triStream)
 {
 	PS_INPUT output;
@@ -82,6 +82,7 @@ void GS(triangle GS_INPUT input[3], inout TriangleStream<PS_INPUT> triStream)
 	};
 
 
+	//Choose dominant axis
 	int index = 0;
 
 	[unroll]

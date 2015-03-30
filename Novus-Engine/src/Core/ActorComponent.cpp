@@ -6,10 +6,9 @@
 namespace novus
 {
 
-ActorComponent::ActorComponent(const char* displayName, Actor* parentActor)
-	: mDisplayName(displayName),
-	mpParentActor(parentActor),
-	mpParentComponent(NULL),
+ActorComponent::ActorComponent()
+	: mpParentComponent(NULL),
+	mpParentActor(NULL),
 	mDestroyed(false)
 {
 }
@@ -72,6 +71,11 @@ void ActorComponent::AddChildComponent(ActorComponent* component)
 
 	component->mpParentComponent = this;
 	mChildComponents.push_back(component);
+}
+
+void ActorComponent::setDisplayName(const char* name)
+{
+	mDisplayName = name;
 }
 
 void ActorComponent::UpdateChildComponents(float dt)

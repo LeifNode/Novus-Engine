@@ -21,6 +21,7 @@ class InputSystem;
 class EventSystem;
 class FontManager;
 class ResourceCache;
+class World;
 
 class NovusApplication
 {
@@ -58,6 +59,7 @@ protected:
 	EventSystem* mpEventSystem;
 	FontManager* mpFontManager;
 	ResourceCache* mpResourceCache;
+	World* mpWorld;
 
 	std::wstring mMainWndCaptionFull;
 	std::wstring mMainWndCaption;

@@ -22,6 +22,7 @@ class EventSystem;
 class FontManager;
 class FileSystem;
 class ResourceCache;
+class World;
 
 class EngineStatics
 {
@@ -35,6 +36,7 @@ public:
 	static FontManager* getFontManager();
 	static FileSystem* getFileSystem();
 	static ResourceCache* getResourceCache();
+	static World* getWorld();
 
 private:
 	static NovusApplication* mspApplication;
@@ -44,6 +46,7 @@ private:
 	static FontManager* mspFontManager;
 	static FileSystem* mspFileSystem;
 	static ResourceCache* mspResourceCache;
+	static World* mspWorld;
 };
 
 }

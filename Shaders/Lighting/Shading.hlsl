@@ -275,7 +275,7 @@ void AccumulateBRDF(SURFACE_DATA surface, PointLight light, float3 toEye, inout 
 	float G = G_Smith(surface.Roughness, NoV, NoL);
 	float3 F = F_Schlick(lerp(float3(0.0f, 0.0f, 0.0f), surface.SpecularColor, surface.Metallic), VoH);
 
-	float3 specContrib = ((D*G*F) / (4.0 * NoL * NoV)) * NoL;
+	float3 specContrib = ((D*G*F) / (4.0 * NoL * NoV)) * NoL;//TODO: This is not correct, but fixes the specular falloff to some degree for the time being
 
 	finalColor += light.Color / PI * surface.Diffuse.rgb * light.Intensity * diffuseContrib * oneOverDistSq * (1.0f - surface.Metallic);//Diffuse
 	finalColor += light.Color * light.Intensity * saturate(specContrib) * oneOverDistSq * lerp(float3(1.0f, 1.0f, 1.0f), surface.SpecularColor, surface.Metallic);//Specular

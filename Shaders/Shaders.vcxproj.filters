@@ -68,5 +68,12 @@
     <FxCompile Include="VXGI\DebugRaymarchVolume.hlsl">
       <Filter>VXGI</Filter>
     </FxCompile>
+    <FxCompile Include="Lighting\DirectionalLightPass.hlsl">
+      <Filter>Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="Deferred\GBuffer.hlsl">
+      <Filter>Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DepthPassShader.hlsl" />
   </ItemGroup>
 </Project>

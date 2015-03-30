@@ -31,7 +31,10 @@ public:
 			  DXGI_FORMAT format,
 			  int mipCount = 1,
 			  UINT bindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET,
-			  UINT miscFlags = 0);
+			  UINT miscFlags = 0,
+			  DXGI_FORMAT srvFormat = DXGI_FORMAT_UNKNOWN,
+			  DXGI_FORMAT rtvFormat = DXGI_FORMAT_UNKNOWN,
+			  DXGI_FORMAT uavFormat = DXGI_FORMAT_UNKNOWN);
 	void DeInit();
 
 	void Load(D3DRenderer* renderer, const wchar_t* filePath);

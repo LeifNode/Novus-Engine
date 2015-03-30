@@ -99,6 +99,15 @@
     <Filter Include="Source Files\Resources\Texture">
       <UniqueIdentifier>{ae16820d-5714-4726-9a50-c300f886d846}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utils\Profiling">
+      <UniqueIdentifier>{349ca4f2-9ca8-4021-be28-e06e211e014a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Components">
+      <UniqueIdentifier>{f00104b2-a488-4c37-8dc9-5e63e0cd8e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\RenderTargets">
+      <UniqueIdentifier>{3bb620f7-d260-4ac6-b965-5560a7eb1516}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -365,6 +374,48 @@
     <ClInclude Include="src\Graphics\Textures\Texture3D.h">
       <Filter>Source Files\Graphics\Textures</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\Profiling\D3DProfiler.h">
+      <Filter>Source Files\Utils\Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Components\StaticMeshComponent.h">
+      <Filter>Source Files\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Components\CameraComponent.h">
+      <Filter>Source Files\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Material.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\RenderTargets\IRenderTarget.h">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\RenderTargets\ShadowMapRenderTarget.h">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\RenderTargets\VoxelVolumeRenderTarget.h">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\LightManager.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\ParticleContacts.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\ParticleContactGenerators.h">
+      <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Components\DynamicMeshComponent.h">
+      <Filter>Source Files\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\ConstraintRenderer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Components\PhysicsParticleComponent.h">
+      <Filter>Source Files\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\RenderTargets\GBufferRenderTarget.h">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -529,9 +580,6 @@
     <ClCompile Include="src\Core\Object.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\ResourceManager.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resources\ResourceCache.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
@@ -540,6 +588,27 @@
     </ClCompile>
     <ClCompile Include="src\Core\World.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Components\StaticMeshComponent.cpp">
+      <Filter>Source Files\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\RenderTargets\ShadowMapRenderTarget.cpp">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\RenderTargets\VoxelVolumeRenderTarget.cpp">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\LightManager.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\ParticleContacts.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\ParticleContactGenerators.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\ConstraintRenderer.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
