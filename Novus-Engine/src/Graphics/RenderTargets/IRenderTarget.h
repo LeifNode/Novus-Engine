@@ -37,7 +37,8 @@ public:
 
 	virtual RenderPass::Type GetRenderPass() const = 0;
 
-	virtual bool ShouldRender(const Actor* actor) const = 0;
+	//virtual bool ShouldRender() const = 0;
+	virtual bool ShouldRenderActor(const Actor* actor) const = 0;
 };
 
 }

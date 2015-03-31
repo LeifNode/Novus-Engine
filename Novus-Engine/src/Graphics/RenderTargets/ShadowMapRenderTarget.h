@@ -34,7 +34,7 @@ public:
 
 	RenderPass::Type GetRenderPass() const override;
 
-	bool ShouldRender(const Actor* actor) const override;
+	bool ShouldRenderActor(const Actor* actor) const override;
 
 	void setPosition(const Vector3& position);
 	void setDirection(const Vector3& direction);

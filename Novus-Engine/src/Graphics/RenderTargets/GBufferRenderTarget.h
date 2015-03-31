@@ -22,11 +22,12 @@ class D3DRenderer;
 class Actor;
 class GBuffer;
 
-class ShadowMapRenderTarget : public IRenderTarget
+class GBufferRenderTarget : public IRenderTarget
 {
 public:
-	ShadowMapRenderTarget();
-	~ShadowMapRenderTarget();
+	//True if this buffer is prioritized as a viewport that will render directly to the screen
+	GBufferRenderTarget(bool primaryRenderTarget);
+	~GBufferRenderTarget();
 
 	void Init(int width, int height);
 
@@ -35,16 +36,23 @@ public:
 
 	RenderPass::Type GetRenderPass() const override;
 
-	bool ShouldRender(const Actor* actor) const override;
+	bool ShouldRenderActor(const Actor* actor) const override;
 
+	Matrix4 getViewTransform() const;
 
+	bool IsPrimaryRenderTarget() const;
+	void setIsPrimaryRenderTarget(bool isPrimaryRenderTarget);
 
-private:
-	mutable bool mTransformDirty;
+	GBuffer* getGBuffer() const { return mpGBuffer; }
 
-	Matrix4 mProjectionMatrix;
-	mutable Matrix4 mViewMatrix;
-	mutable Matrix4 mTransform;
+protected:
+	GBuffer* mpGBuffer;
+
+	bool mIsPrimaryRenderTarget;
+
+	//TODO: Generalize the Camera class to handle these transforms for Orthographic & Perspective views
+	Matrix4 mView;
+	Matrix4 mProjection;
 };
 
 }

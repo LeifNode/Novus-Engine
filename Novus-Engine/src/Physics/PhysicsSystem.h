@@ -28,14 +28,19 @@ public:
 	~PhysicsSystem();
 
 	void Init();
+	void Clear();
 
 	void Update(float dt);
 
-	const std::vector<Particle*>& getParticles() const;
+	const std::vector<Particle*>* getParticles() const;
+	const std::vector<ParticleContactGenerator*>* getContactGenerators() const;
+	const std::list<ParticleForceGenerator*>* getForceGenerators() const;
+	const ParticleForceRegistry* getForceRegistry() const;
 
 	void AddParticle(Particle* particle);
 	void AddForceGenerator(ParticleForceGenerator* generator);
 	void AddRegistryEntry(Particle* particle, ParticleForceGenerator* generator);
+	void AddContactGenerator(ParticleContactGenerator* generator);
 
 	ConstraintRenderer constraintRenderer;
 

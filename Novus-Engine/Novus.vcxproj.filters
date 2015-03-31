@@ -416,6 +416,9 @@
     <ClInclude Include="src\Graphics\RenderTargets\GBufferRenderTarget.h">
       <Filter>Source Files\Graphics\RenderTargets</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\PostProcess\IPostProcessStage.h">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -609,6 +612,9 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\ConstraintRenderer.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\RenderTargets\GBufferRenderTarget.cpp">
+      <Filter>Source Files\Graphics\RenderTargets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

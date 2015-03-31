@@ -29,14 +29,14 @@ public:
 
 	void ClearRenderTargets();
 
+	void Init(int width, int height);
+	void OnResize(int width, int height);
+
 private:
 	GBuffer(const GBuffer&);
 	GBuffer& operator= (const GBuffer&);
 
-	void Init(int width, int height);
 	void DeInit();
-
-	void OnResize(int width, int height);
 
 private:
 	int mWidth, mHeight;

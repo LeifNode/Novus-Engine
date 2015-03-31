@@ -84,7 +84,7 @@ RenderPass::Type ShadowMapRenderTarget::GetRenderPass() const
 	return RenderPass::Shadow;
 }
 
-bool ShadowMapRenderTarget::ShouldRender(const Actor* actor) const
+bool ShadowMapRenderTarget::ShouldRenderActor(const Actor* actor) const
 {
 	return actor->getCastShadow();
 }

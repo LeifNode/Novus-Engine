@@ -66,7 +66,7 @@ private:
 	float mFar;
 	float mVelocity;
 
-	Vector3_t<int> mLastMousePosition;
+	Vector3i mLastMousePosition;
 
 	bool mReadingMouse;
 	bool mFreeRoam;

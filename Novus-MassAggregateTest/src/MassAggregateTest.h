@@ -29,6 +29,9 @@ namespace novus
 	class SkyboxRenderer;
 	class StaticMesh;
 	class PhysicsSystem;
+	class LineRenderer;
+	class Particle;
+	class ParticleGravity;
 }
 
 class MassAggregateTest : public novus::NovusApplication
@@ -49,11 +52,34 @@ public:
 
 	void InitShaders();
 	void InitMesh();
+	void InitPhysicsActors();
+	void InitPhysicsBounds(float particleRadius);
+
+	void ResetPhysicsSimulation();
+
+	void CreateMassAggregateBox(float pointMass, const novus::Vector3& position, const novus::Vector3& scale, novus::Particle** pArrayOut = NULL);
+	void CreateMassAggregateTetrahedron(float pointMass, const novus::Vector3& position, const novus::Vector3& scale, novus::Particle** pArrayOut = NULL);
+	void CreateMassAggregatePyramid(float pointMass, const novus::Vector3& position, const novus::Vector3& scale, novus::Particle** pArrayOut = NULL);
+
+	void CreateMassAggregateChandelier(float pointMass, const novus::Vector3& position, const novus::Vector3& scale);
+
+	void AddRod(novus::Particle* p1, novus::Particle* p2, float length = 0.0f);
+	void AddCable(novus::Particle* p1, novus::Particle* p2, float length = 0.0f);
+	void AddSpring(novus::Particle* p1, novus::Particle* p2, float springConstant, float length = 0.0f);
+
+private:
+	void UpdateContactRenderers();
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
 
 	novus::PhysicsSystem* mpPhysicsSystem;
+
+	novus::ParticleGravity* mpGravityForce;
+
+	novus::LineRenderer* mpRodRenderer;
+	novus::LineRenderer* mpCableRenderer;
+	novus::LineRenderer* mpSpringRenderer;
 
 	novus::Camera* mpCamera;
 

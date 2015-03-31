@@ -83,20 +83,29 @@ void GS(lineadj GS_INPUT points[4], uint primID : SV_PrimitiveID, inout Triangle
 			neighborUpAxis[i] = normalize(cross(toEye, normalize(toNextPoint)));
 	}
 
-	const float3 neighborPoints[4] =
+	/*const float3 neighborPoints[4] =
 	{
 		points[1].PositionW + neighborUpAxis[0] * halfLineWidth,
 		points[1].PositionW - neighborUpAxis[0] * halfLineWidth,
 		points[2].PositionW + neighborUpAxis[2] * halfLineWidth,
 		points[2].PositionW - neighborUpAxis[2] * halfLineWidth,
+	};*/
+	
+	
+	const float3 neighborPoints[4] =
+	{
+		points[1].PositionW + upAxis * halfLineWidth,
+		points[1].PositionW - upAxis * halfLineWidth,
+		points[2].PositionW + upAxis * halfLineWidth,
+		points[2].PositionW - upAxis * halfLineWidth,
 	};
 
 	const float3 outPoints[4] =
 	{
-		(points[1].PositionW + upAxis * distToEye * halfLineWidth + neighborPoints[0]) * 0.5f,
-		(points[1].PositionW - upAxis * distToEye * halfLineWidth + neighborPoints[1]) * 0.5f,
-		(points[2].PositionW + upAxis * distToEye * halfLineWidth + neighborPoints[2]) * 0.5f,
-		(points[2].PositionW - upAxis * distToEye * halfLineWidth + neighborPoints[3]) * 0.5f,
+		(points[1].PositionW + upAxis * halfLineWidth + neighborPoints[0]) * 0.5f,
+		(points[1].PositionW - upAxis * halfLineWidth + neighborPoints[1]) * 0.5f,
+		(points[2].PositionW + upAxis * halfLineWidth + neighborPoints[2]) * 0.5f,
+		(points[2].PositionW - upAxis * halfLineWidth + neighborPoints[3]) * 0.5f,
 	};
 
 	[unroll]

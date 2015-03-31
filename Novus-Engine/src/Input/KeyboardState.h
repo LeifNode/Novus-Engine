@@ -28,6 +28,8 @@ enum Type
 
 	KEY_ESC = 27,
 
+	KEY_SPACE = 32,
+
 	KEY_LEFT = 37,
 	KEY_UP,
 	KEY_RIGHT,

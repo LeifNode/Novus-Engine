@@ -28,6 +28,8 @@ public:
 
 	virtual void UpdateForce(Particle* particle, float dt) override;
 
+	void setGravity(const Vector3& gravity) { mGravity = gravity; }
+
 private:
 	Vector3 mGravity;
 };
@@ -49,6 +51,8 @@ public:
 	ParticleSpring(Particle* other, float springConstant, float restLength);
 
 	virtual void UpdateForce(Particle* particle, float dt) override;
+
+	Particle* getOther() const { return other; }
 
 private:
 	Particle* other;
@@ -103,6 +107,8 @@ public:
 	void Clear();
 
 	void Update(float dt);
+
+	const std::vector<ParticleForceRegistration>* getRegistrations() const;
 };
 
 }//namespace novus

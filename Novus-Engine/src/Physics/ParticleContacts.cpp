@@ -37,6 +37,8 @@ void ParticleContact::ResolveVelocity(float dt)
 
 	float newSepVelocity = -separatingVelocity * restitution;
 
+	//Resting contact
+	//Gets acceleration along the contact normal for one frame and 
 	Vector3 accCausedVelocity = particle[0]->getAcceleration();
 	if (particle[1])
 		accCausedVelocity -= particle[1]->getAcceleration();
@@ -60,6 +62,7 @@ void ParticleContact::ResolveVelocity(float dt)
 	if (totalInverseMass <= 0)
 		return;
 
+	//Amount of force to apply in order to apply change in velocity to both bodies
 	float impulse = deltaVelocity / totalInverseMass;
 
 	Vector3 inpulsePerIMass = contactNormal * impulse;
@@ -69,6 +72,7 @@ void ParticleContact::ResolveVelocity(float dt)
 	//	std::cout << "Is NaN\n";
 	//}
 
+	//Add impulse based on mass of each object
 	particle[0]->setVelocity(particle[0]->getVelocity() + inpulsePerIMass * particle[0]->getInverseMass());
 	if (particle[1])
 		particle[1]->setVelocity(particle[1]->getVelocity() + inpulsePerIMass * -particle[1]->getInverseMass());
@@ -85,6 +89,7 @@ void ParticleContact::ResolveInterpenetration(float dt)
 
 	Vector3 movePerIMass = contactNormal * (penetration / totalInverseMass);
 
+	//Move particles proportional to their mass
 	particleMovement[0] = movePerIMass * particle[0]->getInverseMass();
 
 	if (particle[1])
@@ -133,6 +138,34 @@ void ParticleContactResolver::ResolveContacts(ParticleContact* contactArr, unsig
 			break;
 
 		contactArr[maxIndex].Resolve(dt);
+
+		//This was left out of the code in the book's implementation even though it was talked about and referenced in the section prior
+		//If this is left out, then any objects that get affected by two or more contacts at a time will generally end up exploding since the penetration of contacts will get pulled or compressed when the contacts are resolved 
+		Vector3 *particleMovevement = contactArr[maxIndex].particleMovement;
+		for (i = 0; i < numContacts; i++)
+		{
+			//Subtract distance along the normal that the particle has moved from the penetration
+			if (contactArr[i].particle[0] == contactArr[maxIndex].particle[0])
+			{
+				contactArr[i].penetration -= Dot(particleMovevement[0], contactArr[i].contactNormal);
+			}
+			else if (contactArr[i].particle[0] == contactArr[maxIndex].particle[1])
+			{
+				contactArr[i].penetration -= Dot(particleMovevement[1], contactArr[i].contactNormal);
+			}
+
+			if (contactArr[i].particle[1] != NULL)
+			{
+				if (contactArr[i].particle[1] == contactArr[maxIndex].particle[0])
+				{
+					contactArr[i].penetration += Dot(particleMovevement[0], contactArr[i].contactNormal);
+				}
+				else if (contactArr[i].particle[1] == contactArr[maxIndex].particle[1])
+				{
+					contactArr[i].penetration += Dot(particleMovevement[1], contactArr[i].contactNormal);
+				}
+			}
+		}
 
 		iterationsUsed++;
 	}

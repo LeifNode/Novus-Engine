@@ -44,30 +44,36 @@ GBuffer::~GBuffer()
 
 void GBuffer::Init(int width, int height)
 {
-	//OnResize(width, height);
+	OnResize(width, height);
+	
+	if (mpDepthStencilState == NULL)
+	{
+		D3D11_DEPTH_STENCIL_DESC desc;
+		desc.DepthEnable = true;
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		desc.DepthFunc = D3D11_COMPARISON_LESS;
+		desc.StencilEnable = TRUE;
+		desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+		desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		const D3D11_DEPTH_STENCILOP_DESC stencilMarkOp = { D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_REPLACE, D3D11_COMPARISON_ALWAYS };
+		desc.FrontFace = stencilMarkOp;
+		desc.BackFace = stencilMarkOp;
 
-	D3D11_DEPTH_STENCIL_DESC desc;
-	desc.DepthEnable = true;
-	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	desc.DepthFunc = D3D11_COMPARISON_LESS;
-	desc.StencilEnable = TRUE;
-	desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-	desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
-	const D3D11_DEPTH_STENCILOP_DESC stencilMarkOp = { D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_REPLACE, D3D11_COMPARISON_ALWAYS };
-	desc.FrontFace = stencilMarkOp;
-	desc.BackFace = stencilMarkOp;
+		HR(EngineStatics::getRenderer()->device()->CreateDepthStencilState(&desc, &mpDepthStencilState));
+	}
 
-	HR(EngineStatics::getRenderer()->device()->CreateDepthStencilState(&desc, &mpDepthStencilState));
+	if (mpSamplerState == NULL)
+	{
+		D3D11_SAMPLER_DESC samDesc;
+		ZeroMemory(&samDesc, sizeof(samDesc));
+		samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samDesc.MaxAnisotropy = 1;
+		samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	D3D11_SAMPLER_DESC samDesc;
-	ZeroMemory(&samDesc, sizeof(samDesc));
-	samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-	samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samDesc.MaxAnisotropy = 1;
-	samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	HR(EngineStatics::getRenderer()->device()->CreateSamplerState(&samDesc, &mpSamplerState));
+		HR(EngineStatics::getRenderer()->device()->CreateSamplerState(&samDesc, &mpSamplerState));
+	}
 }
 
 void GBuffer::DeInit()

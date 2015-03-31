@@ -51,7 +51,7 @@ void ParticleSpring::UpdateForce(Particle* particle, float dt)
 	force -= other->getPosition();
 
 	float magnitude = Length(force);
-	magnitude = fabsf(magnitude - restLength);
+	magnitude = magnitude - restLength;
 	magnitude *= springConstant;
 
 	force = Normalize(force);
@@ -122,6 +122,11 @@ void ParticleForceRegistry::Add(Particle* particle, ParticleForceGenerator* fg)
 void ParticleForceRegistry::Clear()
 {
 	registrations.clear();
+}
+
+const std::vector<ParticleForceRegistry::ParticleForceRegistration>* ParticleForceRegistry::getRegistrations() const
+{
+	return &registrations;
 }
 
 }//namespace novus

@@ -62,10 +62,25 @@ public:
 	unsigned AddContact(ParticleContact* contact, unsigned limit) const override;
 
 public:
-	std::vector<Particle*>* pParticles;
+	const std::vector<Particle*>* pParticles;
 
 	Vector3 point;
 	Vector3 normal;
+	float particleRadius;
+
+	float restitution;
+};
+
+class ParticleSelfCollision : public ParticleContactGenerator
+{
+public:
+	ParticleSelfCollision(float particleRadius);
+
+	unsigned AddContact(ParticleContact* contact, unsigned limit) const override;
+
+public:
+	const std::vector<Particle*>* pParticles;
+
 	float particleRadius;
 
 	float restitution;

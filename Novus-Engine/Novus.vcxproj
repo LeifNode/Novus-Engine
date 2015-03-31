@@ -198,6 +198,7 @@
     <ClInclude Include="src\Graphics\Material.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h" />
+    <ClInclude Include="src\Graphics\PostProcess\IPostProcessStage.h" />
     <ClInclude Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.h" />
     <ClInclude Include="src\Graphics\RenderTargets\GBufferRenderTarget.h" />
     <ClInclude Include="src\Graphics\RenderTargets\IRenderTarget.h" />
@@ -291,6 +292,7 @@
     <ClCompile Include="src\Graphics\LineRenderer.cpp" />
     <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp" />
     <ClCompile Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.cpp" />
+    <ClCompile Include="src\Graphics\RenderTargets\GBufferRenderTarget.cpp" />
     <ClCompile Include="src\Graphics\RenderTargets\ShadowMapRenderTarget.cpp" />
     <ClCompile Include="src\Graphics\RenderTargets\VoxelVolumeRenderTarget.cpp" />
     <ClCompile Include="src\Graphics\Shaders\D3DLocalInclude.cpp" />

@@ -112,7 +112,7 @@ void World::RenderToRenderTarget(D3DRenderer* renderer, IRenderTarget* renderTar
 	auto endIt = mActors.cend();
 	for (auto it = mActors.cbegin(); it != endIt; ++it)
 	{
-		if (renderTarget->ShouldRender(it->second))
+		if (renderTarget->ShouldRenderActor(it->second))
 		{
 			it->second->PreRender(renderer);
 			it->second->Render(renderer);

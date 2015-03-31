@@ -40,7 +40,7 @@ public:
 
 	RenderPass::Type GetRenderPass() const override;
 
-	bool ShouldRender(const Actor* actor) const override;
+	bool ShouldRenderActor(const Actor* actor) const override;
 
 private:
 	void BuildWorldToVolumeProj();

@@ -99,7 +99,7 @@ RenderPass::Type VoxelVolumeRenderTarget::GetRenderPass() const
 	return RenderPass::GraphicsPrepass;
 }
 
-bool VoxelVolumeRenderTarget::ShouldRender(const Actor* actor) const
+bool VoxelVolumeRenderTarget::ShouldRenderActor(const Actor* actor) const
 {
 	return true;
 }
