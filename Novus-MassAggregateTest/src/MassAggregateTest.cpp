@@ -48,7 +48,7 @@ mpCableRenderer(NULL),
 mpSpringRenderer(NULL),
 mpGravityForce(NULL)
 {
-	mMainWndCaption = L"Novus Engine Material Test v0.1.66";
+	mMainWndCaption = L"Novus Engine Mass Aggregate Test v0.1.70";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
@@ -229,6 +229,8 @@ void MassAggregateTest::CreateMassAggregateBox(float pointMass, const Vector3& p
 				mpPhysicsSystem->AddParticle(boxParticle);
 				mpPhysicsSystem->AddRegistryEntry(boxParticle, mpGravityForce);
 
+				mPointLightParticles.push_back(boxParticle);
+
 				particleArray[x * 4 + y * 2 + z] = boxParticle;
 
 				if (pArrayOut != NULL)
@@ -287,6 +289,8 @@ void MassAggregateTest::CreateMassAggregateTetrahedron(float pointMass, const no
 		mpPhysicsSystem->AddParticle(tetraParticle);
 		mpPhysicsSystem->AddRegistryEntry(tetraParticle, mpGravityForce);
 
+		mPointLightParticles.push_back(tetraParticle);
+
 		particleArray[i] = tetraParticle;
 
 		if (pArrayOut != NULL)
@@ -323,6 +327,8 @@ void MassAggregateTest::CreateMassAggregatePyramid(float pointMass, const novus:
 
 		mpPhysicsSystem->AddParticle(pyramidParticle);
 		mpPhysicsSystem->AddRegistryEntry(pyramidParticle, mpGravityForce);
+
+		mPointLightParticles.push_back(pyramidParticle);
 
 		particleArray[i] = pyramidParticle;
 
@@ -378,6 +384,8 @@ void MassAggregateTest::CreateMassAggregateChandelier(float pointMass, const nov
 
 		mpPhysicsSystem->AddParticle(hangingParticle);
 		mpPhysicsSystem->AddRegistryEntry(hangingParticle, mpGravityForce);
+
+		//mPointLightParticles.push_back(hangingParticle);
 
 		AddSpring(pyramidArr[i], hangingParticle, 15.0f);
 	}
@@ -446,6 +454,7 @@ void MassAggregateTest::AddSpring(Particle* p1, Particle* p2, float springConsta
 void MassAggregateTest::ResetPhysicsSimulation()
 {
 	mpPhysicsSystem->Clear();
+	mPointLightParticles.clear();
 
 	InitPhysicsActors();
 }
@@ -526,6 +535,7 @@ void MassAggregateTest::Update(float dt)
 	mpPhysicsSystem->Update(dt);
 	
 	UpdateContactRenderers();
+	UpdatePointLights(dt);
 }
 
 void MassAggregateTest::UpdateContactRenderers()
@@ -567,6 +577,20 @@ void MassAggregateTest::UpdateContactRenderers()
 	mpRodRenderer->ReloadPoints();
 	mpCableRenderer->ReloadPoints();
 	mpSpringRenderer->ReloadPoints();
+}
+
+void MassAggregateTest::UpdatePointLights(float dt)
+{
+	for (auto it = mPointLightParticles.cbegin(); it != mPointLightParticles.cend(); ++it)
+	{
+		PointLight light;
+		light.Color = Vector3(1.0f);
+		light.Intensity = 0.4f;
+		light.PositionWorld = (*it)->getPosition();
+		light.Radius = 0.0f;
+
+		mpRenderer->getDeferredRenderer()->getLightManager()->AddLightForFrame(light);
+	}
 }
 
 void MassAggregateTest::Render()
@@ -622,7 +646,7 @@ void MassAggregateTest::Render()
 	perObject.Material.SpecularColor = Vector3(1.0f, 1.0f, 1.0f);
 	perObject.Material.Emissive = Vector3(0.0f);
 	perObject.Material.Metallic = 0.0f;
-	perObject.Material.Roughness = 0.4f;
+	perObject.Material.Roughness = 0.2f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);
 

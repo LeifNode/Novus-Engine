@@ -13,6 +13,7 @@
 #include "Application/Common.h"
 #include "Graphics/StructuredBuffer.h"
 #include "Graphics/Lights.h"
+#include "Graphics/LightManager.h"
 #include "Graphics/Textures/Texture2D.h"
 
 namespace novus
@@ -34,6 +35,8 @@ public:
 
 	class Texture2D* getHDRRenderTarget() const { return mpHDRRenderTarget; }
 
+	LightManager* getLightManager() const { return mpLightManager; }
+
 private:
 	int mMaxLightCount;
 
@@ -48,7 +51,7 @@ private:
 
 	StructuredBuffer<PointLight> mLightBuffer;
 
-	std::vector<PointLight> mTestPointLights;
+	LightManager* mpLightManager;
 };
 
 }

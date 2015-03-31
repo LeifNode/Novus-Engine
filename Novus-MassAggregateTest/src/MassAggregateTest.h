@@ -69,6 +69,7 @@ public:
 
 private:
 	void UpdateContactRenderers();
+	void UpdatePointLights(float dt);
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
@@ -80,6 +81,7 @@ private:
 	novus::LineRenderer* mpRodRenderer;
 	novus::LineRenderer* mpCableRenderer;
 	novus::LineRenderer* mpSpringRenderer;
+	std::vector<novus::Particle*> mPointLightParticles;
 
 	novus::Camera* mpCamera;
 

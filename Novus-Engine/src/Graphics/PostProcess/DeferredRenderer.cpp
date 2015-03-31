@@ -15,15 +15,17 @@ namespace novus
 		mpEnvironmentSampler(NULL),
 		mpEnvMap(NULL),
 		mpBRDFLUT(NULL),
-		mMaxLightCount(128)
+		mMaxLightCount(1024)
 {
 	mpHDRRenderTarget = NE_NEW Texture2D();
+	mpLightManager = NE_NEW LightManager();
 }
 
 DeferredRenderer::~DeferredRenderer()
 {
 	ReleaseCOM(mpPointSampler);
 	ReleaseCOM(mpEnvironmentSampler);
+	NE_DELETE(mpLightManager);
 	NE_DELETE(mpHDRRenderTarget);
 	NE_DELETE(mpEnvMap);
 	NE_DELETE(mpBRDFLUT);
@@ -55,23 +57,23 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 
 		mpDebugOutputShader = renderer->LoadShader(L"../Shaders/Utils/DebugFullscreenTriangle.hlsl", debugShaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, NULL, 0);
 
-		mTestPointLights.clear();
-		mTestPointLights.reserve(mMaxLightCount);
-		for (int i = 0; i < mMaxLightCount; i++)
-		{
-			PointLight light;
-			light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
-			//light.Color = Vector3(1.0f, 1.0f, 1.0f);
-			light.Intensity = Math::RandF(0.3f, 5.7f) * 0.3f;
-			light.Radius = 0.0f;
+		//mTestPointLights.clear();
+		//mTestPointLights.reserve(mMaxLightCount);
+		//for (int i = 0; i < mMaxLightCount; i++)
+		//{
+		//	PointLight light;
+		//	light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
+		//	//light.Color = Vector3(1.0f, 1.0f, 1.0f);
+		//	light.Intensity = Math::RandF(0.3f, 2.7f) * 0.1f;
+		//	light.Radius = 0.0f;
 
-			light.Range = sqrt(light.Intensity / 0.002f) - 1.0f + light.Radius;
-			light.FalloffPow = 1;
-			light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 20.0f;
-			light.PositionWorld.y = Math::RandF(0.8f, 9.5f);
+		//	light.Range = sqrt(light.Intensity / 0.002f) - 1.0f + light.Radius;
+		//	light.FalloffPow = 1;
+		//	light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 20.0f;
+		//	light.PositionWorld.y = Math::RandF(0.8f, 9.5f);
 
-			mTestPointLights.push_back(light);
-		}
+		//	mTestPointLights.push_back(light);
+		//}
 
 		D3D11_SAMPLER_DESC samDesc;
 		ZeroMemory(&samDesc, sizeof(samDesc));
@@ -110,10 +112,12 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 
 void DeferredRenderer::Update(float dt)
 {
-	for (int i = 0; i < mMaxLightCount; i++)
+	/*for (int i = 0; i < mMaxLightCount; i++)
 	{
 		mTestPointLights[i].PositionWorld = Matrix3::RotateY(dt * 0.02f) * mTestPointLights[i].PositionWorld;
-	}
+	}*/
+
+	mpLightManager->ClearLights();
 }
 
 void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
@@ -127,11 +131,20 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 	PointLight* lightBufferPtr = mLightBuffer.Map(renderer);
 	for (int i = 0; i < mMaxLightCount; i++)
 	{
-		PointLight light = mTestPointLights[i];
-		light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);
-		//light.PositionView.z = -light.PositionView.z;
+		if (i < mpLightManager->getLights().size())
+		{
+			PointLight light = mpLightManager->getLights()[i];
+			light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);
+			light.Range = light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
+			//light.PositionView.z = -light.PositionView.z;
 
-		lightBufferPtr[i] = light;
+			lightBufferPtr[i] = light;
+		}
+		else
+		{
+			lightBufferPtr[i].Intensity = 0.0f;
+			lightBufferPtr[i].Range = 0.0f;
+		}
 	}
 	mLightBuffer.Unmap(renderer);
 
