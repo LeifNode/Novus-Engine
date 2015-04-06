@@ -87,6 +87,7 @@ public:
 
 	void ResetSamplerState();
 	void ResetRenderTarget();
+	void ResetRasterizerState();
 
 	Shader* LoadShader(const WCHAR* filePath,
 					   const ShaderInfo* shaderInfo, 
@@ -158,6 +159,7 @@ private:
 	CBPerFrame mPerFrameData;
 	ID3D11Buffer* mpPerObjectBuffer;
 	ID3D11SamplerState* mpSamplerState;
+	ID3D11RasterizerState* mpRasterizerState;
 	ID3D11BlendState* mpBlendStateAlpha;
 	ID3D11BlendState* mpBlendStateOpaque;
 

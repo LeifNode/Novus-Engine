@@ -628,10 +628,10 @@ void MassAggregateTest::Render()
 		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 		perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		perObject.Material.Emissive = Vector3(0.0f, 0.0f, 0.0f);
+		perObject.Material.Emissive = Vector3(0.5f);
 		perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
 		perObject.Material.Metallic = 0.0f;
-		perObject.Material.Roughness = 0.15f;
+		perObject.Material.Roughness = 0.12f;
 		mpRenderer->setPerObjectBuffer(perObject);
 
 		mMeshRenderer.Render(mpRenderer);

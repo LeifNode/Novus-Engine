@@ -38,13 +38,14 @@ public:
 
 	void setPosition(const Vector3& position);
 	void setDirection(const Vector3& direction);
+	Vector3 getDirection() const { return mDirection; }
 
 	void setVolumePerspectiveBounds(float fovAngleY, float aspectHByW, float nearZ, float farZ);
 	void setVolumeOrthographicBounds(float width, float height, float depth);
 
-	Matrix4 getRenderTransform() const;
+	Matrix4 getRenderTransform();
 
-	Matrix4 getSampleTransform() const;
+	Matrix4 getSampleTransform();
 
 	Texture2D* getTexture() const { return mpRenderTarget; }
 
@@ -55,12 +56,14 @@ private:
 	Texture2D* mpRenderTarget;
 	ID3D11DepthStencilView* mpDepthView;
 
-	mutable bool mTransformDirty;
+	ID3D11RasterizerState* mpRasterizerState;
+
+	bool mTransformDirty;
 
 	Matrix4 mProjectionMatrix;
-	mutable Matrix4 mViewMatrix;
-	mutable Matrix4 mTransform;
-	mutable Matrix4 mSampleTransform;
+	Matrix4 mViewMatrix;
+	Matrix4 mTransform;
+	Matrix4 mSampleTransform;
 };
 
 }

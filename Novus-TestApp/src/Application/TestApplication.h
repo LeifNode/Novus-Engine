@@ -29,6 +29,8 @@ namespace novus
 	class SkyboxRenderer;
 	class StaticMesh;
 	class ShadowMapRenderTarget;
+	class VoxelVolumeRenderTarget;
+	class GlobalIlluminationPass;
 }
 
 class TestApplication : public novus::NovusApplication
@@ -60,6 +62,8 @@ private:
 	novus::Shader* mpDepthPassShader;
 
 	novus::ShadowMapRenderTarget* mpShadowMap;
+	novus::VoxelVolumeRenderTarget* mpVoxelVolume;
+	novus::GlobalIlluminationPass* mpGlobalIlluminationRenderPass;
 
 	novus::CBPerFrame mPerFrameData;
 

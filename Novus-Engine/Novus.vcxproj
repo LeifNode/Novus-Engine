@@ -198,6 +198,7 @@
     <ClInclude Include="src\Graphics\Material.h" />
     <ClInclude Include="src\Graphics\MeshRenderer.h" />
     <ClInclude Include="src\Graphics\PostProcess\DeferredRenderer.h" />
+    <ClInclude Include="src\Graphics\PostProcess\GlobalIlluminationPass.h" />
     <ClInclude Include="src\Graphics\PostProcess\IPostProcessStage.h" />
     <ClInclude Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.h" />
     <ClInclude Include="src\Graphics\RenderTargets\GBufferRenderTarget.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="src\Graphics\TextRenderer.h" />
     <ClInclude Include="src\Graphics\Textures\Texture2D.h" />
     <ClInclude Include="src\Graphics\Textures\Texture3D.h" />
+    <ClInclude Include="src\Graphics\VXGI\VoxelRadianceVolume.h" />
     <ClInclude Include="src\Input\InputSystem.h" />
     <ClInclude Include="src\Input\KeyboardState.h" />
     <ClInclude Include="src\Input\MouseState.h" />
@@ -291,6 +293,7 @@
     <ClCompile Include="src\Graphics\LightManager.cpp" />
     <ClCompile Include="src\Graphics\LineRenderer.cpp" />
     <ClCompile Include="src\Graphics\PostProcess\DeferredRenderer.cpp" />
+    <ClCompile Include="src\Graphics\PostProcess\GlobalIlluminationPass.cpp" />
     <ClCompile Include="src\Graphics\PostProcess\PrefilteredEnvironmentMap.cpp" />
     <ClCompile Include="src\Graphics\RenderTargets\GBufferRenderTarget.cpp" />
     <ClCompile Include="src\Graphics\RenderTargets\ShadowMapRenderTarget.cpp" />
@@ -302,6 +305,7 @@
     <ClCompile Include="src\Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture2D.cpp" />
     <ClCompile Include="src\Graphics\Textures\Texture3D.cpp" />
+    <ClCompile Include="src\Graphics\VXGI\VoxelRadianceVolume.cpp" />
     <ClCompile Include="src\Input\InputSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardState.cpp" />
     <ClCompile Include="src\Input\MouseState.cpp" />

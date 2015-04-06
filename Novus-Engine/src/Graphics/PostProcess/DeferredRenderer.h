@@ -33,6 +33,8 @@ public:
 
 	void RenderDebugOutput(class D3DRenderer* renderer);
 
+	void setSourceRenderTarget(class Texture2D* texture) { mpSourceRenderTarget = texture; }
+
 	class Texture2D* getHDRRenderTarget() const { return mpHDRRenderTarget; }
 
 	LightManager* getLightManager() const { return mpLightManager; }
@@ -44,6 +46,7 @@ private:
 	class Shader* mpLUTShader;
 	class Shader* mpDebugOutputShader;
 	class Texture2D* mpHDRRenderTarget;
+	class Texture2D* mpSourceRenderTarget;
 	class Texture2D* mpBRDFLUT;
 	class PrefilteredEnvironmentMap* mpEnvMap;
 	ID3D11SamplerState* mpPointSampler;

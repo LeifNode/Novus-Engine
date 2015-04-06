@@ -7,7 +7,7 @@
 
 #include "Common.hlsl"
 
-Texture3D<float4> gVoxelVolume     : register(t0);
+Texture3D<float4> gVoxelVolume       : register(t0);
 
 SamplerState gVolumeSampler        : register(s0);
 
@@ -15,7 +15,13 @@ RWTexture2D<float4> gOutputTexture : register(u0);
 
 float3 WorldToVolume(float3 world)
 {
-	return (world.xyz / float(15.0f).xxx + 1.0f) * 0.5f;
+	return (mul(gWorldViewProj, float4(world, 1.0f)).xyz + 1.0f) * 0.5f;
+	//return (world.xyz / float(15.0f).xxx + 1.0f) * 0.5f;
+}
+
+float4 convRGBA8ToVec4(uint val)
+{
+	return float4(float((val & 0x000000FF)), float((val & 0x0000FF00) >> 8U), float((val & 0x00FF0000) >> 16U), float((val & 0xFF000000) >> 24U));
 }
 
 [numthreads(COMPUTE_SHADER_TILE_GROUP_DIM, COMPUTE_SHADER_TILE_GROUP_DIM, 1)]
@@ -49,8 +55,8 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	forward = normalize(forward);
 
 	//Find amount to advance each sample
-	const int sampleCount = 256;
-	const float maxDistance = 10.0f;
+	const int sampleCount = 1024;
+	const float maxDistance = 20.0f;
 	forward *= maxDistance / sampleCount;
 
 	//Setup ray
@@ -62,15 +68,16 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	[loop]
 	for (int i = 0; i < sampleCount; i++)
 	{
-		//sampleColor = gVoxelVolume.SampleLevel(gVolumeSampler, WorldToVolume(samplePosition), 0);
+		//sampleColor = convRGBA8ToVec4(gVoxelVolume.SampleLevel(gVolumeSampler, WorldToVolume(samplePosition), 0));
 		sampleColor = gVoxelVolume.Load(int4(WorldToVolume(samplePosition) * volumeDimensions, 0));
 
+		if (sampleColor.a > 0.0f)
+			sampleColor.a = 1.0f;
+
 		//Average colors if this ray is partially occluded
-		[branch]
 		if (occlusion < 1.0f)
 		{
 			finalColor.rgb += sampleColor.rgb * (sampleColor.a + occlusion > 1.0f ? 1.0f - occlusion : sampleColor.a);
-			
 		}
 		else
 		{

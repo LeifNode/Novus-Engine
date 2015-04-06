@@ -36,6 +36,7 @@ cbuffer cbPerFrame : register(b0)
 cbuffer cbPerObject : register(b1)
 {
 	float4x4 gWorld;
+	float4x4 gWorldView;
 	float4x4 gWorldViewProj;
 	float4x4 gWorldInvTranspose;
 	float4x4 gTextureTransform;

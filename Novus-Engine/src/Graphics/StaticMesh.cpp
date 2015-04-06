@@ -149,6 +149,7 @@ void StaticMesh::Render(D3DRenderer* renderer)
 
 		CBPerObject perObject;
 		perObject.World = renderer->GetTopTransform();
+		perObject.WorldView = perObject.World * perFrame->View;
 		perObject.WorldViewProj = perObject.World * perFrame->ViewProj;
 		perObject.WorldInvTranspose = Matrix4::Inverse(Matrix4::Transpose(perObject.World));
 		perObject.TextureTransform = Matrix4(1.0f);

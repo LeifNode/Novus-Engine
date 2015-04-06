@@ -108,6 +108,9 @@
     <Filter Include="Source Files\Graphics\RenderTargets">
       <UniqueIdentifier>{3bb620f7-d260-4ac6-b965-5560a7eb1516}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics\VXGI">
+      <UniqueIdentifier>{01ff3a18-75cd-4a01-b961-160e4242d92c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\D3DRenderer.h">
@@ -419,6 +422,12 @@
     <ClInclude Include="src\Graphics\PostProcess\IPostProcessStage.h">
       <Filter>Source Files\Graphics\PostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\PostProcess\GlobalIlluminationPass.h">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\VXGI\VoxelRadianceVolume.h">
+      <Filter>Source Files\Graphics\VXGI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">
@@ -615,6 +624,12 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\RenderTargets\GBufferRenderTarget.cpp">
       <Filter>Source Files\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\PostProcess\GlobalIlluminationPass.cpp">
+      <Filter>Source Files\Graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\VXGI\VoxelRadianceVolume.cpp">
+      <Filter>Source Files\Graphics\VXGI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

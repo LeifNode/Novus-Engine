@@ -10,18 +10,23 @@ namespace novus
 ShadowMapRenderTarget::ShadowMapRenderTarget()
 	: mpRenderTarget(NULL),
 	mpDepthView(NULL),
+	mpRasterizerState(NULL),
 	mTransformDirty(true)
 {
 }
 
 ShadowMapRenderTarget::~ShadowMapRenderTarget()
 {
+	ReleaseCOM(mpRasterizerState);
 	ReleaseCOM(mpDepthView);
 	NE_DELETE(mpRenderTarget);
 }
 
 void ShadowMapRenderTarget::Init(int width, int height)
 {
+	ReleaseCOM(mpDepthView);
+	NE_DELETE(mpRenderTarget);
+
 	mpRenderTarget = NE_NEW Texture2D();
 
 	mpRenderTarget->Init(EngineStatics::getRenderer(), 
@@ -41,6 +46,22 @@ void ShadowMapRenderTarget::Init(int width, int height)
 	dsvd.Texture2D.MipSlice = 0;
 
 	HR(EngineStatics::getRenderer()->device()->CreateDepthStencilView(mpRenderTarget->getTexture(), &dsvd, &mpDepthView));
+
+	if (mpRasterizerState == NULL)
+	{
+		D3D11_RASTERIZER_DESC rasterDesc;
+		ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+		rasterDesc.FillMode = D3D11_FILL_SOLID;
+		rasterDesc.CullMode = D3D11_CULL_NONE;
+		rasterDesc.FrontCounterClockwise = true;
+		//rasterDesc.DepthBias = 12746; //Expected depth bias (0.01 in this case) / 0.0000007845
+		rasterDesc.DepthBias = 0;
+		rasterDesc.DepthBiasClamp = 0.0f;
+		rasterDesc.SlopeScaledDepthBias = 1.0f;
+
+		HR(EngineStatics::getRenderer()->device()->CreateRasterizerState(&rasterDesc, &mpRasterizerState));
+	}
 }
 
 void ShadowMapRenderTarget::BindTarget(D3DRenderer* renderer)
@@ -53,6 +74,7 @@ void ShadowMapRenderTarget::BindTarget(D3DRenderer* renderer)
 	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
 	perFrame.View = mViewMatrix;
 	perFrame.ViewInv = Matrix4::Inverse(perFrame.View);
+	//perFrame.ScreenResolution = Vector2u(mpRenderTarget->getWidth(), mpRenderTarget->getHeight());
 	perFrame.EyePosition = mPosition;
 
 	renderer->setPerFrameBuffer(perFrame);
@@ -67,6 +89,8 @@ void ShadowMapRenderTarget::BindTarget(D3DRenderer* renderer)
 
 	renderer->context()->RSSetViewports(1, &viewport);
 
+	renderer->context()->RSSetState(mpRasterizerState);
+
 	ID3D11RenderTargetView* renderTargets[1] = { 0 };
 	renderer->context()->OMSetRenderTargets(1, renderTargets, mpDepthView);
 
@@ -77,6 +101,7 @@ void ShadowMapRenderTarget::UnbindTarget(D3DRenderer* renderer)
 {
 	ID3D11RenderTargetView* renderTargets[1] = { 0 };
 	renderer->context()->OMSetRenderTargets(1, renderTargets, NULL);
+	renderer->ResetRasterizerState();
 }
 
 RenderPass::Type ShadowMapRenderTarget::GetRenderPass() const
@@ -113,21 +138,23 @@ void ShadowMapRenderTarget::setVolumeOrthographicBounds(float width, float heigh
 	mProjectionMatrix = Matrix4::Orthographic(width, height, 0.0f, depth);
 }
 
-Matrix4 ShadowMapRenderTarget::getRenderTransform() const
+Matrix4 ShadowMapRenderTarget::getRenderTransform()
 {
-	if (mTransformDirty)
-	{
-		mViewMatrix = Matrix4::LookToward(mPosition, mDirection, Vector3(0.0f, 1.0f, 0.0f));
+	//if (mTransformDirty)
+	//{
+		mViewMatrix = Matrix4::LookToward(mPosition, -mDirection, Vector3(0.0f, 1.0f, 0.0f));
 		mTransform = mViewMatrix * mProjectionMatrix;
-	}
+
+		mTransformDirty = false;
+	//}
 
 	return mTransform;
 }
 
-Matrix4 ShadowMapRenderTarget::getSampleTransform() const
+Matrix4 ShadowMapRenderTarget::getSampleTransform()
 {
-	if (mTransformDirty)
-	{
+	//if (mTransformDirty)
+	//{
 		Matrix4 renderTransform = getRenderTransform();
 
 		Matrix4 clipToSampleTransform = Matrix4(0.5f, 0.0f, 0.0f, 0.0f,
@@ -135,8 +162,8 @@ Matrix4 ShadowMapRenderTarget::getSampleTransform() const
 												0.0f, 0.0f, 1.0f, 0.0f,
 												0.5f, 0.5f, 0.0f, 1.0f);
 
-		mSampleTransform = renderTransform;
-	}
+		mSampleTransform = renderTransform * clipToSampleTransform;
+	//}
 
 	return mSampleTransform;
 }

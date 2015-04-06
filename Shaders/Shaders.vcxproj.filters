@@ -75,5 +75,8 @@
       <Filter>Deferred</Filter>
     </FxCompile>
     <FxCompile Include="DepthPassShader.hlsl" />
+    <FxCompile Include="VXGI\GlobalIlluminationPass.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

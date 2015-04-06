@@ -26,6 +26,7 @@ D3DRenderer::D3DRenderer()
 	mpPerObjectBuffer(NULL),
 	mpBlendStateAlpha(NULL),
 	mpBlendStateOpaque(NULL),
+	mpRasterizerState(NULL),
 	mpGBuffer(NULL),
 	//mpHDRRenderTarget(NULL),
 	mpDeferredRenderer(NULL),
@@ -70,6 +71,7 @@ D3DRenderer::~D3DRenderer()
 	ReleaseCOM(mpBlendStateAlpha);
 	ReleaseCOM(mpBlendStateOpaque);
 	ReleaseCOM(mpSamplerState);
+	ReleaseCOM(mpRasterizerState);
 	ReleaseCOM(mpPerFrameBuffer);
 	ReleaseCOM(mpPerObjectBuffer);
 	ReleaseCOM(mpRenderTarget);
@@ -294,15 +296,11 @@ bool D3DRenderer::Init()
 	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.CullMode = D3D11_CULL_NONE;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
 	rasterDesc.FrontCounterClockwise = true;
 
-	ID3D11RasterizerState* rasterState;
-
-	mpd3dDevice->CreateRasterizerState(&rasterDesc, &rasterState);
-	mpd3dImmediateContext->RSSetState(rasterState);
-
-	ReleaseCOM(rasterState);
+	mpd3dDevice->CreateRasterizerState(&rasterDesc, &mpRasterizerState);
+	mpd3dImmediateContext->RSSetState(mpRasterizerState);
 
 	D3D11_BLEND_DESC blendDesc;
 	ZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
@@ -967,6 +965,12 @@ void D3DRenderer::ResetRenderTarget()
 {
 	mpd3dImmediateContext->OMSetRenderTargetsAndUnorderedAccessViews(1, &mpRenderTarget, mpDepthStencilView, 0, 0, NULL, 0);
 }
+
+void D3DRenderer::ResetRasterizerState()
+{
+	mpd3dImmediateContext->RSSetState(mpRasterizerState);
+}
+
 //
 //void D3DRenderer::Clear(RenderTarget* target)
 //{

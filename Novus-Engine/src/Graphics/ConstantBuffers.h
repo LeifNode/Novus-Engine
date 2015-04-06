@@ -60,6 +60,7 @@ struct CBPerFrame
 struct CBPerObject
 {
 	Matrix4 World;
+	Matrix4 WorldView;
 	Matrix4 WorldViewProj;
 	Matrix4 WorldInvTranspose;
 	Matrix4 TextureTransform;

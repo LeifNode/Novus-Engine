@@ -15,6 +15,7 @@ namespace novus
 		mpEnvironmentSampler(NULL),
 		mpEnvMap(NULL),
 		mpBRDFLUT(NULL),
+		mpSourceRenderTarget(NULL),
 		mMaxLightCount(1024)
 {
 	mpHDRRenderTarget = NE_NEW Texture2D();
@@ -108,6 +109,8 @@ void DeferredRenderer::Init(D3DRenderer* renderer, int width, int height)
 
 	mpHDRRenderTarget->Init(renderer, width, height, DXGI_FORMAT_R16G16B16A16_FLOAT, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_RENDER_TARGET);
 	mpHDRRenderTarget->setDebugName("HDR Render Target");
+
+	mpSourceRenderTarget = mpHDRRenderTarget;
 }
 
 void DeferredRenderer::Update(float dt)
@@ -135,7 +138,7 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 		{
 			PointLight light = mpLightManager->getLights()[i];
 			light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);
-			light.Range = light.Range = sqrt(light.Intensity / 0.001f) - 1.0f + light.Radius;
+			light.Range = light.Range = sqrt(light.Intensity / 0.0005f) - 1.0f + light.Radius;
 			//light.PositionView.z = -light.PositionView.z;
 
 			lightBufferPtr[i] = light;
@@ -178,7 +181,7 @@ void DeferredRenderer::RenderDebugOutput(D3DRenderer* renderer)
 	renderer->ResetRenderTarget();
 	renderer->ResetSamplerState();
 	renderer->setSampler(0, mpPointSampler);
-	renderer->setTextureResource(0, mpHDRRenderTarget);
+	renderer->setTextureResource(0, mpSourceRenderTarget);
 
 	renderer->context()->IASetVertexBuffers(0, 0, 0, 0, 0);
 	renderer->context()->IASetIndexBuffer(NULL, (DXGI_FORMAT)0, 0);

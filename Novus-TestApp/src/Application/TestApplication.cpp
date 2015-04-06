@@ -20,6 +20,8 @@
 #include <Core/Actor.h>
 #include <Core/Components/StaticMeshComponent.h>
 #include <Graphics/RenderTargets/ShadowMapRenderTarget.h>
+#include <Graphics/RenderTargets/VoxelVolumeRenderTarget.h>
+#include <Graphics/PostProcess/GlobalIlluminationPass.h>
 
 using namespace novus;
 
@@ -54,8 +56,10 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpMesh(NULL),
 	mpVoxelTexture(NULL),
 	mpShadowMap(NULL),
+	mpVoxelVolume(NULL),
 	mRenderVoxelization(false),
-	mVoxelResolution(512)
+	mVoxelResolution(256),
+	mpGlobalIlluminationRenderPass(NULL)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.1.65";
 
@@ -74,7 +78,9 @@ TestApplication::~TestApplication()
 	NE_DELETE(mpCamera);
 	NE_DELETE(mpSkyboxRenderer);
 	NE_DELETE(mpVoxelTexture);
+	NE_DELETE(mpVoxelVolume);
 	NE_DELETE(mpShadowMap);
+	NE_DELETE(mpGlobalIlluminationRenderPass);
 }
 
 bool TestApplication::Init()
@@ -102,7 +108,7 @@ bool TestApplication::Init()
 
 	mpShadowMap = NE_NEW ShadowMapRenderTarget();
 	mpShadowMap->Init(2048, 2048);
-	mpShadowMap->setDirection(Normalize(Vector3(0.0f, 1.0f, 0.5f)));
+	mpShadowMap->setDirection(Normalize(Vector3(0.0f, -1.0f, 0.5f)));
 	mpShadowMap->setPosition(Vector3(0.0f, 20.0f, 10.0f));
 	mpShadowMap->setVolumeOrthographicBounds(40.0f, 40.0f, 60.0f);
 
@@ -111,16 +117,17 @@ bool TestApplication::Init()
 	mpSkyboxRenderer = NE_NEW SkyboxRenderer();
 	mpSkyboxRenderer->Init(L"../Textures/sunsetcube1024.dds");
 
-	mpVoxelTexture = NE_NEW Texture3D();
-	mpVoxelTexture->Init(mpRenderer, 
-						 mVoxelResolution, 
-						 mVoxelResolution, 
-						 mVoxelResolution, 
-						 DXGI_FORMAT_R8G8B8A8_UNORM, 
-						 Math::MipMapCount(mVoxelResolution, mVoxelResolution), 
-						 D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS);
+	mpVoxelVolume = NE_NEW VoxelVolumeRenderTarget();
+	mpVoxelVolume->Init(mVoxelResolution);
+	mpVoxelVolume->setBounds(30.0f, 30.0f, 30.0f);
 
-	mpVoxelTexture->setDebugName("Voxel Volume");
+	mpWorld->RegisterRenderTarget(mpVoxelVolume);
+
+	mpGlobalIlluminationRenderPass = NE_NEW GlobalIlluminationPass();
+	mpGlobalIlluminationRenderPass->Init(getClientWidth(), getClientHeight());
+	mpGlobalIlluminationRenderPass->setGBuffer(mpRenderer->getGBuffer());
+	mpGlobalIlluminationRenderPass->setShadowMap(mpShadowMap);
+	mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, 0.5f)));
 
 	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");
 
@@ -205,15 +212,18 @@ void TestApplication::OnResize()
 	NovusApplication::OnResize();
 
 	mpCamera->OnResize(getClientWidth(), getClientHeight());
+
+	if (mpGlobalIlluminationRenderPass != NULL)
+		mpGlobalIlluminationRenderPass->Init(getClientWidth(), getClientHeight());
 }
 
 void TestApplication::Update(float dt)
 {
-	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 	mpCamera->Update(dt);
-	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
+
+	mpShadowMap->setDirection(mpGlobalIlluminationRenderPass->getLightDirection());
 
 	EngineStatics::getWorld()->Update(dt);
 }
@@ -229,32 +239,9 @@ void TestApplication::Render()
 
 	Vector4 clearColor = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	mpRenderer->context()->ClearRenderTargetView(mpVoxelTexture->getRenderTargetView(), &clearColor.x);
-
 	//Render voxelization
-	Matrix4 voxelProjection = Matrix4::OrthographicOffCenter(15.0f, -15.0f, -15.0f, 15.0f, -15.0f, 15.0f);
-
-	perFrame.ScreenResolution = Vector2_t<unsigned int>(
-		static_cast<unsigned int>(getClientWidth()),
-		static_cast<unsigned int>(getClientHeight()));
-	perFrame.ClipNearFar = Vector2(mpCamera->getNear(), mpCamera->getFar());
-	perFrame.Projection = voxelProjection;
-	perFrame.ProjectionInv = Matrix4::Inverse(perFrame.Projection);
-	perFrame.View = Matrix4(1.0f);
-	perFrame.ViewInv = Matrix4::Inverse(perFrame.View);
-	perFrame.ViewProj = perFrame.View * perFrame.Projection;
-	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
-	perFrame.EyePosition = mpCamera->getPosition();
-
 	mpRenderer->setShader(mpVoxelizationShader);
-	mpRenderer->setPerFrameBuffer(perFrame);
-
-	ID3D11UnorderedAccessView* voxelUAV = mpVoxelTexture->getUnorderedAccessView();
-	mpRenderer->context()->OMSetRenderTargetsAndUnorderedAccessViews(0, NULL, NULL, 0, 1, &voxelUAV, 0);
-	mpRenderer->setViewport(0, 0, mVoxelResolution, mVoxelResolution);
-	mpRenderer->PushTransform(Matrix4::Scale(0.01f));
-	mpMesh->Render(mpRenderer);
-	mpRenderer->PopTransform();
+	mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
 
 	//Render meshes as normal
 	perFrame.ScreenResolution = Vector2_t<unsigned int>(
@@ -289,6 +276,8 @@ void TestApplication::Render()
 
 	mpSkyboxRenderer->Render(mpRenderer);
 
+	mpGlobalIlluminationRenderPass->Execute(mpRenderer);
+
 	if (mRenderVoxelization)
 	{
 		mpRenderer->ResetRenderTarget();
@@ -299,7 +288,13 @@ void TestApplication::Render()
 		mpRenderer->BindPerFrameBuffer();
 		mpRenderer->ResetSamplerState();
 
-		ID3D11ShaderResourceView* voxelSRV = mpVoxelTexture->getResourceView();
+		CBPerObject perObject;
+		ZeroMemory(&perObject, sizeof(perObject));
+		perObject.WorldViewProj = mpVoxelVolume->getWorldToVolume();
+
+		mpRenderer->setPerObjectBuffer(perObject);
+
+		ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getNormalTexture()->getResourceView();
 		mpRenderer->context()->CSSetShaderResources(0, 1, &voxelSRV);
 
 		ID3D11UnorderedAccessView* outputUAV = mpRenderer->getDeferredRenderer()->getHDRRenderTarget()->getUnorderedAccessView();
@@ -313,9 +308,15 @@ void TestApplication::Render()
 
 		mpRenderer->UnbindTextureResources();
 		mpRenderer->UnbindUAVs();
+
+		//mpRenderer->getDeferredRenderer()->setSourceRenderTarget(mpGlobalIlluminationRenderPass->getRenderTarget());
 	}
 	else
+	{
 		mpRenderer->RenderDeferredShading();
+
+		mpRenderer->getDeferredRenderer()->setSourceRenderTarget(mpRenderer->getDeferredRenderer()->getHDRRenderTarget());
+	}
 
 	mpRenderer->getDeferredRenderer()->RenderDebugOutput(mpRenderer);
 

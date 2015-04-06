@@ -5,6 +5,7 @@ namespace novus
 {
 
 Transform::Transform()
+	: mScale(1.0f)
 {}
 
 Transform::~Transform()

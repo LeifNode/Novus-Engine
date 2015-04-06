@@ -67,7 +67,7 @@ PS_GBUFFER_OUT PS(PS_INPUT pin)
 
 	[flatten]
 	if (gMaterial.HasDiffuseTexture)
-		diffuseColor = gDiffuseTexture.Sample(gSamplerState, pin.Tex);
+		diffuseColor = pow(gDiffuseTexture.Sample(gSamplerState, pin.Tex), 2.2f);
 
 	[flatten]
 	if (gMaterial.HasSpecularTexture)

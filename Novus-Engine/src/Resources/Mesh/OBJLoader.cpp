@@ -317,6 +317,11 @@ void OBJLoader::LoadMatLib(const std::wstring& path)
 	File* matLibFile = NE_NEW File();
 	matLibFile->Load(path);
 
+	if (!matLibFile->good())
+	{
+		NE_WARN("MtlLib file could not be opened.", "OBJLoader");
+	}
+
 	ParseMaterials(matLibFile);
 
 	NE_DELETE(matLibFile);

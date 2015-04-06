@@ -34,6 +34,12 @@ public:
 
 	int getResolution() const { return mResolution; }
 
+	Texture3D* getTexture() const { return mpVoxelTexture; }
+	Texture3D* getNormalTexture() const { return mpNormalTexture; }
+	Texture3D* getEmissiveTexture() const { return mpEmissiveTexture; }
+
+	Matrix4 getWorldToVolume() const { return mWorldToVolume; }
+
 	void BindTarget(D3DRenderer* renderer) override;
 
 	void UnbindTarget(D3DRenderer* renderer) override;
@@ -47,6 +53,10 @@ private:
 
 private:
 	Texture3D* mpVoxelTexture;
+	Texture3D* mpNormalTexture;
+	Texture3D* mpEmissiveTexture;
+
+	ID3D11RasterizerState* mpRasterizerState;
 
 	int mResolution;
 
