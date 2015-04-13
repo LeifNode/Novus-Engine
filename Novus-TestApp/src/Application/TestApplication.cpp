@@ -3,6 +3,7 @@
 #include <Application/EngineStatics.h>
 #include <Events/Events.h>
 #include <Events/EventSystem.h>
+#include <Input/InputSystem.h>
 #include <Resources/Font/Font.h>
 #include <Resources/Font/FontManager.h>
 #include <Math/Math.h>
@@ -22,6 +23,7 @@
 #include <Graphics/RenderTargets/ShadowMapRenderTarget.h>
 #include <Graphics/RenderTargets/VoxelVolumeRenderTarget.h>
 #include <Graphics/PostProcess/GlobalIlluminationPass.h>
+#include <Graphics/VXGI/VoxelRadianceVolume.h>
 
 using namespace novus;
 
@@ -59,7 +61,11 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpVoxelVolume(NULL),
 	mRenderVoxelization(false),
 	mVoxelResolution(256),
-	mpGlobalIlluminationRenderPass(NULL)
+	mpGlobalIlluminationRenderPass(NULL),
+	mpRadianceVolume(NULL),
+	mSceneVoxelized(false),
+	mShadowOffset(0.0f),
+	mRequiresReinject(true)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.1.65";
 
@@ -81,6 +87,7 @@ TestApplication::~TestApplication()
 	NE_DELETE(mpVoxelVolume);
 	NE_DELETE(mpShadowMap);
 	NE_DELETE(mpGlobalIlluminationRenderPass);
+	NE_DELETE(mpRadianceVolume);
 }
 
 bool TestApplication::Init()
@@ -93,6 +100,7 @@ bool TestApplication::Init()
 	HookInputEvents();
 
 	InitShaders();
+	InitLights();
 
 	novus::Font* verdana = mpFontManager->LoadFont(
 		"verdana",
@@ -108,8 +116,8 @@ bool TestApplication::Init()
 
 	mpShadowMap = NE_NEW ShadowMapRenderTarget();
 	mpShadowMap->Init(2048, 2048);
-	mpShadowMap->setDirection(Normalize(Vector3(0.0f, -1.0f, 0.5f)));
-	mpShadowMap->setPosition(Vector3(0.0f, 20.0f, 10.0f));
+	mpShadowMap->setDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+	mpShadowMap->setPosition(Vector3(0.0f, 20.0f, 0.0f));
 	mpShadowMap->setVolumeOrthographicBounds(40.0f, 40.0f, 60.0f);
 
 	mpWorld->RegisterRenderTarget(mpShadowMap);
@@ -123,11 +131,15 @@ bool TestApplication::Init()
 
 	mpWorld->RegisterRenderTarget(mpVoxelVolume);
 
+	mpRadianceVolume = NE_NEW VoxelRadianceVolume();
+	mpRadianceVolume->Init(mpVoxelVolume, mpShadowMap);
+
 	mpGlobalIlluminationRenderPass = NE_NEW GlobalIlluminationPass();
 	mpGlobalIlluminationRenderPass->Init(getClientWidth(), getClientHeight());
 	mpGlobalIlluminationRenderPass->setGBuffer(mpRenderer->getGBuffer());
 	mpGlobalIlluminationRenderPass->setShadowMap(mpShadowMap);
-	mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, 0.5f)));
+	mpGlobalIlluminationRenderPass->setVoxelVolume(mpRadianceVolume);
+	mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
 
 	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");
 
@@ -185,6 +197,26 @@ void TestApplication::InitShaders()
 	mpDebugRaymarchShader = mpRenderer->LoadShader(L"../Shaders/VXGI/DebugRaymarchVolume.hlsl", raymarchShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
 }
 
+void TestApplication::InitLights()
+{
+	mLights.clear();
+	mLights.reserve(256);
+	for (int i = 0; i < 256; i++)
+	{
+		PointLight light;
+		light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
+		//light.Color = Vector3(1.0f, 1.0f, 1.0f);
+		light.Intensity = Math::RandF(0.3f, 2.7f) * 0.65f;
+		light.Radius = 0.0f;
+
+		light.FalloffPow = 1;
+		light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 20.0f;
+		light.PositionWorld.y = Math::RandF(0.8f, 9.5f);
+
+		mLights.push_back(light);
+	}
+}
+
 void TestApplication::HookInputEvents()
 {
 	EngineStatics::getEventSystem()->AddListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
@@ -223,6 +255,26 @@ void TestApplication::Update(float dt)
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
 
+	auto endIt = mLights.end();
+	for (auto it = mLights.begin(); it != endIt; ++it)
+	{
+		(*it).PositionWorld = Matrix3::RotateY(dt * 0.02f) * (*it).PositionWorld;
+		mpRenderer->getDeferredRenderer()->getLightManager()->AddLightForFrame(*it);
+	}
+
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
+	{
+		mShadowOffset = Math::Clamp(mShadowOffset + 0.1f * dt, -1.0f, 1.0f);
+		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+		mRequiresReinject = true;
+	}
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
+	{
+		mShadowOffset = Math::Clamp(mShadowOffset - 0.1f * dt, -1.0f, 1.0f);
+		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+		mRequiresReinject = true;
+	}
+
 	mpShadowMap->setDirection(mpGlobalIlluminationRenderPass->getLightDirection());
 
 	EngineStatics::getWorld()->Update(dt);
@@ -232,18 +284,20 @@ void TestApplication::Render()
 {
 	mpRenderer->PreRender();
 
-	mpRenderer->setShader(mpDepthPassShader);
-	mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
-	CBPerFrame perFrame;
+	if (!mSceneVoxelized || mRequiresReinject)
+	{
+		mpRenderer->setShader(mpDepthPassShader);
+		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
-	Vector4 clearColor = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	//Render voxelization
-	mpRenderer->setShader(mpVoxelizationShader);
-	mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
+		//Render voxelization
+		mpRenderer->setShader(mpVoxelizationShader);
+		mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
+	}
 
 	//Render meshes as normal
+	CBPerFrame perFrame;
+
 	perFrame.ScreenResolution = Vector2_t<unsigned int>(
 		static_cast<unsigned int>(getClientWidth()), 
 		static_cast<unsigned int>(getClientHeight()));
@@ -278,6 +332,12 @@ void TestApplication::Render()
 
 	mpGlobalIlluminationRenderPass->Execute(mpRenderer);
 
+	if (mRequiresReinject)
+	{
+		mpRadianceVolume->InjectRadiance(mpRenderer);
+		mRequiresReinject = false;
+	}
+
 	if (mRenderVoxelization)
 	{
 		mpRenderer->ResetRenderTarget();
@@ -294,7 +354,8 @@ void TestApplication::Render()
 
 		mpRenderer->setPerObjectBuffer(perObject);
 
-		ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getNormalTexture()->getResourceView();
+		//ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getNormalTexture()->getResourceView();
+		ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceVolume()->getResourceView();
 		mpRenderer->context()->CSSetShaderResources(0, 1, &voxelSRV);
 
 		ID3D11UnorderedAccessView* outputUAV = mpRenderer->getDeferredRenderer()->getHDRRenderTarget()->getUnorderedAccessView();
@@ -309,7 +370,7 @@ void TestApplication::Render()
 		mpRenderer->UnbindTextureResources();
 		mpRenderer->UnbindUAVs();
 
-		//mpRenderer->getDeferredRenderer()->setSourceRenderTarget(mpGlobalIlluminationRenderPass->getRenderTarget());
+		mpRenderer->getDeferredRenderer()->setSourceRenderTarget(mpGlobalIlluminationRenderPass->getRenderTarget());
 	}
 	else
 	{
@@ -321,4 +382,6 @@ void TestApplication::Render()
 	mpRenderer->getDeferredRenderer()->RenderDebugOutput(mpRenderer);
 
 	mpRenderer->PostRender();
+
+	mSceneVoxelized = true;
 }

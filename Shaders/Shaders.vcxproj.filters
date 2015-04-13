@@ -78,5 +78,17 @@
     <FxCompile Include="VXGI\GlobalIlluminationPass.hlsl">
       <Filter>VXGI</Filter>
     </FxCompile>
+    <FxCompile Include="VXGI\InjectRadianceFromDirectionalLight.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
+    <FxCompile Include="VXGI\VoxelGICommon.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
+    <FxCompile Include="VXGI\FilerVoxelVolumeMIP.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
+    <FxCompile Include="VXGI\CopyVoxelOcclusion.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

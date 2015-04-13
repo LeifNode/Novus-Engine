@@ -16,6 +16,7 @@
 #include "Shaders/Shader.h"
 #include "ConstantBuffers.h"
 #include "Textures/Texture2D.h"
+#include "Textures/Texture3D.h"
 #include "Math/MatrixStack.h"
 
 namespace novus
@@ -53,6 +54,7 @@ public:
 	IDXGISwapChain* swapChain() const { return mpSwapChain; }
 
 	void setTextureResource(int index, Texture2D*);
+	void setTextureResource(int index, Texture3D*);
 	void setTextureResources(Texture2D** texArray, int startSlot, unsigned count);
 	void setTextureResources(ID3D11ShaderResourceView** texArray, int startSlot, unsigned count);
 	void setSampler(int index, ID3D11SamplerState* samplerState);

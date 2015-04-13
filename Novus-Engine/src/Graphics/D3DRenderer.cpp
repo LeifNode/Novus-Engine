@@ -623,6 +623,25 @@ void D3DRenderer::setTextureResource(int index, Texture2D* texture)
 	}
 }
 
+void D3DRenderer::setTextureResource(int index, Texture3D* texture)
+{
+	if (mpActiveShader)
+	{
+		if (mpActiveShader->hasVertexShader())
+			context()->VSSetShaderResources(index, 1, &texture->mpResourceView);
+		if (mpActiveShader->hasPixelShader())
+			context()->PSSetShaderResources(index, 1, &texture->mpResourceView);
+		if (mpActiveShader->hasGeometryShader())
+			context()->GSSetShaderResources(index, 1, &texture->mpResourceView);
+		if (mpActiveShader->hasComputeShader())
+			context()->CSSetShaderResources(index, 1, &texture->mpResourceView);
+		if (mpActiveShader->hasHullShader())
+			context()->HSSetShaderResources(index, 1, &texture->mpResourceView);
+		if (mpActiveShader->hasDomainShader())
+			context()->DSSetShaderResources(index, 1, &texture->mpResourceView);
+	}
+}
+
 void D3DRenderer::setTextureResources(Texture2D** texArray, int startSlot, unsigned count)
 {
 	if (mpActiveShader)

@@ -6,6 +6,7 @@
 //================================================================
 
 #include "Utils/ConstantBuffers.hlsl"
+#include "VXGI/VoxelGICommon.hlsl"
 
 RWTexture3D<uint> gVoxelVolume   : register(u0);
 RWTexture3D<uint> gVoxelNormals  : register(u1);
@@ -41,16 +42,6 @@ struct PS_INPUT
 	//float3 Bitangent: BITANGENT;
 	float2 Tex   : TEXCOORD;
 };
-
-float4 convRGBA8ToVec4(uint val)
-{
-	return float4(float((val & 0x000000FF)), float((val & 0x0000FF00) >> 8U), float((val & 0x00FF0000) >> 16U), float((val & 0xFF000000) >> 24U));
-}
-
-uint convVec4ToRGBA8(float4 val)
-{
-	return (uint (val.w) & 0x000000FF) << 24U | (uint(val.z) & 0x000000FF) << 16U | (uint(val.y) & 0x000000FF) << 8U | (uint(val.x) & 0x000000FF);
-}
 
 //Averages the color stored in a specific texel
 void imageAtomicRGBA8Avg(RWTexture3D<uint> imgUI, uint3 coords, float4 val)
@@ -235,9 +226,9 @@ void PS(PS_INPUT pin)
 	int3 texDimensions;
 	gVoxelVolume.GetDimensions(texDimensions.x, texDimensions.y, texDimensions.z);
 
-	uint3 texIndex = uint3(((pin.PosW.x * -0.5) + 0.5f) * texDimensions.x, 
-						   ((pin.PosW.y * -0.5) + 0.5f) * texDimensions.y, 
-						   ((pin.PosW.z * -0.5) + 0.5f) * texDimensions.z);
+	uint3 texIndex = uint3(((pin.PosW.x * 0.5) + 0.5f) * texDimensions.x, 
+						   ((pin.PosW.y * 0.5) + 0.5f) * texDimensions.y, 
+						   ((pin.PosW.z * 0.5) + 0.5f) * texDimensions.z);
 
 	float4 normal = float4(pin.Normal, 1.0f);
 

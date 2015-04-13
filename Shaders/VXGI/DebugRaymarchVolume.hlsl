@@ -15,7 +15,7 @@ RWTexture2D<float4> gOutputTexture : register(u0);
 
 float3 WorldToVolume(float3 world)
 {
-	return (mul(gWorldViewProj, float4(world, 1.0f)).xyz + 1.0f) * 0.5f;
+	return mul(gWorldViewProj, float4(-world, 1.0f)).xyz * 0.5f + 0.5f;
 	//return (world.xyz / float(15.0f).xxx + 1.0f) * 0.5f;
 }
 
@@ -27,6 +27,8 @@ float4 convRGBA8ToVec4(uint val)
 [numthreads(COMPUTE_SHADER_TILE_GROUP_DIM, COMPUTE_SHADER_TILE_GROUP_DIM, 1)]
 void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 {
+	int mipLevel = 3;
+
 	uint2 globalCoords = dispatchThreadID.xy;
 
 	uint2 outputDimensions;
@@ -55,8 +57,8 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	forward = normalize(forward);
 
 	//Find amount to advance each sample
-	const int sampleCount = 1024;
-	const float maxDistance = 20.0f;
+	const int sampleCount = 256;
+	const float maxDistance = 15.0f;
 	forward *= maxDistance / sampleCount;
 
 	//Setup ray
@@ -69,10 +71,10 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	for (int i = 0; i < sampleCount; i++)
 	{
 		//sampleColor = convRGBA8ToVec4(gVoxelVolume.SampleLevel(gVolumeSampler, WorldToVolume(samplePosition), 0));
-		sampleColor = gVoxelVolume.Load(int4(WorldToVolume(samplePosition) * volumeDimensions, 0));
+		sampleColor = gVoxelVolume.Load(int4(WorldToVolume(samplePosition) * volumeDimensions / pow(2, mipLevel), mipLevel));
 
-		if (sampleColor.a > 0.0f)
-			sampleColor.a = 1.0f;
+		//if (sampleColor.a > 0.0f)
+			//sampleColor.a = 1.0f;
 
 		//Average colors if this ray is partially occluded
 		if (occlusion < 1.0f)

@@ -43,6 +43,9 @@ public:
 	void setVolumePerspectiveBounds(float fovAngleY, float aspectHByW, float nearZ, float farZ);
 	void setVolumeOrthographicBounds(float width, float height, float depth);
 
+	Matrix4 getView() const { return mViewMatrix; }
+	Matrix4 getProjection() const { return mProjectionMatrix; }
+
 	Matrix4 getRenderTransform();
 
 	Matrix4 getSampleTransform();

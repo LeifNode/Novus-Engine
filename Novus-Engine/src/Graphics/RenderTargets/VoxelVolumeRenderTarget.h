@@ -37,6 +37,7 @@ public:
 	Texture3D* getTexture() const { return mpVoxelTexture; }
 	Texture3D* getNormalTexture() const { return mpNormalTexture; }
 	Texture3D* getEmissiveTexture() const { return mpEmissiveTexture; }
+	Vector3 getBounds() const { return mBounds; }
 
 	Matrix4 getWorldToVolume() const { return mWorldToVolume; }
 
@@ -55,6 +56,10 @@ private:
 	Texture3D* mpVoxelTexture;
 	Texture3D* mpNormalTexture;
 	Texture3D* mpEmissiveTexture;
+
+	ID3D11UnorderedAccessView** mpVoxelMipArr;
+	ID3D11UnorderedAccessView** mpNormalMipArr;
+	ID3D11UnorderedAccessView** mpEmissiveMipArr;
 
 	ID3D11RasterizerState* mpRasterizerState;
 

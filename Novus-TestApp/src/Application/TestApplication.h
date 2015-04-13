@@ -20,6 +20,7 @@
 #include <Graphics/Geometry.h>
 #include <Events/EventSystem.h>
 #include <Math/Math.h>
+#include <Graphics/Lights.h>
 
 namespace novus
 {
@@ -31,6 +32,7 @@ namespace novus
 	class ShadowMapRenderTarget;
 	class VoxelVolumeRenderTarget;
 	class GlobalIlluminationPass;
+	class VoxelRadianceVolume;
 }
 
 class TestApplication : public novus::NovusApplication
@@ -50,6 +52,7 @@ public:
 	void OnKeyDown(novus::IEventDataPtr eventData);
 
 	void InitShaders();
+	void InitLights();
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
@@ -65,12 +68,20 @@ private:
 	novus::VoxelVolumeRenderTarget* mpVoxelVolume;
 	novus::GlobalIlluminationPass* mpGlobalIlluminationRenderPass;
 
+	novus::VoxelRadianceVolume* mpRadianceVolume;
+
 	novus::CBPerFrame mPerFrameData;
 
 	novus::StaticMesh* mpMesh;
 
 	novus::Texture3D* mpVoxelTexture;
 
+	std::vector<novus::PointLight> mLights;
+
+	float mShadowOffset;
+	bool mRequiresReinject;
+
+	bool mSceneVoxelized;
 	bool mRenderVoxelization;
 	int mVoxelResolution;
 };

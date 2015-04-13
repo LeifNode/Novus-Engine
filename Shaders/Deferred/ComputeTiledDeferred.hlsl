@@ -127,7 +127,13 @@ void ComputeShaderTileCS(uint3 groupID          :SV_GroupID,
 		{
 			for (uint tileLightIndex = 0; tileLightIndex < numLights; ++tileLightIndex)
 			{
-				AccumulateBRDF(surface, gPointLights[TileLightIndices[tileLightIndex]], toEye, finalColor);
+				float3 toLight = surface.PositionWorld - gPointLights[TileLightIndices[tileLightIndex]].PositionWorld;
+				float distSq = dot(toLight, toLight);
+				float rangeSq = gPointLights[TileLightIndices[tileLightIndex]].Range;
+				rangeSq *= rangeSq;
+
+				if (distSq < rangeSq)
+					AccumulateBRDF(surface, gPointLights[TileLightIndices[tileLightIndex]], toEye, finalColor);
 			}
 		}
 	}
