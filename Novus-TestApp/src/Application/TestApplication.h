@@ -78,7 +78,8 @@ private:
 
 	std::vector<novus::PointLight> mLights;
 
-	float mShadowOffset;
+	float mShadowOffsetX;
+	float mShadowOffsetY;
 	bool mRequiresReinject;
 
 	bool mSceneVoxelized;

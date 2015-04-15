@@ -12,6 +12,7 @@
 
 #include "Application/Common.h"
 #include "Math/Math.h"
+#include "Graphics/VXGI/VoxelGICommon.h"
 
 namespace novus
 {
@@ -25,18 +26,6 @@ class VoxelRadianceVolume;
 
 class GlobalIlluminationPass
 {
-	struct CBVoxelGI
-	{
-		Matrix4 WorldToVoxelVolume;
-
-		Vector3i VoxelVolumeDim;
-		int VoxelMipCount;
-
-		Vector3 pad;
-		float VoxelScale; //Size of one voxel in meters
-	};
-
-
 	struct CBShadowPass
 	{
 		Vector3 LightDirection;

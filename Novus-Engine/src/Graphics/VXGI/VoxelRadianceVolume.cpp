@@ -10,24 +10,30 @@ namespace novus
 {
 
 VoxelRadianceVolume::VoxelRadianceVolume()
-:mpRadianceInjectionShader(NULL),
-mpVoxelFilterShader(NULL),
+:mpVoxelFilterShader(NULL),
+mpRadianceInjectionShader(NULL),
+mpVoxelAnisotropicFilterShader(NULL),
 mpCopyOcclusionShader(NULL),
 mpSourceVolume(NULL),
 mpSourceShadowMap(NULL),
 mpVoxelRadianceVolume(NULL),
-mpRadianceInjectionBuffer(NULL),
-mpDebugPositionOut(NULL)
+mpDebugPositionOut(NULL),
+mpAnisotropicMips(NULL)
 {
 }
 
 VoxelRadianceVolume::~VoxelRadianceVolume()
 {
 	NE_DELETE(mpVoxelRadianceVolume);
+	NE_DELETE(mpAnisotropicMips);
 	NE_DELETE(mpDebugPositionOut);
-	ReleaseCOM(mpRadianceInjectionBuffer);
 
 	for (auto it = mMipUavs.begin(); it != mMipUavs.end(); ++it)
+	{
+		ReleaseCOM((*it));
+	}
+
+	for (auto it = mAnisotropicMipUavs.begin(); it != mAnisotropicMipUavs.end(); ++it)
 	{
 		ReleaseCOM((*it));
 	}
@@ -48,8 +54,7 @@ void VoxelRadianceVolume::Init(VoxelVolumeRenderTarget* sourceVolume, ShadowMapR
 
 void VoxelRadianceVolume::InitShaders(D3DRenderer* renderer)
 {
-	mpRadianceInjectionShader = renderer->getShader("../Shaders/VXGI/InjectRadianceFromDirectionalLight");
-
+	mpRadianceInjectionShader = renderer->getShader("../Shaders/VXGI/InjectRadianceFromDirectionalLight.hlsl");
 	if (mpRadianceInjectionShader == NULL)
 	{
 		ShaderInfo injectionShaderInfo[] = {
@@ -60,8 +65,7 @@ void VoxelRadianceVolume::InitShaders(D3DRenderer* renderer)
 		mpRadianceInjectionShader = renderer->LoadShader(L"../Shaders/VXGI/InjectRadianceFromDirectionalLight.hlsl", injectionShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
 	}
 
-	mpVoxelFilterShader = renderer->getShader("../Shaders/VXGI/InjectRadianceFromDirectionalLight");
-
+	mpVoxelFilterShader = renderer->getShader("../Shaders/VXGI/FilerVoxelVolumeMIP.hlsl");
 	if (mpVoxelFilterShader == NULL)
 	{
 		ShaderInfo filterShaderInfo[] = {
@@ -72,8 +76,29 @@ void VoxelRadianceVolume::InitShaders(D3DRenderer* renderer)
 		mpVoxelFilterShader = renderer->LoadShader(L"../Shaders/VXGI/FilerVoxelVolumeMIP.hlsl", filterShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
 	}
 
-	mpCopyOcclusionShader = renderer->getShader("../Shaders/VXGI/CopyVoxelOcclusion.hlsl");
+	mpVoxelAnisotropicFilterShader = renderer->getShader("../Shaders/VXGI/FilerVoxelVolumeMIPAnisotropic.hlsl");
+	if (mpVoxelAnisotropicFilterShader == NULL)
+	{
+		ShaderInfo filterShaderInfo[] = {
+			{ ShaderType::Compute, "VoxelVolumeMipMap" },
+			{ ShaderType::None, NULL }
+		};
 
+		mpVoxelAnisotropicFilterShader = renderer->LoadShader(L"../Shaders/VXGI/FilerVoxelVolumeMIPAnisotropic.hlsl", filterShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
+	}
+
+	mpVoxelFilterBaseMipShader = renderer->getShader("../Shaders/VXGI/FilterVoxelBaseMIPAnisotropic.hlsl");
+	if (mpVoxelFilterBaseMipShader == NULL)
+	{
+		ShaderInfo filterShaderInfo[] = {
+			{ ShaderType::Compute, "VoxelVolumeMipMap" },
+			{ ShaderType::None, NULL }
+		};
+
+		mpVoxelFilterBaseMipShader = renderer->LoadShader(L"../Shaders/VXGI/FilterVoxelBaseMIPAnisotropic.hlsl", filterShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
+	}
+
+	mpCopyOcclusionShader = renderer->getShader("../Shaders/VXGI/CopyVoxelOcclusion.hlsl");
 	if (mpCopyOcclusionShader == NULL)
 	{
 		ShaderInfo copyShaderInfo[] = {
@@ -104,6 +129,23 @@ void VoxelRadianceVolume::InitRadianceVolume(D3DRenderer* renderer)
 
 	mpVoxelRadianceVolume->setDebugName("Radiance Voxel Volume");
 
+	int halfResolution = resolution / 2;
+
+	mpAnisotropicMips = NE_NEW Texture3D();
+	mpAnisotropicMips->Init(renderer,
+		halfResolution * 6,
+		halfResolution,
+		halfResolution,
+		DXGI_FORMAT_R8G8B8A8_TYPELESS,
+		Math::MipMapCount(halfResolution, halfResolution),
+		D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS,
+		0,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R32_UINT);
+
+	mpAnisotropicMips->setDebugName("Radiance Voxel Volume Anisotropic Mips");
+
 	mpDebugPositionOut = NE_NEW Texture2D();
 	mpDebugPositionOut->Init(renderer,
 		mpSourceShadowMap->getTexture()->getWidth(),
@@ -117,18 +159,8 @@ void VoxelRadianceVolume::InitRadianceVolume(D3DRenderer* renderer)
 
 void VoxelRadianceVolume::InitConstantBuffers(D3DRenderer* renderer)
 {
-	if (mpRadianceInjectionBuffer == NULL)
-	{
-		D3D11_BUFFER_DESC bd;
-		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(CBLightInjectionPass);
-		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		bd.MiscFlags = 0;
-		bd.StructureByteStride = 0;
-
-		HR(renderer->device()->CreateBuffer(&bd, NULL, &mpRadianceInjectionBuffer));
-	}
+	mRadianceInjectionBuffer.Init(renderer);
+	mFilterBuffer.Init(renderer);
 }
 
 void VoxelRadianceVolume::InitMipUAVs(D3DRenderer* renderer)
@@ -149,6 +181,22 @@ void VoxelRadianceVolume::InitMipUAVs(D3DRenderer* renderer)
 		HR(renderer->device()->CreateUnorderedAccessView(mpVoxelRadianceVolume->getTexture(), &uavDesc, &mipUav));
 
 		mMipUavs.push_back(mipUav);
+	}
+
+	for (int i = 0; i < mipCount - 1; i++)
+	{
+		D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+		uavDesc.Format = DXGI_FORMAT_R32_UINT;
+		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE3D;
+		uavDesc.Texture3D.MipSlice = i;
+		uavDesc.Texture3D.FirstWSlice = 0;
+		uavDesc.Texture3D.WSize = -1;
+
+		ID3D11UnorderedAccessView* mipUav;
+
+		HR(renderer->device()->CreateUnorderedAccessView(mpAnisotropicMips->getTexture(), &uavDesc, &mipUav));
+
+		mAnisotropicMipUavs.push_back(mipUav);
 	}
 }
 
@@ -199,7 +247,7 @@ void VoxelRadianceVolume::InjectRadiance(D3DRenderer* renderer)
 	unsigned int dispatchHeight = (mpSourceShadowMap->getTexture()->getHeight() + 16 - 1) / 16;
 
 	CBLightInjectionPass injectionCB;
-	injectionCB.LightColor = Vector3(1.0f);
+	injectionCB.LightColor = Math::Lerp(Vector3(1.0f, 0.8952f, 0.8666f) * 1.0f, Vector3(1.0000f, 0.7992f, 0.6045f) * 1.0f, abs(mpSourceShadowMap->getDirection().z * 2.0f));
 	injectionCB.LightDirection = mpSourceShadowMap->getDirection();
 	injectionCB.LightIntensity = 1.0f;
 	injectionCB.ShadowMapDimensions = Vector2(mpSourceShadowMap->getTexture()->getWidth(), mpSourceShadowMap->getTexture()->getHeight());
@@ -207,17 +255,15 @@ void VoxelRadianceVolume::InjectRadiance(D3DRenderer* renderer)
 	injectionCB.ShadowToVoxelVolume = injectionCB.ShadowToWorld * mpSourceVolume->getWorldToVolume();
 	injectionCB.VoxelVolumeDimensions = Vector3i(mpSourceVolume->getResolution());
 
-	D3D11_MAPPED_SUBRESOURCE resource;
-	HR(renderer->context()->Map(mpRadianceInjectionBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource));
-	CBLightInjectionPass* constantBuffer = static_cast<CBLightInjectionPass*>(resource.pData);
+	CBLightInjectionPass* constantBuffer = mRadianceInjectionBuffer.Map(renderer);
 
 	*constantBuffer = injectionCB;
-	renderer->context()->Unmap(mpRadianceInjectionBuffer, 0);
+	mRadianceInjectionBuffer.Unmap(renderer);
 
 	renderer->setShader(mpRadianceInjectionShader);
-	renderer->setConstantBuffer(3, mpRadianceInjectionBuffer);
 	renderer->BindPerFrameBuffer();
 	renderer->ResetRenderTarget();
+	mRadianceInjectionBuffer.Bind(3, renderer);
 
 	ID3D11UnorderedAccessView* outputUavs[] =
 	{
@@ -243,6 +289,13 @@ void VoxelRadianceVolume::FilterMips(D3DRenderer* renderer)
 	{
 		FilerMipLevel(renderer, i);
 	}
+
+	FilterBaseMip(renderer);
+
+	for (int i = 1; i < mAnisotropicMipUavs.size(); i++)
+	{
+		FilerAnisotropicMipLevel(renderer, i);
+	}
 }
 
 void VoxelRadianceVolume::FilerMipLevel(D3DRenderer* renderer, int level)
@@ -266,6 +319,72 @@ void VoxelRadianceVolume::FilerMipLevel(D3DRenderer* renderer, int level)
 	};
 
 	renderer->setShader(mpVoxelFilterShader);
+
+	renderer->context()->CSSetUnorderedAccessViews(0, 2, outputUavs, 0);
+
+	renderer->context()->Dispatch(dispatchWidth, dispatchHeight, dispatchDepth);
+}
+
+void VoxelRadianceVolume::FilterBaseMip(D3DRenderer* renderer)
+{
+	ID3D11UnorderedAccessView* sourceUav = mpVoxelRadianceVolume->getUnorderedAccessView();
+	ID3D11UnorderedAccessView* targetUav = mAnisotropicMipUavs[0];
+
+	unsigned int mipFraction = 2;
+
+	unsigned int dispatchWidth = (mpVoxelRadianceVolume->getWidth() / mipFraction + 8 - 1) / 8;
+	unsigned int dispatchHeight = (mpVoxelRadianceVolume->getHeight() / mipFraction + 8 - 1) / 8;
+	unsigned int dispatchDepth = (mpVoxelRadianceVolume->getDepth() / mipFraction + 8 - 1) / 8;
+
+	CBVoxelGI* buffer = mFilterBuffer.Map(renderer);
+	ZeroMemory(buffer, sizeof(CBVoxelGI));
+
+	buffer->VoxelVolumeDim = Vector3i(mpVoxelRadianceVolume->getWidth() / mipFraction);
+	mFilterBuffer.Unmap(renderer);
+
+	ID3D11UnorderedAccessView* outputUavs[] =
+	{
+		sourceUav,
+		targetUav
+	};
+
+	renderer->setShader(mpVoxelFilterBaseMipShader);
+
+	mFilterBuffer.Bind(2, renderer);
+	renderer->context()->CSSetUnorderedAccessViews(0, 2, outputUavs, 0);
+
+	renderer->context()->Dispatch(dispatchWidth, dispatchHeight, dispatchDepth);
+}
+
+void VoxelRadianceVolume::FilerAnisotropicMipLevel(D3DRenderer* renderer, int level)
+{
+	if (level == 0 || level >= mAnisotropicMipUavs.size())
+		return;
+
+	ID3D11UnorderedAccessView* sourceUav = mAnisotropicMipUavs[level - 1];
+	ID3D11UnorderedAccessView* targetUav = mAnisotropicMipUavs[level];
+
+	unsigned int mipFraction = pow(2, level);
+
+	unsigned int dispatchWidth = ((mpAnisotropicMips->getWidth() / mipFraction) / 6 + 8 - 1) / 8;
+	unsigned int dispatchHeight = (mpAnisotropicMips->getHeight() / mipFraction + 8 - 1) / 8;
+	unsigned int dispatchDepth = (mpAnisotropicMips->getDepth() / mipFraction + 8 - 1) / 8;
+
+	CBVoxelGI* buffer = mFilterBuffer.Map(renderer);
+	ZeroMemory(buffer, sizeof(CBVoxelGI));
+
+	buffer->VoxelVolumeDim = Vector3i(mpVoxelRadianceVolume->getWidth() / (mipFraction * 2));
+	mFilterBuffer.Unmap(renderer);
+
+	ID3D11UnorderedAccessView* outputUavs[] =
+	{
+		sourceUav,
+		targetUav
+	};
+
+	renderer->setShader(mpVoxelAnisotropicFilterShader);
+
+	mFilterBuffer.Bind(2, renderer);
 
 	renderer->context()->CSSetUnorderedAccessViews(0, 2, outputUavs, 0);
 

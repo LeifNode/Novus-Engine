@@ -11,6 +11,15 @@
 
 #include "Utils/Math.hlsl"
 
+static const float cMipDirectionalOffsets[] = {
+	0.0f,
+	1.0f / 6.0f,
+	2.0f / 6.0f,
+	3.0f / 6.0f,
+	4.0f / 6.0f,
+	5.0f / 6.0f
+};
+
 cbuffer cbVoxelGI : register(b2)
 {
 	float4x4 gWorldToVoxelVolume;
@@ -70,6 +79,33 @@ float4 sampleVoxelVolume(Texture3D<float4> voxelTexture, SamplerState voxelSampl
 	float mipLevel = getMipLevelFromRadius(radius);
 
 	return voxelTexture.SampleLevel(voxelSampler, voxelPos, mipLevel);
+}	
+
+float4 sampleVoxelVolumeAnisotropic(Texture3D<float4> voxelTexture, Texture3D<float4> voxelMips, SamplerState voxelSampler, float3 worldPosition, float radius, float3 direction)
+{
+	//direction = -direction;
+	uint3 isNegative = (direction < 0.0f);
+	float3 dirSq = direction * direction;
+
+	float3 voxelPos = worldToVoxelVolume(worldPosition);
+
+	float mipLevel = getMipLevelFromRadius(radius);
+	float anisotropicMipLevel = mipLevel - 1.0f;
+
+	float4 mip0Sample = voxelTexture.SampleLevel(voxelSampler, voxelPos, mipLevel);
+
+	voxelPos.x /= 6.0f;
+
+	float4 xSample = voxelMips.SampleLevel(voxelSampler, voxelPos + float3(cMipDirectionalOffsets[isNegative.x], 0.0f, 0.0f), anisotropicMipLevel);
+	float4 ySample = voxelMips.SampleLevel(voxelSampler, voxelPos + float3(cMipDirectionalOffsets[isNegative.y + 2], 0.0f, 0.0f), anisotropicMipLevel);
+	float4 zSample = voxelMips.SampleLevel(voxelSampler, voxelPos + float3(cMipDirectionalOffsets[isNegative.z + 4], 0.0f, 0.0f), anisotropicMipLevel);
+
+	float4 filteredColor = dirSq.x * xSample + dirSq.y * ySample + dirSq.z * zSample;
+
+	filteredColor = lerp(mip0Sample, filteredColor, 1.0f);
+	filteredColor.a = mip0Sample.a;
+
+	return filteredColor;
 }
 
 void accumilateColorOcclusion(float4 sampleColor, inout float3 colorAccum, inout float occlusionAccum)
@@ -103,28 +139,45 @@ float4 filterAnsiotropicVoxelDirection(float4 f1, float4 f2, float4 f3, float4 f
 
 	int i = 0;
 
-	/*[unroll]
-	for (i = 0; i < 4; i++)
-	{
-		accumilateColorOcclusion(frontVoxels[i], directionalAccum[i].rgb, directionalAccum[i].a);
-	}*/
-
 	[unroll]
 	for (i = 0; i < 4; i++)
 	{
 		directionalAccum[i] = frontVoxels[i];
 	}
 
+	/*[unroll]
+	for (i = 0; i < 4; i++)
+	{
+		accumilateColorOcclusion(frontVoxels[i], directionalAccum[i].rgb, directionalAccum[i].a);
+	}*/
+
+	float totalOcclusion = 0.0f;
+
 	[unroll]
 	for (i = 0; i < 4; i++)
 	{
 		accumilateColorOcclusion(backVoxels[i], directionalAccum[i].rgb, directionalAccum[i].a);
+
+		totalOcclusion += directionalAccum[i].a;
 	}
 
-	return (directionalAccum[0] + directionalAccum[1] + directionalAccum[2] + directionalAccum[3]) * 0.25f;
+	float4 finalAccum = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	[unroll]
+	for (i = 0; i < 4; i++)
+	{
+		finalAccum.rgb += directionalAccum[i].rgb * (directionalAccum[i].a / totalOcclusion);
+	}
+
+	finalAccum.a = totalOcclusion * 0.25f;
+
+	return finalAccum;
 }
 
-
+float4 filterAnsiotropicVoxelDirectionBase(float4 f1, float4 f2, float4 f3, float4 f4, float4 b1, float4 b2, float4 b3, float4 b4)
+{
+	return filterAnsiotropicVoxelDirection(f1, f2, f3, f4, b1, b2, b3, b4);
+}
 
 static const float3 cVXGIConeSampleDirections[] =
 {

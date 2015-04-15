@@ -10,8 +10,9 @@
 #include "Lighting/Shading.hlsl"
 #include "VXGI/VoxelGICommon.hlsl"
 
-Texture2D<float> gShadowMap        : register(t5);
-Texture3D<float4> gVoxelVolume     : register(t6);
+Texture2D<float> gShadowMap                    : register(t5);
+Texture3D<float4> gVoxelVolume                 : register(t6);
+Texture3D<float4> gVoxelVolumeAnisotropicMips  : register(t7);
 
 SamplerState gShadowSampler        : register(s0);
 SamplerState gVoxelSampler         : register(s1);
@@ -52,7 +53,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	SURFACE_DATA surface = UnpackGBufferViewport(globalCoords);
 
-	surface.Roughness += 0.2f;
+	surface.Roughness += 0.1f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -94,10 +95,12 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	const float radiusRatio = sin(calculateSpecularConeHalfAngle(roughness2));
 
-	//const float radiusRatio = tan(0.01f);
-	const float startSampleDistance = 0.1f;
+	//const float radiusRatio = sin(0.02f);
+	float startSampleDistance = 0.05f;
 
 	coneSamplePosition += surface.Normal * gVoxelScale * 2.0f; //Offset to avoid self intersections
+	float3 originSamplePosition = coneSamplePosition;
+
 	coneSamplePosition += coneSampleDirection * startSampleDistance;
 	float currentRadius = radiusRatio * startSampleDistance;
 	float currentDistance = startSampleDistance;
@@ -106,41 +109,42 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	float accumilatedOcclusion = 0.0f;
 
 	//Specular GI
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < 512; i++)
 	{
-		float4 sampleColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, currentRadius);
+		//float4 sampleColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, currentRadius);
+		float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection);
 
 		accumilateColorOcclusion(sampleColor, accumilatedColor, accumilatedOcclusion);
 
 		if (accumilatedOcclusion >= 1.0f)
 			break;
 
-		float incrementDist = (currentRadius / radiusRatio) * (surface.Roughness);//TODO: Figure out the actual spacing that has no overlap
-		currentDistance += incrementDist;
-		coneSamplePosition += coneSampleDirection * incrementDist;
+		//currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
+		currentDistance = lerp(currentDistance, currentDistance / (1.0f - radiusRatio), 1.0f);
+		coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 		currentRadius = radiusRatio * currentDistance;
 	}
 
 	float3 accumilatedSpecular = accumilatedColor;
 
-	float3 up = surface.Normal.y > 0.98f ? float3(0.0f, 0.0f, 1.0f) : float3(0.0f, 1.0f, 0.0f);
+	float3 up = surface.Normal.y > 0.98f ? float3(1.0f, 0.0f, 0.0f) : float3(0.0f, 1.0f, 0.0f);
 	float3 right = cross(surface.Normal, up);
 	up = cross(surface.Normal, right);
 
-	const float diffuseRadiusRatio = sin(0.5f);//60 degree cones
+	const float diffuseRadiusRatio = sin(0.2f);//60 degree cones
 
 	//Diffuse GI
 	float3 diffuseAccum = float3(0.0f, 0.0f, 0.0f);
 	float diffuseOcclusionAccum = 0.0f;
+	startSampleDistance = 0.2f;
 
 	for (int conei = 0; conei < 6; conei++)
 	{
 		coneSamplePosition = surface.PositionWorld;
 		coneSamplePosition += surface.Normal * gVoxelScale * 2.0f; //Offset to avoid self intersections
+		originSamplePosition = coneSamplePosition;
 
-		coneSampleDirection = surface.Normal;
-		coneSampleDirection += cVXGIConeSampleDirections[conei].x * right + cVXGIConeSampleDirections[conei].z * up;
-		coneSampleDirection = normalize(coneSampleDirection);
+		coneSampleDirection = cVXGIConeSampleDirections[conei];
 
 		coneSamplePosition += coneSampleDirection * startSampleDistance;
 		currentRadius = diffuseRadiusRatio * startSampleDistance;
@@ -148,28 +152,35 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 		accumilatedColor = float3(0.0f, 0.0f, 0.0f);
 		accumilatedOcclusion = 0.0f;
+		float ambientOcclusionAccum = 0.0f;
 
-		for (int i = 0; i < 256; i++)
+		for (int i = 0; i < 64; i++)
 		{
-			float4 sampleColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, currentRadius);
+			float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection);
 
+			float lastDistance = currentDistance;
+			currentDistance = currentDistance / (1.0f - diffuseRadiusRatio);
+			coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
+			currentRadius = diffuseRadiusRatio * currentDistance;
+
+			//sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
 			accumilateColorOcclusion(sampleColor, accumilatedColor, accumilatedOcclusion);
+
+			ambientOcclusionAccum += sampleColor.a * (0.05f / (currentDistance + 1.0f));
 
 			if (accumilatedOcclusion >= 1.0f)
 				break;
-
-			float incrementDist = (currentRadius / diffuseRadiusRatio) * 1.5f;//TODO: Figure out the actual spacing that has no overlap
-			currentDistance += incrementDist;
-			coneSamplePosition += coneSampleDirection * incrementDist;
-			currentRadius = diffuseRadiusRatio * currentDistance;
 		}
 
 		diffuseAccum += accumilatedColor * cVXGIConeSampleWeights[conei];
+		diffuseOcclusionAccum += ambientOcclusionAccum * cVXGIConeSampleWeights[conei];
 	}
 
 	//float4 sampledColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, 0.1f);
 
-	//gOutputTexture[globalCoords] = directColor;
-	gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb + diffuseAccum.rgb, 1.0f);
+	//gOutputTexture[globalCoords] = directColor * 3.0f;
+	gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + (directColor.rgb * 3.0f) * (1.0f - diffuseOcclusionAccum) + diffuseAccum.rgb * surface.Diffuse.rgb, 1.0f);
 	//gOutputTexture[globalCoords] = float4(diffuseAccum.rgb, 1.0f);
+	//gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb, 1.0f);
+	//gOutputTexture[globalCoords] = float4(1.0f - diffuseOcclusionAccum.rrr, 1.0f);
 }

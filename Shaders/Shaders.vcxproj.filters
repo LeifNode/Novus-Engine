@@ -84,10 +84,16 @@
     <FxCompile Include="VXGI\VoxelGICommon.hlsl">
       <Filter>VXGI</Filter>
     </FxCompile>
-    <FxCompile Include="VXGI\FilerVoxelVolumeMIP.hlsl">
+    <FxCompile Include="VXGI\CopyVoxelOcclusion.hlsl">
       <Filter>VXGI</Filter>
     </FxCompile>
-    <FxCompile Include="VXGI\CopyVoxelOcclusion.hlsl">
+    <FxCompile Include="VXGI\FilterVoxelBaseMIPAnisotropic.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
+    <FxCompile Include="VXGI\FilerVoxelVolumeMIPAnisotropic.hlsl">
+      <Filter>VXGI</Filter>
+    </FxCompile>
+    <FxCompile Include="VXGI\FilerVoxelVolumeMIP.hlsl">
       <Filter>VXGI</Filter>
     </FxCompile>
   </ItemGroup>

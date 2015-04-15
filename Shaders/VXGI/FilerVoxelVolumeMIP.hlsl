@@ -47,6 +47,31 @@ static const float cGaussianWeights[] =
 	1 / 64.0f,
 };
 
+[numthreads(8, 8, 8)] //512 threads per group
+void VoxelVolumeMipMap(uint3 dispatchThreadID : SV_DispatchThreadID)
+{
+	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		int3 lowerMipIndex = dispatchThreadID * 2;
+		int3 sampleIndex;
+
+	[unroll]
+	for (int x = -1; x <= 1; x++)
+	{
+		[unroll]
+		for (int y = -1; y <= 1; y++)
+		{
+			[unroll]
+			for (int z = -1; z <= 1; z++)
+			{
+				sampleIndex = lowerMipIndex + int3(x, y, z); //Should probably offset by 0.5 and use a linear sampler
+				finalColor += toFloat4(gInputMip[sampleIndex]) * cGaussianWeights[x + 1 + (y + 1) * 3 + (z + 1) * 9];
+			}
+		}
+	}
+
+	gOutputMip[dispatchThreadID] = toUint(finalColor);
+}
+
 //[numthreads(8, 8, 8)] //512 threads per group
 //void VoxelVolumeMipMap(uint3 dispatchThreadID : SV_DispatchThreadID)
 //{
@@ -54,58 +79,33 @@ static const float cGaussianWeights[] =
 //		int3 lowerMipIndex = dispatchThreadID * 2;
 //		int3 sampleIndex;
 //
+//	float4 colorArr[8] = {
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f),
+//		float4(0.0f, 0.0f, 0.0f, 0.0f)
+//	};
+//
 //	[unroll]
-//	for (int x = -1; x <= 1; x++)
+//	for (int x = 0; x <= 1; x++)
 //	{
 //		[unroll]
-//		for (int y = -1; y <= 1; y++)
+//		for (int y = 0; y <= 1; y++)
 //		{
 //			[unroll]
-//			for (int z = -1; z <= 1; z++)
+//			for (int z = 0; z <= 1; z++)
 //			{
 //				sampleIndex = lowerMipIndex + int3(x, y, z); //Should probably offset by 0.5 and use a linear sampler
-//				finalColor += toFloat4(gInputMip[sampleIndex]) * cGaussianWeights[x + 1 + (y + 1) * 3 + (z + 1) * 9];
+//				colorArr[x + y * 4 + z * 2] = toFloat4(gInputMip[sampleIndex]);
 //			}
 //		}
 //	}
 //
+//	finalColor = filterAnsiotropicVoxelDirection(colorArr[0], colorArr[1], colorArr[2], colorArr[3], colorArr[4], colorArr[5], colorArr[6], colorArr[7]);
+//
 //	gOutputMip[dispatchThreadID] = toUint(finalColor);
 //}
-
-[numthreads(8, 8, 8)] //512 threads per group
-void VoxelVolumeMipMap(uint3 dispatchThreadID : SV_DispatchThreadID)
-{
-	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	int3 lowerMipIndex = dispatchThreadID * 2;
-	int3 sampleIndex;
-
-	float4 colorArr[8] = {
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f)
-	};
-
-	[unroll]
-	for (int x = 0; x <= 1; x++)
-	{
-		[unroll]
-		for (int y = 0; y <= 1; y++)
-		{
-			[unroll]
-			for (int z = 0; z <= 1; z++)
-			{
-				sampleIndex = lowerMipIndex + int3(x, y, z); //Should probably offset by 0.5 and use a linear sampler
-				colorArr[x + y * 4 + z * 2] = toFloat4(gInputMip[sampleIndex]);
-			}
-		}
-	}
-
-	finalColor = filterAnsiotropicVoxelDirection(colorArr[0], colorArr[1], colorArr[2], colorArr[3], colorArr[4], colorArr[5], colorArr[6], colorArr[7]);
-
-	gOutputMip[dispatchThreadID] = toUint(finalColor);
-}

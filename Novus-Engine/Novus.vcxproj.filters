@@ -428,6 +428,12 @@
     <ClInclude Include="src\Graphics\VXGI\VoxelRadianceVolume.h">
       <Filter>Source Files\Graphics\VXGI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\VXGI\VoxelGICommon.h">
+      <Filter>Source Files\Graphics\VXGI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\ConstantBuffer.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\NovusApplication.cpp">

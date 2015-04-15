@@ -57,9 +57,9 @@ void LightInjectionCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	//float4 outputColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float4 outputColor = float4(gVoxelVolume.Load(int4(volumeCoordinates.xyz, 0)).rgb, 1.0f);
-	float3 normal = gVoxelNormals.Load(int4(volumeCoordinates.xyz, 0));
+	float3 normal = gVoxelNormals.Load(int4(volumeCoordinates.xyz, 0)).rgb;
 
-	outputColor.rgb *= dot(normal, -gLightDirection) * gLightIntensity;
+	outputColor.rgb *= dot(normal, -gLightDirection) * gLightIntensity * gLightColor;
 
 	outputColor *= 255.0f;
 

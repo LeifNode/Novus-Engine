@@ -64,7 +64,8 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpGlobalIlluminationRenderPass(NULL),
 	mpRadianceVolume(NULL),
 	mSceneVoxelized(false),
-	mShadowOffset(0.0f),
+	mShadowOffsetX(0.0f),
+	mShadowOffsetY(0.0f),
 	mRequiresReinject(true)
 {
 	mMainWndCaption = L"Novus Engine Test App v0.1.65";
@@ -74,7 +75,7 @@ TestApplication::TestApplication(HINSTANCE instance)
 	mpCamera->setVelocity(3.0f);
 
 	mpCamera->setPosition(Vector3(3.0f, 2.0f, 0.0f));
-	mpCamera->LookAt(Vector3(0.0f, 0.0f, 0.0f));
+	mpCamera->LookAt(Vector3(0.0f, 2.0f, -2.0f));
 	//mpCamera->setRotation(Quaternion::AxisAngle((Normalize(Vector3(0.5f, 1.0f, 0.0f))), Math::Pi * 0.3f));
 }
 
@@ -116,7 +117,7 @@ bool TestApplication::Init()
 
 	mpShadowMap = NE_NEW ShadowMapRenderTarget();
 	mpShadowMap->Init(2048, 2048);
-	mpShadowMap->setDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+	mpShadowMap->setDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
 	mpShadowMap->setPosition(Vector3(0.0f, 20.0f, 0.0f));
 	mpShadowMap->setVolumeOrthographicBounds(40.0f, 40.0f, 60.0f);
 
@@ -139,7 +140,7 @@ bool TestApplication::Init()
 	mpGlobalIlluminationRenderPass->setGBuffer(mpRenderer->getGBuffer());
 	mpGlobalIlluminationRenderPass->setShadowMap(mpShadowMap);
 	mpGlobalIlluminationRenderPass->setVoxelVolume(mpRadianceVolume);
-	mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+	mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
 
 	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");
 
@@ -264,16 +265,29 @@ void TestApplication::Update(float dt)
 
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
 	{
-		mShadowOffset = Math::Clamp(mShadowOffset + 0.1f * dt, -1.0f, 1.0f);
-		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+		mShadowOffsetX = Math::Clamp(mShadowOffsetX + 0.1f * dt, -1.0f, 1.0f);
+		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
 		mRequiresReinject = true;
 	}
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
 	{
-		mShadowOffset = Math::Clamp(mShadowOffset - 0.1f * dt, -1.0f, 1.0f);
-		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(0.0f, -1.0f, mShadowOffset)));
+		mShadowOffsetX = Math::Clamp(mShadowOffsetX - 0.1f * dt, -1.0f, 1.0f);
+		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
 		mRequiresReinject = true;
 	}
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_C))
+	{
+		mShadowOffsetY = Math::Clamp(mShadowOffsetY + 0.1f * dt, -1.0f, 1.0f);
+		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
+		mRequiresReinject = true;
+	}
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_V))
+	{
+		mShadowOffsetY = Math::Clamp(mShadowOffsetY - 0.1f * dt, -1.0f, 1.0f);
+		mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
+		mRequiresReinject = true;
+	}
+
 
 	mpShadowMap->setDirection(mpGlobalIlluminationRenderPass->getLightDirection());
 
@@ -285,7 +299,7 @@ void TestApplication::Render()
 	mpRenderer->PreRender();
 
 
-	if (!mSceneVoxelized || mRequiresReinject)
+	if (!mSceneVoxelized)
 	{
 		mpRenderer->setShader(mpDepthPassShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
@@ -293,6 +307,11 @@ void TestApplication::Render()
 		//Render voxelization
 		mpRenderer->setShader(mpVoxelizationShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
+	}
+	else if (mRequiresReinject)
+	{
+		mpRenderer->setShader(mpDepthPassShader);
+		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 	}
 
 	//Render meshes as normal
@@ -337,6 +356,7 @@ void TestApplication::Render()
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
 	}
+	
 
 	if (mRenderVoxelization)
 	{
@@ -354,8 +374,8 @@ void TestApplication::Render()
 
 		mpRenderer->setPerObjectBuffer(perObject);
 
-		//ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getNormalTexture()->getResourceView();
-		ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceVolume()->getResourceView();
+		ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getTexture()->getResourceView();
+		//ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceVolume()->getResourceView();
 		mpRenderer->context()->CSSetShaderResources(0, 1, &voxelSRV);
 
 		ID3D11UnorderedAccessView* outputUAV = mpRenderer->getDeferredRenderer()->getHDRRenderTarget()->getUnorderedAccessView();

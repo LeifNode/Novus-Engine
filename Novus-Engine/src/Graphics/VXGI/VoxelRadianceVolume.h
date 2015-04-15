@@ -12,6 +12,8 @@
 
 #include "Application/Common.h"
 #include "Math/Math.h"
+#include "Graphics/VXGI/VoxelGICommon.h"
+#include "Graphics/ConstantBuffer.h"
 
 namespace novus
 {
@@ -50,6 +52,7 @@ public:
 	void Init(VoxelVolumeRenderTarget* sourceVolume, ShadowMapRenderTarget* sourceShadowMap);
 
 	Texture3D* getRadianceVolume() const { return mpVoxelRadianceVolume; }
+	Texture3D* getRadianceMips() const { return mpAnisotropicMips; }
 
 	VoxelVolumeRenderTarget* getSourceVolume() const { return mpSourceVolume; }
 
@@ -67,21 +70,28 @@ private:
 
 	void FilterMips(D3DRenderer* renderer);
 	void FilerMipLevel(D3DRenderer* renderer, int level);
+	void FilterBaseMip(D3DRenderer* renderer);
+	void FilerAnisotropicMipLevel(D3DRenderer* renderer, int level);
 
 private:
 	Shader* mpRadianceInjectionShader;
 	Shader* mpVoxelFilterShader;
+	Shader* mpVoxelAnisotropicFilterShader;
+	Shader* mpVoxelFilterBaseMipShader;
 	Shader* mpCopyOcclusionShader;
+
+	ConstantBuffer<CBVoxelGI> mFilterBuffer;
+	ConstantBuffer<CBLightInjectionPass> mRadianceInjectionBuffer;
 
 	Texture2D* mpDebugPositionOut;
 	Texture3D* mpVoxelRadianceVolume;
-
-	ID3D11Buffer* mpRadianceInjectionBuffer;
+	Texture3D* mpAnisotropicMips;
 
 	VoxelVolumeRenderTarget* mpSourceVolume;
 	ShadowMapRenderTarget* mpSourceShadowMap;
 
 	std::vector<ID3D11UnorderedAccessView*> mMipUavs;
+	std::vector<ID3D11UnorderedAccessView*> mAnisotropicMipUavs;
 };
 
 }
