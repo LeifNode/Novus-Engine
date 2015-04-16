@@ -247,7 +247,7 @@ void VoxelRadianceVolume::InjectRadiance(D3DRenderer* renderer)
 	unsigned int dispatchHeight = (mpSourceShadowMap->getTexture()->getHeight() + 16 - 1) / 16;
 
 	CBLightInjectionPass injectionCB;
-	injectionCB.LightColor = Math::Lerp(Vector3(1.0f, 0.8952f, 0.8666f) * 1.0f, Vector3(1.0000f, 0.7992f, 0.6045f) * 1.0f, abs(mpSourceShadowMap->getDirection().z * 2.0f));
+	injectionCB.LightColor = Vector3(1.0f, 0.8952f, 0.8666f);
 	injectionCB.LightDirection = mpSourceShadowMap->getDirection();
 	injectionCB.LightIntensity = 1.0f;
 	injectionCB.ShadowMapDimensions = Vector2(mpSourceShadowMap->getTexture()->getWidth(), mpSourceShadowMap->getTexture()->getHeight());

@@ -156,7 +156,7 @@ void GlobalIlluminationPass::Execute(D3DRenderer* renderer)
 	HR(renderer->context()->Map(mpConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource));
 	CBShadowPass* constantBuffer = static_cast<CBShadowPass*>(resource.pData);
 	//constantBuffer->LightColor = Vector4(1.0f, 0.8541f, 0.7437f, 1.0f) * 2.0f;
-	constantBuffer->LightColor = Math::Lerp(Vector4(1.0f, 0.8952f, 0.8666f, 1.0f) * 1.0f, Vector4(1.0000f, 0.7992f, 0.6045f, 1.0f) * 1.0f, abs(mLightDirection.z * 2.0f));
+	constantBuffer->LightColor = Vector4(1.0f, 0.8952f, 0.8666f, 1.0f);
 	constantBuffer->LightDirection = mLightDirection;
 	constantBuffer->ShadowIntensity = 1.0f;
 	constantBuffer->WorldToShadow = mpSourceShadowMap->getSampleTransform();
