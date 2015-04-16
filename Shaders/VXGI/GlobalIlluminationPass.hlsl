@@ -81,6 +81,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	float3 specContrib = ((D*G*F) / (4.0 * NoL * NoV)) * NoL;//TODO: This is not correct, but fixes the specular falloff to some degree for the time being
 
 	finalColor += (gLightColor.rgb / PI) * surface.Diffuse.rgb * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
+	//finalColor += (gLightColor.rgb / PI) * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
 	finalColor += gLightColor.rgb * saturate(specContrib) * lerp(float3(1.0f, 1.0f, 1.0f), surface.SpecularColor, surface.Metallic);//Specular
 
 	float4 pointShadowSampleSpace = mul(gWorldToShadow, float4(surface.PositionWorld, 1.0f));
@@ -134,7 +135,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	float3 right = cross(surface.Normal, up);
 	up = cross(surface.Normal, right);
 
-	const float diffuseRadiusRatio = sin(0.5f);//60 degree cones
+	const float diffuseRadiusRatio = sin(0.53f);//60 degree cones
 
 	//Diffuse GI
 	float3 diffuseAccum = float3(0.0f, 0.0f, 0.0f);
@@ -185,7 +186,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	//gOutputTexture[globalCoords] = directColor * 11.0f;
 	gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + (directColor.rgb * 11.0f) * (1.0f - diffuseOcclusionAccum) + diffuseAccum.rgb * surface.Diffuse.rgb, 1.0f);
-	//gOutputTexture[globalCoords] = float4(diffuseAccum.rgb, 1.0f);
+	//gOutputTexture[globalCoords] = float4(diffuseAccum.rgb + directColor.rgb * 11.0f, 1.0f);
 	//gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f, 1.0f);
 	//gOutputTexture[globalCoords] = float4(1.0f - diffuseOcclusionAccum.rrr, 1.0f);
 }
