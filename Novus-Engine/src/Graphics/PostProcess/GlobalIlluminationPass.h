@@ -34,6 +34,9 @@ class GlobalIlluminationPass
 		Vector4 LightColor;
 
 		Matrix4 WorldToShadow;
+
+		Vector2i ShadowMapDimensions;
+		Vector2i Pad;
 	};
 
 public:
@@ -58,7 +61,7 @@ private:
 	void InitShader(D3DRenderer* renderer);
 	void InitConstantBuffers(D3DRenderer* renderer);
 	void InitDestinationTexture(D3DRenderer* renderer, int width, int height);
-	void InitSamplerState(D3DRenderer* renderer);
+	void InitSamplerStates(D3DRenderer* renderer);
 
 private:
 	Vector3 mLightDirection;
@@ -73,6 +76,7 @@ private:
 
 	ID3D11Buffer* mpConstantBuffer;
 	ID3D11Buffer* mpVXGIBuffer;
+	ID3D11SamplerState* mpShadowSamplerState;
 	ID3D11SamplerState* mpConeTracingSamplerState;
 
 };

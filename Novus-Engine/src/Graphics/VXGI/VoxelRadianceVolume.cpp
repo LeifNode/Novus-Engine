@@ -120,7 +120,8 @@ void VoxelRadianceVolume::InitRadianceVolume(D3DRenderer* renderer)
 								resolution,
 								resolution,
 								DXGI_FORMAT_R8G8B8A8_TYPELESS,
-								Math::MipMapCount(resolution, resolution),
+								//Math::MipMapCount(resolution, resolution),
+								1,
 								D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET | D3D11_BIND_UNORDERED_ACCESS,
 								0,
 								DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -167,7 +168,7 @@ void VoxelRadianceVolume::InitMipUAVs(D3DRenderer* renderer)
 {
 	int mipCount = Math::MipMapCount(mpSourceVolume->getResolution(), mpSourceVolume->getResolution());
 
-	for (int i = 0; i < mipCount; i++)
+	/*for (int i = 0; i < mipCount; i++)
 	{
 		D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
 		uavDesc.Format = DXGI_FORMAT_R32_UINT;
@@ -181,7 +182,7 @@ void VoxelRadianceVolume::InitMipUAVs(D3DRenderer* renderer)
 		HR(renderer->device()->CreateUnorderedAccessView(mpVoxelRadianceVolume->getTexture(), &uavDesc, &mipUav));
 
 		mMipUavs.push_back(mipUav);
-	}
+	}*/
 
 	for (int i = 0; i < mipCount - 1; i++)
 	{

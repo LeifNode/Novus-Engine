@@ -55,7 +55,7 @@ void ShadowMapRenderTarget::Init(int width, int height)
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
 		rasterDesc.CullMode = D3D11_CULL_NONE;
 		rasterDesc.FrontCounterClockwise = true;
-		//rasterDesc.DepthBias = 12746; //Expected depth bias (0.01 in this case) / 0.0000007845
+		//rasterDesc.DepthBias = 38204; //Expected depth bias (0.03 in this case) / 0.0000007845
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.SlopeScaledDepthBias = 1.0f;

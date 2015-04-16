@@ -14,7 +14,7 @@ Texture2D<float> gShadowMap                    : register(t5);
 Texture3D<float4> gVoxelVolume                 : register(t6);
 Texture3D<float4> gVoxelVolumeAnisotropicMips  : register(t7);
 
-SamplerState gShadowSampler        : register(s0);
+SamplerComparisonState gShadowSampler        : register(s0);
 SamplerState gVoxelSampler         : register(s1);
 
 RWTexture2D<float4> gOutputTexture : register(u0);
@@ -27,15 +27,49 @@ cbuffer cbShadowPass               : register(b3)
 	float4 gLightColor;
 
 	float4x4 gWorldToShadow;
+
+	int2 gShadowMapDimensions;
+	int2 shadowPassPad;
 };
 
-float CalculateShadow(SamplerState texSampler, Texture2D<float> depthTex, float4 shadowPosH)
+//float CalculateShadow(SamplerState texSampler, Texture2D<float> depthTex, float4 shadowPosH)
+//{
+//	float depth = shadowPosH.z;
+//
+//	float shadowDepth = depthTex.SampleLevel(gShadowSampler, shadowPosH.xy, 0) + 0.001;
+//
+//	return shadowDepth < depth ? 0.0f : 1.0f;
+//}
+
+float CalculateShadow(SamplerComparisonState shadowSampler, Texture2D<float> depthTex, float4 shadowPosH)
 {
-	float depth = shadowPosH.z;
+	shadowPosH.xyz /= shadowPosH.w;
 
-	float shadowDepth = depthTex.SampleLevel(gShadowSampler, shadowPosH.xy, 0);
+	float depth = shadowPosH.z - 0.003f;
 
-	return shadowDepth < depth ? 0.0f : 1.0f;
+	// Texel size.
+	const float dx = 1.0f / (float)gShadowMapDimensions.x;
+
+	float percentLit = 0.0f;
+	const float2 offsets[9] =
+	{
+		float2(-dx, -dx), float2(0.0f, -dx), float2(dx, -dx),
+		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+		float2(-dx, +dx), float2(0.0f, +dx), float2(dx, +dx)
+	};
+
+	/*[unroll]
+	for (int i = 0; i < 9; ++i)
+	{
+		percentLit += depthTex.SampleCmpLevelZero(shadowSampler,
+			shadowPosH.xy + offsets[i], depth).r;
+	}
+
+	return percentLit /= 9.0f;*/
+
+	percentLit += depthTex.SampleCmpLevelZero(shadowSampler, shadowPosH.xy, depth).r;
+
+	return percentLit;
 }
 
 //void coneTraceScene(float3 startPosition, float3 direction, )
@@ -53,7 +87,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	SURFACE_DATA surface = UnpackGBufferViewport(globalCoords);
 
-	surface.Roughness += 0.3f;
+	surface.Roughness += 0.4f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -185,8 +219,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	//float4 sampledColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, 0.1f);
 
 	//gOutputTexture[globalCoords] = directColor * 11.0f;
-	gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + (directColor.rgb * 11.0f) * (1.0f - diffuseOcclusionAccum) + diffuseAccum.rgb * surface.Diffuse.rgb, 1.0f);
-	//gOutputTexture[globalCoords] = float4(diffuseAccum.rgb + directColor.rgb * 11.0f, 1.0f);
+	gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f + diffuseAccum.rgb * surface.Diffuse.rgb * (1.0f - diffuseOcclusionAccum), 1.0f);
+	//gOutputTexture[globalCoords] = float4(diffuseAccum.rgb * (1.0f - diffuseOcclusionAccum) + directColor.rgb * 11.0f, 1.0f);
 	//gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f, 1.0f);
 	//gOutputTexture[globalCoords] = float4(1.0f - diffuseOcclusionAccum.rrr, 1.0f);
 }

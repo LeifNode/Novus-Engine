@@ -17,6 +17,7 @@ GlobalIlluminationPass::GlobalIlluminationPass()
 	mpConstantBuffer(NULL),
 	mpVXGIBuffer(NULL),
 	mpConeTracingSamplerState(NULL),
+	mpShadowSamplerState(NULL),
 	mpRadianceVolume(NULL),
 	mLightDirection(0.0f, -1.0f, 0.0f)
 {
@@ -25,6 +26,7 @@ GlobalIlluminationPass::GlobalIlluminationPass()
 GlobalIlluminationPass::~GlobalIlluminationPass()
 {
 	ReleaseCOM(mpConeTracingSamplerState);
+	ReleaseCOM(mpShadowSamplerState);
 	ReleaseCOM(mpConstantBuffer);
 	ReleaseCOM(mpVXGIBuffer);
 	NE_DELETE(mpDestinationTexture);
@@ -37,7 +39,7 @@ void GlobalIlluminationPass::Init(int width, int height)
 	InitShader(renderer);
 	InitConstantBuffers(renderer);
 	InitDestinationTexture(renderer, width, height);
-	InitSamplerState(renderer);
+	InitSamplerStates(renderer);
 }
 
 void GlobalIlluminationPass::InitShader(D3DRenderer* renderer)
@@ -93,7 +95,7 @@ void GlobalIlluminationPass::InitDestinationTexture(D3DRenderer* renderer, int w
 	mpDestinationTexture->setDebugName("Global Illumination RT");
 }
 
-void GlobalIlluminationPass::InitSamplerState(D3DRenderer* renderer)
+void GlobalIlluminationPass::InitSamplerStates(D3DRenderer* renderer)
 {
 	if (mpConeTracingSamplerState == NULL)
 	{
@@ -113,6 +115,26 @@ void GlobalIlluminationPass::InitSamplerState(D3DRenderer* renderer)
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		HR(renderer->device()->CreateSamplerState(&sampDesc, &mpConeTracingSamplerState));
+	}
+
+	if (mpShadowSamplerState == NULL)
+	{
+		D3D11_SAMPLER_DESC sampDesc;
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+		sampDesc.MaxAnisotropy = 0;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampDesc.BorderColor[0] = 0.0f;
+		sampDesc.BorderColor[1] = 0.0f;
+		sampDesc.BorderColor[2] = 0.0f;
+		sampDesc.BorderColor[3] = 0.0f;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		HR(renderer->device()->CreateSamplerState(&sampDesc, &mpShadowSamplerState));
 	}
 }
 
@@ -160,6 +182,7 @@ void GlobalIlluminationPass::Execute(D3DRenderer* renderer)
 	constantBuffer->LightDirection = mLightDirection;
 	constantBuffer->ShadowIntensity = 1.0f;
 	constantBuffer->WorldToShadow = mpSourceShadowMap->getSampleTransform();
+	constantBuffer->ShadowMapDimensions = Vector2i(mpSourceShadowMap->getTexture()->getWidth(), mpSourceShadowMap->getTexture()->getHeight());
 	renderer->context()->Unmap(mpConstantBuffer, 0);
 
 	HR(renderer->context()->Map(mpVXGIBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource));
@@ -193,6 +216,7 @@ void GlobalIlluminationPass::Execute(D3DRenderer* renderer)
 	ID3D11UnorderedAccessView* outputUav = mpDestinationTexture->getUnorderedAccessView();
 
 	renderer->context()->CSSetUnorderedAccessViews(0, 1, &outputUav, 0);
+	renderer->setSampler(0, mpShadowSamplerState);
 	renderer->setSampler(1, mpConeTracingSamplerState);
 
 	renderer->context()->Dispatch(dispatchWidth, dispatchHeight, 1);
