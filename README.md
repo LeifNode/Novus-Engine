@@ -15,7 +15,7 @@ This project is built in Visual Studio 2013 and is currently only targeted at x6
 * High Dynamic Range Rendering
 * ~~Tiled Deferred Shading Pipeline~~ Functional but needs some work to give it more utility
 * ~~Physically Based Shading BRDF (based on Unreal Engine 4's)~~ Implemented
-* Voxel Cone Traced Global Illumination
+* ~~Voxel Cone Traced Global Illumination~~ Implemented, still needs some work on filtering
 
 #### GUI
 * A GUI system that can interchangeably be attached to the camera and be interracted with in screen space or positioned in the world an interacted with in 3D. 
