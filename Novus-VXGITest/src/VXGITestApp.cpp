@@ -72,7 +72,7 @@ mRequiresReinject(true)
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
-	mpCamera->setVelocity(3.0f);
+	mpCamera->setSpeed(3.0f);
 
 	mpCamera->setPosition(Vector3(3.0f, 2.0f, 0.0f));
 	mpCamera->LookAt(Vector3(0.0f, 2.0f, -2.0f));
@@ -280,35 +280,31 @@ void VXGITestApplication::Update(float dt)
 
 	Vector3 direction = Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX));
 	Vector3 position = -direction * 20.0f;
+	const float speedScalar = 0.04f;
 
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
 	{
-		mShadowOffsetX = Math::Clamp(mShadowOffsetX + 0.1f * dt, -1.0f, 1.0f);
-		mpGlobalIlluminationRenderPass->setLightDirection(direction);
-		mpShadowMap->setPosition(position);
+		mShadowOffsetX = Math::Clamp(mShadowOffsetX + speedScalar * dt, -1.0f, 1.0f);
 		mRequiresReinject = true;
 	}
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
 	{
-		mShadowOffsetX = Math::Clamp(mShadowOffsetX - 0.1f * dt, -1.0f, 1.0f);
-		mpGlobalIlluminationRenderPass->setLightDirection(direction);
-		mpShadowMap->setPosition(position);
+		mShadowOffsetX = Math::Clamp(mShadowOffsetX - speedScalar * dt, -1.0f, 1.0f);
 		mRequiresReinject = true;
 	}
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_C))
 	{
-		mShadowOffsetY = Math::Clamp(mShadowOffsetY + 0.1f * dt, -1.0f, 1.0f);
-		mpGlobalIlluminationRenderPass->setLightDirection(direction);
-		mpShadowMap->setPosition(position);
+		mShadowOffsetY = Math::Clamp(mShadowOffsetY + speedScalar * dt, -1.0f, 1.0f);
 		mRequiresReinject = true;
 	}
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_V))
 	{
-		mShadowOffsetY = Math::Clamp(mShadowOffsetY - 0.1f * dt, -1.0f, 1.0f);
-		mpGlobalIlluminationRenderPass->setLightDirection(direction);
-		mpShadowMap->setPosition(position);
+		mShadowOffsetY = Math::Clamp(mShadowOffsetY - speedScalar * dt, -1.0f, 1.0f);
 		mRequiresReinject = true;
 	}
+
+	mpGlobalIlluminationRenderPass->setLightDirection(direction);
+	mpShadowMap->setPosition(position);
 
 	mpGlobalIlluminationRenderPass->Update(dt);
 

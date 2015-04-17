@@ -188,8 +188,8 @@ void GlobalIlluminationPass::TransitionToMix()
 
 void GlobalIlluminationPass::Update(float dt)
 {
-	mDiffuseInterpolation = Math::Lerp(mDiffuseInterpolation, mTargetDiffuseInterpolation, dt * 10.0f);
-	mSpecularInterpolation = Math::Lerp(mSpecularInterpolation, mTargetSpecularInterpolation, dt * 10.0f);
+	mDiffuseInterpolation = Math::Lerp(mDiffuseInterpolation, mTargetDiffuseInterpolation, dt * 12.0f);
+	mSpecularInterpolation = Math::Lerp(mSpecularInterpolation, mTargetSpecularInterpolation, dt * 12.0f);
 }
 
 void GlobalIlluminationPass::Execute(D3DRenderer* renderer)

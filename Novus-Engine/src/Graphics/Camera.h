@@ -34,8 +34,8 @@ public:
 
 	void setRotation(const Quaternion& q);
 
-	void setVelocity(float velocity);
-	float getVelocity() const { return mVelocity; }
+	void setSpeed(float speed);
+	Vector3 getVelocity() const { return mVelocity; }
 
 	float getNear() const { return mNear; }
 	float getFar() const { return mFar; }
@@ -64,7 +64,8 @@ private:
 
 	float mNear;
 	float mFar;
-	float mVelocity;
+	float mMaxSpeed;
+	Vector3 mVelocity;
 
 	Vector3i mLastMousePosition;
 

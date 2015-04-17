@@ -9,10 +9,11 @@ Camera::Camera()
 	:mPosition(0.0f, 1.66f, 0.0f),
 	mDirection(0.0f, 0.0f, -1.0f),
 	mReadingMouse(false),
-	mVelocity(50.0f),
+	mVelocity(0.0f),
 	mNear(0.01f),
 	mFar(10000.0f),
-	mFreeRoam(true)
+	mFreeRoam(true),
+	mMaxSpeed(3.0f)
 {
 	//OnResize(1280, 720);
 
@@ -54,9 +55,9 @@ void Camera::setRotation(const Quaternion& q)
 	mDirection = Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation));
 }
 
-void Camera::setVelocity(float velocity)
+void Camera::setSpeed(float speed)
 {
-	mVelocity = velocity;
+	mMaxSpeed = speed;
 }
 
 Vector3 Camera::getForward() const
@@ -138,8 +139,9 @@ void Camera::UpdatePosition(float dt)
 	InputSystem* inputSystem = EngineStatics::getInputSystem();
 	//HydraManager* hydra = inputSystem->getHydra();
 
-	Vector3 forwardOffset = mDirection * mVelocity * dt;
-	Vector3 sidewaysOffset = Cross(mDirection, Vector3(0.0f, 1.0f, 0.0f)) * mVelocity * dt;
+	float speedScalar = 14.0f;
+	Vector3 forwardOffset = mDirection * speedScalar * dt;
+	Vector3 sidewaysOffset = Cross(mDirection, Vector3(0.0f, 1.0f, 0.0f)) * speedScalar * dt;
 
 	if (!mFreeRoam)
 	{
@@ -159,24 +161,38 @@ void Camera::UpdatePosition(float dt)
 	{
 		if (inputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_W))
 		{
-			mPosition += forwardOffset;
+			mVelocity += forwardOffset;
+			//mPosition += forwardOffset;
 		}
 
 		if (inputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_S))
 		{
-			mPosition -= forwardOffset;
+			mVelocity -= forwardOffset;
+			//mPosition -= forwardOffset;
 		}
 
 		if (inputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_A))
 		{
-			mPosition -= sidewaysOffset;
+			mVelocity -= sidewaysOffset;
+			//mPosition -= sidewaysOffset;
 		}
 
 		if (inputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_D))
 		{
-			mPosition += sidewaysOffset;
+			mVelocity += sidewaysOffset;
+			//mPosition += sidewaysOffset;
 		}
 	}
+
+	if (Length(mVelocity) > mMaxSpeed)
+	{
+		mVelocity = Normalize(mVelocity);
+		mVelocity *= mMaxSpeed;
+	}
+
+	mPosition += mVelocity * dt;
+	mVelocity *= powf(0.01f, dt);
+
 }
 
 }//namespace novus
