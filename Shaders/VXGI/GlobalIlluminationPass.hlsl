@@ -19,7 +19,7 @@ SamplerState gVoxelSampler         : register(s1);
 
 RWTexture2D<float4> gOutputTexture : register(u0);
 
-cbuffer cbShadowPass               : register(b3)
+cbuffer cbGIPass                   : register(b3)
 {
 	float3 gLightDirection;
 	float gShadowIntensity;
@@ -29,7 +29,7 @@ cbuffer cbShadowPass               : register(b3)
 	float4x4 gWorldToShadow;
 
 	int2 gShadowMapDimensions;
-	int2 shadowPassPad;
+	float2 gDiffuseSpecularInterpolation;
 };
 
 //float CalculateShadow(SamplerState texSampler, Texture2D<float> depthTex, float4 shadowPosH)
@@ -87,7 +87,10 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	SURFACE_DATA surface = UnpackGBufferViewport(globalCoords);
 
-	surface.Roughness += 0.4f;
+	bool pastDiffuseDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.x;
+	bool pastSpecularDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.y;
+
+	surface.Roughness += 0.3f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -113,9 +116,15 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	float3 F = F_Schlick(lerp(float3(0.0f, 0.0f, 0.0f), surface.SpecularColor, surface.Metallic), VoH);
 
 	float3 specContrib = ((D*G*F) / (4.0 * NoL * NoV)) * NoL;//TODO: This is not correct, but fixes the specular falloff to some degree for the time being
-
-	finalColor += (gLightColor.rgb / PI) * surface.Diffuse.rgb * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
-	//finalColor += (gLightColor.rgb / PI) * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
+	
+	if (pastDiffuseDivide)
+	{
+		finalColor += (gLightColor.rgb / PI) * surface.Diffuse.rgb * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
+	}
+	else
+	{
+		finalColor += (gLightColor.rgb / PI) * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
+	}
 	finalColor += gLightColor.rgb * saturate(specContrib) * lerp(float3(1.0f, 1.0f, 1.0f), surface.SpecularColor, surface.Metallic);//Specular
 
 	float4 pointShadowSampleSpace = mul(gWorldToShadow, float4(surface.PositionWorld, 1.0f));
@@ -174,7 +183,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	//Diffuse GI
 	float3 diffuseAccum = float3(0.0f, 0.0f, 0.0f);
 	float diffuseOcclusionAccum = 0.0f;
-	startSampleDistance = 0.2f;
+	startSampleDistance = 0.1f;
 
 	for (int conei = 0; conei < 6; conei++)
 	{
@@ -199,14 +208,15 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 			float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection);
 
 			float lastDistance = currentDistance;
+			//currentDistance = (currentDistance * (1.0f + diffuseRadiusRatio)) / (1.0f - diffuseRadiusRatio);
 			currentDistance = currentDistance / (1.0f - diffuseRadiusRatio);
 			coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 			currentRadius = diffuseRadiusRatio * currentDistance;
 
-			sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
+			//sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
 			accumilateColorOcclusion(sampleColor, accumilatedColor, accumilatedOcclusion);
 
-			ambientOcclusionAccum += sampleColor.a * (0.23f / (currentDistance + 1.0f));
+			ambientOcclusionAccum += sampleColor.a * (0.1f / (currentDistance + 1.0f));
 
 			if (accumilatedOcclusion >= 1.0f)
 				break;
@@ -219,8 +229,17 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	//float4 sampledColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, 0.1f);
 
 	//gOutputTexture[globalCoords] = directColor * 11.0f;
-	gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f + diffuseAccum.rgb * surface.Diffuse.rgb * (1.0f - diffuseOcclusionAccum), 1.0f);
-	//gOutputTexture[globalCoords] = float4(diffuseAccum.rgb * (1.0f - diffuseOcclusionAccum) + directColor.rgb * 11.0f, 1.0f);
-	//gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f, 1.0f);
+	if (pastSpecularDivide)
+	{
+		gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f, 1.0f);
+	}
+	else if (pastDiffuseDivide)
+	{
+		gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f + diffuseAccum.rgb * surface.Diffuse.rgb * (1.0f - diffuseOcclusionAccum), 1.0f);
+	}
+	else
+	{
+		gOutputTexture[globalCoords] = float4(diffuseAccum.rgb * (1.0f - diffuseOcclusionAccum) + directColor.rgb * 11.0f, 1.0f);
+	}
 	//gOutputTexture[globalCoords] = float4(1.0f - diffuseOcclusionAccum.rrr, 1.0f);
 }

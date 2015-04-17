@@ -326,10 +326,10 @@ bool D3DRenderer::Init()
 
 	//Per frame buffer
 	D3D11_BUFFER_DESC bd;
-	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.Usage = D3D11_USAGE_DYNAMIC;
 	bd.ByteWidth = sizeof(CBPerFrame);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = 0;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	bd.MiscFlags = 0;
 	bd.StructureByteStride = 0;
 
@@ -753,7 +753,15 @@ void D3DRenderer::setConstantBuffer(int index, ID3D11Buffer* buffer)
 void D3DRenderer::setPerFrameBuffer(CBPerFrame& buffer)
 {
 	///TODO: use map with discard flag instead of UpdateSubresource
-	mpd3dImmediateContext->UpdateSubresource(mpPerFrameBuffer, 0, NULL, &buffer, 0, 0);
+	//mpd3dImmediateContext->UpdateSubresource(mpPerFrameBuffer, 0, NULL, &buffer, 0, 0);
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+	HR(context()->Map(mpPerFrameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource));
+	CBPerFrame* constantBuffer = static_cast<CBPerFrame*>(resource.pData);
+	*constantBuffer = buffer;
+
+	context()->Unmap(mpPerFrameBuffer, 0);
+
 	setConstantBuffer(0, mpPerFrameBuffer);
 	mPerFrameData = buffer;
 }
@@ -761,7 +769,13 @@ void D3DRenderer::setPerFrameBuffer(CBPerFrame& buffer)
 void D3DRenderer::setPerObjectBuffer(CBPerObject& buffer)
 {
 	///TODO: use map with discard flag instead of UpdateSubresource
-	mpd3dImmediateContext->UpdateSubresource(mpPerObjectBuffer, 0, NULL, &buffer, 0, 0);
+	//mpd3dImmediateContext->UpdateSubresource(mpPerObjectBuffer, 0, NULL, &buffer, 0, 0);
+	D3D11_MAPPED_SUBRESOURCE resource;
+	HR(context()->Map(mpPerObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource));
+	CBPerObject* constantBuffer = static_cast<CBPerObject*>(resource.pData);
+	*constantBuffer = buffer;
+	context()->Unmap(mpPerObjectBuffer, 0);
+
 	setConstantBuffer(1, mpPerObjectBuffer);
 }
 

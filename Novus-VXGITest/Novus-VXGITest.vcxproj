@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{70EB89FB-490A-4B6F-A46F-B6AA66CDB389}</ProjectGuid>
+    <ProjectGuid>{A78B3A0E-8C3D-41A5-AA7F-263F744D6188}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>NovusMaterialTest</RootNamespace>
+    <RootNamespace>NovusVXGITest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -143,10 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\MaterialTest.h" />
+    <ClInclude Include="src\VXGITestApp.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\MaterialTest.cpp" />
+    <ClCompile Include="src\VXGITestApp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

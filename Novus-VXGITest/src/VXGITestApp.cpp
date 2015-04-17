@@ -1,4 +1,4 @@
-#include "TestApplication.h"
+#include "VXGITestApp.h"
 
 #include <Application/EngineStatics.h>
 #include <Events/Events.h>
@@ -35,7 +35,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	TestApplication* application = NE_NEW TestApplication(hInstance);
+	VXGITestApplication* application = NE_NEW VXGITestApplication(hInstance);
 
 	if (!application->Init())
 		return 0;
@@ -47,28 +47,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 	return returnVal;
 }
 
-TestApplication::TestApplication(HINSTANCE instance)
-	:
-	NovusApplication(instance),
-	mpStaticMeshShader(NULL),
-	mpDepthPassShader(NULL),
-	mpVoxelizationShader(NULL),
-	mpDebugRaymarchShader(NULL),
-	mpSkyboxRenderer(NULL),
-	mpMesh(NULL),
-	mpVoxelTexture(NULL),
-	mpShadowMap(NULL),
-	mpVoxelVolume(NULL),
-	mRenderVoxelization(false),
-	mVoxelResolution(256),
-	mpGlobalIlluminationRenderPass(NULL),
-	mpRadianceVolume(NULL),
-	mSceneVoxelized(false),
-	mShadowOffsetX(0.0f),
-	mShadowOffsetY(0.0f),
-	mRequiresReinject(true)
+VXGITestApplication::VXGITestApplication(HINSTANCE instance)
+:
+NovusApplication(instance),
+mpStaticMeshShader(NULL),
+mpDepthPassShader(NULL),
+mpVoxelizationShader(NULL),
+mpDebugRaymarchShader(NULL),
+mpSkyboxRenderer(NULL),
+mpMesh(NULL),
+mpVoxelTexture(NULL),
+mpShadowMap(NULL),
+mpVoxelVolume(NULL),
+mRenderVoxelization(false),
+mVoxelResolution(256),
+mpGlobalIlluminationRenderPass(NULL),
+mpRadianceVolume(NULL),
+mSceneVoxelized(false),
+mShadowOffsetX(0.0f),
+mShadowOffsetY(0.0f),
+mRequiresReinject(true)
 {
-	mMainWndCaption = L"Novus Engine Test App v0.1.65";
+	mMainWndCaption = L"Novus Engine Voxel Cone Traced GI v0.1.78";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
@@ -79,7 +79,7 @@ TestApplication::TestApplication(HINSTANCE instance)
 	//mpCamera->setRotation(Quaternion::AxisAngle((Normalize(Vector3(0.5f, 1.0f, 0.0f))), Math::Pi * 0.3f));
 }
 
-TestApplication::~TestApplication()
+VXGITestApplication::~VXGITestApplication()
 {
 	UnhookInputEvents();
 	NE_DELETE(mpCamera);
@@ -91,7 +91,7 @@ TestApplication::~TestApplication()
 	NE_DELETE(mpRadianceVolume);
 }
 
-bool TestApplication::Init()
+bool VXGITestApplication::Init()
 {
 	if (!NovusApplication::Init())
 		return false;
@@ -116,7 +116,7 @@ bool TestApplication::Init()
 	verdana->LoadGlyphs(24, novus::FontType::BoldItalic);
 
 	mpShadowMap = NE_NEW ShadowMapRenderTarget();
-	mpShadowMap->Init(2048, 2048);
+	mpShadowMap->Init(4096, 4096);
 	mpShadowMap->setDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
 	mpShadowMap->setPosition(Vector3(0.0f, 20.0f, 0.0f));
 	mpShadowMap->setVolumeOrthographicBounds(40.0f, 40.0f, 60.0f);
@@ -161,7 +161,7 @@ bool TestApplication::Init()
 	return true;
 }
 
-void TestApplication::InitShaders()
+void VXGITestApplication::InitShaders()
 {
 	ShaderInfo shaderInfo[] = {
 		{ ShaderType::Vertex, "VS" },
@@ -189,7 +189,7 @@ void TestApplication::InitShaders()
 	};
 
 	mpVoxelizationShader = mpRenderer->LoadShader(L"../Shaders/VXGI/VoxelizeMesh.hlsl", voxelShaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, staticMeshVertexDescription, ARRAYSIZE(staticMeshVertexDescription));
-	
+
 	ShaderInfo raymarchShaderInfo[] = {
 		{ ShaderType::Compute, "RaymarchCS" },
 		{ ShaderType::None, NULL }
@@ -198,7 +198,7 @@ void TestApplication::InitShaders()
 	mpDebugRaymarchShader = mpRenderer->LoadShader(L"../Shaders/VXGI/DebugRaymarchVolume.hlsl", raymarchShaderInfo, D3D_PRIMITIVE_TOPOLOGY_UNDEFINED, NULL, 0);
 }
 
-void TestApplication::InitLights()
+void VXGITestApplication::InitLights()
 {
 	mLights.clear();
 	mLights.reserve(256);
@@ -218,29 +218,44 @@ void TestApplication::InitLights()
 	}
 }
 
-void TestApplication::HookInputEvents()
+void VXGITestApplication::HookInputEvents()
 {
-	EngineStatics::getEventSystem()->AddListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
+	EngineStatics::getEventSystem()->AddListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &VXGITestApplication::OnKeyDown));
 }
 
-void TestApplication::UnhookInputEvents()
+void VXGITestApplication::UnhookInputEvents()
 {
-	EngineStatics::getEventSystem()->RemoveListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &TestApplication::OnKeyDown));
+	EngineStatics::getEventSystem()->RemoveListener(EventData_KeyboardDown::skEventType, fastdelegate::MakeDelegate(this, &VXGITestApplication::OnKeyDown));
 }
 
-void TestApplication::OnKeyDown(novus::IEventDataPtr eventData)
+void VXGITestApplication::OnKeyDown(novus::IEventDataPtr eventData)
 {
 	auto dataPtr = static_pointer_cast<EventData_KeyboardDown>(eventData);
 
-	if (dataPtr->getKey() == KeyboardKey::KEY_ESC)
+	switch (dataPtr->getKey())
 	{
+	case KeyboardKey::KEY_ESC:
 		ExitApp();
-	}
-	if (dataPtr->getKey() == KeyboardKey::KEY_F)
+		break;
+	case KeyboardKey::KEY_F:
 		mRenderVoxelization = !mRenderVoxelization;
+		break;
+	case KeyboardKey::KEY_1:
+		mpGlobalIlluminationRenderPass->TransitionToFinal();
+		break;
+	case KeyboardKey::KEY_2:
+		mpGlobalIlluminationRenderPass->TransitionToMix();
+		break;
+	case KeyboardKey::KEY_3:
+		mpGlobalIlluminationRenderPass->TransitionToDiffuse();
+		break;
+	case KeyboardKey::KEY_4:
+		mpGlobalIlluminationRenderPass->TransitionToSpecular();
+		break;
+	}
 }
 
-void TestApplication::OnResize()
+void VXGITestApplication::OnResize()
 {
 	NovusApplication::OnResize();
 
@@ -250,7 +265,7 @@ void TestApplication::OnResize()
 		mpGlobalIlluminationRenderPass->Init(getClientWidth(), getClientHeight());
 }
 
-void TestApplication::Update(float dt)
+void VXGITestApplication::Update(float dt)
 {
 	mpCamera->Update(dt);
 
@@ -275,7 +290,7 @@ void TestApplication::Update(float dt)
 	}
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
 	{
-		mShadowOffsetX = Math::Clamp(mShadowOffsetX - 0.1f * dt, -1.0f, 1.0f); 
+		mShadowOffsetX = Math::Clamp(mShadowOffsetX - 0.1f * dt, -1.0f, 1.0f);
 		mpGlobalIlluminationRenderPass->setLightDirection(direction);
 		mpShadowMap->setPosition(position);
 		mRequiresReinject = true;
@@ -302,7 +317,7 @@ void TestApplication::Update(float dt)
 	EngineStatics::getWorld()->Update(dt);
 }
 
-void TestApplication::Render()
+void VXGITestApplication::Render()
 {
 	mpRenderer->PreRender();
 
@@ -326,7 +341,7 @@ void TestApplication::Render()
 	CBPerFrame perFrame;
 
 	perFrame.ScreenResolution = Vector2_t<unsigned int>(
-		static_cast<unsigned int>(getClientWidth()), 
+		static_cast<unsigned int>(getClientWidth()),
 		static_cast<unsigned int>(getClientHeight()));
 	perFrame.ClipNearFar = Vector2(mpCamera->getNear(), mpCamera->getFar());
 	perFrame.Projection = mpCamera->getProj();
@@ -336,7 +351,7 @@ void TestApplication::Render()
 	perFrame.ViewProj = perFrame.View * perFrame.Projection;
 	perFrame.ViewProjInv = Matrix4::Inverse(perFrame.ViewProj);
 	perFrame.EyePosition = mpCamera->getPosition();
-	
+
 	mpRenderer->setViewport(0, 0, getClientWidth(), getClientHeight());
 	mpRenderer->setPerFrameBuffer(perFrame);
 	mpRenderer->BindPerFrameBuffer();
@@ -362,8 +377,6 @@ void TestApplication::Render()
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
 	}
-	
-
 
 	if (mRenderVoxelization)
 	{

@@ -282,6 +282,8 @@ void VoxelRadianceVolume::InjectRadiance(D3DRenderer* renderer)
 	renderer->UnbindUAVs();
 
 	FilterMips(renderer);
+
+	renderer->UnbindUAVs();
 }
 
 void VoxelRadianceVolume::FilterMips(D3DRenderer* renderer)

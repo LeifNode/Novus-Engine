@@ -19,7 +19,11 @@ GlobalIlluminationPass::GlobalIlluminationPass()
 	mpConeTracingSamplerState(NULL),
 	mpShadowSamplerState(NULL),
 	mpRadianceVolume(NULL),
-	mLightDirection(0.0f, -1.0f, 0.0f)
+	mLightDirection(0.0f, -1.0f, 0.0f),
+	mDiffuseInterpolation(0.0f),
+	mSpecularInterpolation(2.0f),
+	mTargetDiffuseInterpolation(0.0f),
+	mTargetSpecularInterpolation(2.0f)
 {
 }
 
@@ -158,6 +162,36 @@ void GlobalIlluminationPass::setLightDirection(const Vector3& direction)
 	mLightDirection = direction;
 }
 
+void GlobalIlluminationPass::TransitionToFinal()
+{
+	mTargetDiffuseInterpolation = 0.0f;
+	mTargetSpecularInterpolation = 2.0f;
+}
+
+void GlobalIlluminationPass::TransitionToDiffuse()
+{
+	mTargetDiffuseInterpolation = 2.0f;
+	mTargetSpecularInterpolation = 2.0f;
+}
+
+void GlobalIlluminationPass::TransitionToSpecular()
+{
+	mTargetDiffuseInterpolation = 0.0f;
+	mTargetSpecularInterpolation = 0.0f;
+}
+
+void GlobalIlluminationPass::TransitionToMix()
+{
+	mTargetDiffuseInterpolation = 0.7f;
+	mTargetSpecularInterpolation = 1.3f;
+}
+
+void GlobalIlluminationPass::Update(float dt)
+{
+	mDiffuseInterpolation = Math::Lerp(mDiffuseInterpolation, mTargetDiffuseInterpolation, dt * 10.0f);
+	mSpecularInterpolation = Math::Lerp(mSpecularInterpolation, mTargetSpecularInterpolation, dt * 10.0f);
+}
+
 void GlobalIlluminationPass::Execute(D3DRenderer* renderer)
 {
 	if (mpSourceShadowMap == NULL)
@@ -183,6 +217,7 @@ void GlobalIlluminationPass::Execute(D3DRenderer* renderer)
 	constantBuffer->ShadowIntensity = 1.0f;
 	constantBuffer->WorldToShadow = mpSourceShadowMap->getSampleTransform();
 	constantBuffer->ShadowMapDimensions = Vector2i(mpSourceShadowMap->getTexture()->getWidth(), mpSourceShadowMap->getTexture()->getHeight());
+	constantBuffer->DiffuseSpecularInterpolation = Vector2(mDiffuseInterpolation, mSpecularInterpolation);
 	renderer->context()->Unmap(mpConstantBuffer, 0);
 
 	HR(renderer->context()->Map(mpVXGIBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource));

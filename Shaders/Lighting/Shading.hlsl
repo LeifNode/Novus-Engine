@@ -12,6 +12,8 @@
 
 struct SURFACE_DATA
 {
+	float2 PositionTextureSpace;
+	float3 PositionScreenSpace;
 	float3 PositionView;
 	float3 PositionWorld;
 	float4 Diffuse;

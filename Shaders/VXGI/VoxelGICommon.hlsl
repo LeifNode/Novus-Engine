@@ -92,7 +92,7 @@ float4 sampleVoxelVolumeAnisotropic(Texture3D<float4> voxelTexture, Texture3D<fl
 	float mipLevel = getMipLevelFromRadius(radius);
 	float anisotropicMipLevel = mipLevel - 1.0f;
 
-	float4 mip0Sample = voxelTexture.SampleLevel(voxelSampler, voxelPos, mipLevel);
+	//float4 mip0Sample = voxelTexture.SampleLevel(voxelSampler, voxelPos, mipLevel);
 
 	voxelPos.x /= 6.0f;
 
@@ -102,8 +102,8 @@ float4 sampleVoxelVolumeAnisotropic(Texture3D<float4> voxelTexture, Texture3D<fl
 
 	float4 filteredColor = dirSq.x * xSample + dirSq.y * ySample + dirSq.z * zSample;
 
-	filteredColor = lerp(mip0Sample, filteredColor, clamp(mipLevel, 0.0f, 1.0f));
-	//filteredColor = lerp(mip0Sample, filteredColor, 1.0f);
+	//filteredColor = lerp(mip0Sample, filteredColor, clamp(mipLevel, 0.0f, 1.0f)); //This kills the performance
+	filteredColor = filteredColor;
 	//filteredColor.a = mip0Sample.a;
 
 	filteredColor.rgb *= 11.0f;
@@ -181,7 +181,7 @@ void accumilateColorOcclusion(float4 sampleColor, inout float3 colorAccum, inout
 
 float4 filterAnsiotropicVoxelDirection(float4 f1, float4 f2, float4 f3, float4 f4, float4 b1, float4 b2, float4 b3, float4 b4)
 {
-	const float4 frontVoxels[] = {
+	/*const float4 frontVoxels[] = {
 		f1,
 		f2,
 		f3,
@@ -194,23 +194,31 @@ float4 filterAnsiotropicVoxelDirection(float4 f1, float4 f2, float4 f3, float4 f
 		b3,
 		b4,
 	};
+*/
+	float4 directionalAccum = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	float4 directionalAccum[] = {
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-		float4(0.0f, 0.0f, 0.0f, 0.0f),
-	};
-
-	int i = 0;
-
+	/*int i = 0;
+	
 	[unroll]
 	for (i = 0; i < 4; i++)
 	{
-		directionalAccum[i] = frontVoxels[i] + backVoxels[i] * (1.0f - frontVoxels[i].a);
-	}
+		directionalAccum.rgb += (frontVoxels[i].rgb + backVoxels[i].rgb * (1.0f - frontVoxels[i].a)) * 0.25f;
+		directionalAccum.a += min(1.0f, frontVoxels[i].a + backVoxels[i].a) * 0.25f;
+	}*/
 
-	return (directionalAccum[0] + directionalAccum[1] + directionalAccum[2] + directionalAccum[3]) * 0.25f;
+	directionalAccum.rgb += (f1.rgb + b1.rgb * (1.0f - f1.a)) * 0.25f;
+	directionalAccum.a += min(1.0f, f1.a + b1.a) * 0.25f;
+
+	directionalAccum.rgb += (f2.rgb + b2.rgb * (1.0f - f2.a)) * 0.25f;
+	directionalAccum.a += min(1.0f, f2.a + b2.a) * 0.25f;
+
+	directionalAccum.rgb += (f3.rgb + b3.rgb * (1.0f - f3.a)) * 0.25f;
+	directionalAccum.a += min(1.0f, f3.a + b3.a) * 0.25f;
+
+	directionalAccum.rgb += (f4.rgb + b4.rgb * (1.0f - f4.a)) * 0.25f;
+	directionalAccum.a += min(1.0f, f4.a + b4.a) * 0.25f;
+
+	return directionalAccum;
 }
 
 float4 filterAnsiotropicVoxelDirectionBase(float4 f1, float4 f2, float4 f3, float4 f4, float4 b1, float4 b2, float4 b3, float4 b4)

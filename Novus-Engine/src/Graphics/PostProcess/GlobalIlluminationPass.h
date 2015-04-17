@@ -36,7 +36,7 @@ class GlobalIlluminationPass
 		Matrix4 WorldToShadow;
 
 		Vector2i ShadowMapDimensions;
-		Vector2i Pad;
+		Vector2 DiffuseSpecularInterpolation;
 	};
 
 public:
@@ -55,6 +55,13 @@ public:
 
 	Texture2D* getRenderTarget() const { return mpDestinationTexture; }
 
+	void TransitionToFinal();
+	void TransitionToDiffuse();
+	void TransitionToSpecular();
+	void TransitionToMix();
+
+	void Update(float dt);
+
 	void Execute(D3DRenderer* renderer);
 
 private:
@@ -65,6 +72,10 @@ private:
 
 private:
 	Vector3 mLightDirection;
+	float mDiffuseInterpolation;
+	float mSpecularInterpolation;
+	float mTargetDiffuseInterpolation;
+	float mTargetSpecularInterpolation;
 
 	Shader* mpGIShader;
 

@@ -52,9 +52,12 @@ SURFACE_DATA UnpackGBufferViewport(uint2 viewportPosition)
 
 	//Calcluate screen space position
 	float2 ScreenPixelOffset = float2(2.0f, -2.0f) / GBufferDim;
-		float2 ScreenPosition = (float2(viewportPosition.xy) + 0.5f) * ScreenPixelOffset.xy + float2(-1.0f, 1.0f);
+	float2 ScreenPosition = (float2(viewportPosition.xy) + 0.5f) * ScreenPixelOffset.xy + float2(-1.0f, 1.0f);
 
-		float zBuffer = DepthTexture.Load(uint3(viewportPosition, 0)).r;
+	float zBuffer = DepthTexture.Load(uint3(viewportPosition, 0)).r;
+
+	Out.PositionTextureSpace = viewportPosition.xy / GBufferDim;
+	Out.PositionScreenSpace = float3(ScreenPosition.xy, zBuffer);
 	float ViewSpaceZ = ConvertZToLinearDepth(zBuffer);
 
 	Out.PositionView = GetViewPos(ScreenPosition, ViewSpaceZ);
