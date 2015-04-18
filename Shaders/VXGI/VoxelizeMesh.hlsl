@@ -107,7 +107,10 @@ void GS(triangle GS_INPUT input[3], inout TriangleStream<PS_INPUT> triStream)
 
 	const float2 halfPixel = float2(1.0f, 1.0f) / 512.0f;
 
-	float3 normal = cross(normalize(input[1].PosL - input[0].PosL), normalize(input[2].PosL - input[0].PosL)); //Get face normal
+	float3 posW0 = mul(gWorld, float4(input[0].PosL, 1.0f)).xyz;
+	float3 posW1 = mul(gWorld, float4(input[1].PosL, 1.0f)).xyz;
+	float3 posW2 = mul(gWorld, float4(input[2].PosL, 1.0f)).xyz;
+	float3 normal = cross(normalize(posW1 - posW0), normalize(posW2 - posW0)); //Get face normal
 
 		//float4x4 axisProjections[] = {
 		//	float4x4(gWorldViewProj._m00, 0.0f, 0.0f, 0.0f,

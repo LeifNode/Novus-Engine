@@ -341,7 +341,7 @@ void VXGITestApplication::Update(float dt)
 
 	mpShadowMap->setDirection(mpGlobalIlluminationRenderPass->getLightDirection());
 
-	//mpSphereActor->transform.Rotate(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dt));
+	mpSphereActor->transform.Rotate(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dt));
 
 	EngineStatics::getWorld()->Update(dt);
 }
@@ -351,20 +351,20 @@ void VXGITestApplication::Render()
 	mpRenderer->PreRender();
 
 
-	if (!mSceneVoxelized)
-	{
+	//if (!mSceneVoxelized)
+	//{
 		mpRenderer->setShader(mpDepthPassShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
 		//Render voxelization
 		mpRenderer->setShader(mpVoxelizationShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
-	}
-	else if (mRequiresReinject)
-	{
-		mpRenderer->setShader(mpDepthPassShader);
-		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
-	}
+	//}
+	//else if (mRequiresReinject)
+	//{
+	//	mpRenderer->setShader(mpDepthPassShader);
+	//	mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
+	//}
 
 	//Render meshes as normal
 	CBPerFrame perFrame;
@@ -400,11 +400,11 @@ void VXGITestApplication::Render()
 
 	mpSkyboxRenderer->Render(mpRenderer);
 
-	if (mRequiresReinject)
-	{
+	/*if (mRequiresReinject)
+	{*/
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
-	}
+	//}
 	
 	if (mRenderVoxelization)
 	{
