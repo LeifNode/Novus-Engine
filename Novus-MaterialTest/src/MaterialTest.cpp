@@ -44,7 +44,7 @@ mpSkyboxRenderer(NULL)
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
-	mpCamera->setVelocity(3.0f);
+	mpCamera->setSpeed(3.0f);
 
 	mpCamera->setPosition(Vector3(3.0f, 2.0f, 3.0f));
 	mpCamera->LookAt(Vector3(0.0f, 0.0f, 0.0f));
@@ -101,8 +101,7 @@ void MaterialTest::InitShaders()
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	mpMainShader = mpRenderer->LoadShader(L"../Shaders/GenericShader.hlsl", shaderInfo, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vertexDescription, ARRAYSIZE(vertexDescription));

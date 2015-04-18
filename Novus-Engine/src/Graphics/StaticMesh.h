@@ -17,16 +17,19 @@
 #include "Resources/Mesh/AssetTypes.h"
 #include "Resources/Resource.h"
 #include "Utils/Objects/Type.h"
+#include "Geometry.h"
 
 namespace novus
 {
-struct StaticMeshVertex
-{
-	Vector3 Position;
-	Vector3 Normal;
-	Vector3 Tangent;
-	Vector2 TexCoord;
-};
+struct Vertex;
+
+//struct StaticMeshVertex
+//{
+//	Vector3 Position;
+//	Vector3 Normal;
+//	Vector3 Tangent;
+//	Vector2 TexCoord;
+//};
 
 struct StaticMeshMaterial
 {
@@ -46,13 +49,15 @@ public:
 	virtual ~StaticMesh();
 
 	void Init(novus::assettypes::Scene* meshes);
-	MeshRenderer<StaticMeshVertex>* AddMesh(std::vector<StaticMeshVertex>& vertices, std::vector<unsigned int>& indices);
+	MeshRenderer<Vertex>* AddMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
 
 	void Render(D3DRenderer* renderer) override;
 
 	size_t getDiskSize() const override { return 0; }
 	size_t getGPUSize() const override { return 0; }
 	size_t getSize() const override { return 0; }
+
+	void setMaterial(const StaticMeshMaterial& material);
 
 	void Free();
 
@@ -61,8 +66,11 @@ private:
 	StaticMesh& operator= (const StaticMesh& other) { return *this; }
 
 private:
-	std::vector<MeshRenderer<StaticMeshVertex>*> mMeshes;
-	std::map<MeshRenderer<StaticMeshVertex>*, StaticMeshMaterial*> mMeshMaterials;
+	StaticMeshMaterial mMaterialFallback;
+	bool mFallbackSet;
+
+	std::vector<MeshRenderer<Vertex>*> mMeshes;
+	std::map<MeshRenderer<Vertex>*, StaticMeshMaterial*> mMeshMaterials;
 };
 
 NOVUS_OBJECT_DEF(StaticMesh);

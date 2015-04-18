@@ -36,6 +36,7 @@ public:
 	void AddActor(Actor* actor);
 
 	void RenderScenePass(D3DRenderer* renderer, RenderPass::Type pass);
+	void RenderAllActors(D3DRenderer* renderer);
 
 	void RegisterRenderTarget(IRenderTarget* renderTarget);
 	void UnregisterRenderTarget(IRenderTarget* renderTarget);

@@ -91,6 +91,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	bool pastSpecularDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.y;
 
 	surface.Roughness += 0.3f;
+	//surface.Roughness = 0.4f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -117,7 +118,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	float3 specContrib = ((D*G*F) / (4.0 * NoL * NoV)) * NoL;//TODO: This is not correct, but fixes the specular falloff to some degree for the time being
 	
-	if (pastDiffuseDivide)
+	if (pastDiffuseDivide && !pastSpecularDivide)
 	{
 		finalColor += (gLightColor.rgb / PI) * surface.Diffuse.rgb * diffuseContrib * (1.0f - surface.Metallic);//Diffuse
 	}
@@ -131,7 +132,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	float shadowContrib = CalculateShadow(gShadowSampler, gShadowMap, pointShadowSampleSpace);
 
-	float4 directColor = float4(finalColor * shadowContrib, 1.0f);
+	float4 directColor = float4(finalColor * shadowContrib + surface.Emissive, 1.0f);
 
 		//Cone tracing
 	float3 coneSamplePosition = surface.PositionWorld;
@@ -140,7 +141,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	const float radiusRatio = sin(calculateSpecularConeHalfAngle(roughness2));
 
 	//const float radiusRatio = sin(0.05f);
-	float startSampleDistance = 0.03f;
+	float startSampleDistance = 0.04f;
 
 	coneSamplePosition += surface.Normal * gVoxelScale * 2.0f; //Offset to avoid self intersections
 	float3 originSamplePosition = coneSamplePosition;
@@ -156,8 +157,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	for (int i = 0; i < 512; i++)
 	{
 		float lastDistance = currentDistance;
-		//currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
-		currentDistance = currentDistance / (1.0f - radiusRatio);
+		currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
+		//currentDistance = currentDistance / (1.0f - radiusRatio);
 		coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 		currentRadius = radiusRatio * currentDistance;
 
@@ -174,7 +175,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	float3 accumilatedSpecular = accumilatedColor;
 
-	float3 up = surface.Normal.y > 0.98f ? float3(0.0f, 0.0f, 1.0f) : float3(0.0f, 1.0f, 0.0f);
+	float3 up = (surface.Normal.y * surface.Normal.y) > 0.95f ? float3(0.0f, 0.0f, 1.0f) : float3(0.0f, 1.0f, 0.0f);
 	float3 right = cross(surface.Normal, up);
 	up = cross(surface.Normal, right);
 

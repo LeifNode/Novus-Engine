@@ -95,6 +95,17 @@ void World::RenderScenePass(D3DRenderer* renderer, RenderPass::Type pass)
 	}
 }
 
+void World::RenderAllActors(D3DRenderer* renderer)
+{
+	auto endIt = mActors.cend();
+	for (auto it = mActors.cbegin(); it != endIt; ++it)
+	{
+		it->second->PreRender(renderer);
+		it->second->Render(renderer);
+		it->second->PostRender(renderer);
+	}
+}
+
 void World::RegisterRenderTarget(IRenderTarget* renderTarget)
 {
 	mRenderTargets.insert(renderTarget);

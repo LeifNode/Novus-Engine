@@ -56,6 +56,8 @@ mpVoxelizationShader(NULL),
 mpDebugRaymarchShader(NULL),
 mpSkyboxRenderer(NULL),
 mpMesh(NULL),
+mpSphereMesh(NULL),
+mpSphereActor(NULL),
 mpVoxelTexture(NULL),
 mpShadowMap(NULL),
 mpVoxelVolume(NULL),
@@ -89,6 +91,7 @@ VXGITestApplication::~VXGITestApplication()
 	NE_DELETE(mpShadowMap);
 	NE_DELETE(mpGlobalIlluminationRenderPass);
 	NE_DELETE(mpRadianceVolume);
+	NE_DELETE(mpSphereMesh);
 }
 
 bool VXGITestApplication::Init()
@@ -141,6 +144,34 @@ bool VXGITestApplication::Init()
 	mpGlobalIlluminationRenderPass->setShadowMap(mpShadowMap);
 	mpGlobalIlluminationRenderPass->setVoxelVolume(mpRadianceVolume);
 	mpGlobalIlluminationRenderPass->setLightDirection(Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX)));
+
+	Mesh sphereMesh;
+
+	//GeometryGenerator::CreateBox(2.0f, 2.0f, 2.0f, sphereMesh);
+	GeometryGenerator::CreateSphere(1.0f, 30, 30, sphereMesh);
+
+	mpSphereMesh = NE_NEW StaticMesh();
+	mpSphereMesh->AddMesh(sphereMesh.Vertices, sphereMesh.Indices);
+
+	StaticMeshMaterial sphereMat;
+	sphereMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	sphereMat.RenderMaterial.SpecularColor = Vector3(0.0f);
+	sphereMat.RenderMaterial.Emissive = Vector3(0.0f);
+	sphereMat.RenderMaterial.Metallic = 1.0f;
+	sphereMat.RenderMaterial.Roughness = 0.01f;
+
+	StaticMesh* modelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/buddha.obj");
+
+	mpSphereMesh->setMaterial(sphereMat);
+	modelMesh->setMaterial(sphereMat);
+
+	mpSphereActor = NE_NEW Actor();
+	mpSphereActor->transform.SetPosition(Vector3(0.0f, 2.0f, 1.2f));
+	mpSphereActor->transform.SetScale(5.0f);
+	StaticMeshComponent* sphereMeshComponent = NE_NEW StaticMeshComponent(modelMesh);
+
+	mpSphereActor->AddComponent(sphereMeshComponent);
+	mpWorld->AddActor(mpSphereActor);
 
 	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");
 
@@ -310,6 +341,8 @@ void VXGITestApplication::Update(float dt)
 
 	mpShadowMap->setDirection(mpGlobalIlluminationRenderPass->getLightDirection());
 
+	//mpSphereActor->transform.Rotate(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dt));
+
 	EngineStatics::getWorld()->Update(dt);
 }
 
@@ -354,9 +387,8 @@ void VXGITestApplication::Render()
 	mpRenderer->ClearDepth();
 	mpRenderer->getGBuffer()->BindRenderTargets();
 	mpRenderer->setShader(mpStaticMeshShader);
-	mpRenderer->PushTransform(Matrix4::Scale(0.01f));
-	mpMesh->Render(mpRenderer);
-	mpRenderer->PopTransform();
+	
+	mpWorld->RenderAllActors(mpRenderer);
 
 	mpRenderer->UnbindTextureResources();
 
@@ -373,7 +405,7 @@ void VXGITestApplication::Render()
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
 	}
-
+	
 	if (mRenderVoxelization)
 	{
 		mpGlobalIlluminationRenderPass->Execute(mpRenderer);
@@ -393,7 +425,7 @@ void VXGITestApplication::Render()
 		mpRenderer->setPerObjectBuffer(perObject);
 
 		ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getTexture()->getResourceView();
-		//ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceVolume()->getResourceView();
+		//ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceMips()->getResourceView();
 		mpRenderer->context()->CSSetShaderResources(0, 1, &voxelSRV);
 
 		ID3D11UnorderedAccessView* outputUAV = mpRenderer->getDeferredRenderer()->getHDRRenderTarget()->getUnorderedAccessView();

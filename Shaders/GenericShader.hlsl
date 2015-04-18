@@ -18,7 +18,6 @@ struct VS_INPUT
 	float3 PosL  : POSITION;
 	float3 Normal: NORMAL;
 	float3 Tangent : TANGENT;
-	float3 Bitangent : BITANGENT;
 	float2 Tex : TEXCOORD;
 };
 
@@ -42,7 +41,7 @@ PS_INPUT VS(VS_INPUT vin)
 
 	vout.Normal = mul((float3x3)gWorldInvTranspose, normalize(vin.Normal));
 	vout.Tangent = mul((float3x3)gWorldInvTranspose, normalize(vin.Tangent));
-	vout.Bitangent = mul((float3x3)gWorldInvTranspose, normalize(vin.Bitangent));
+	vout.Bitangent = cross(vin.Normal, vin.Tangent);
 
 	vout.Tex = mul(gTextureTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
 

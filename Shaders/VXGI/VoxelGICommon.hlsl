@@ -70,7 +70,7 @@ float3 worldToVoxelVolume(float3 worldPosition)
 
 float getMipLevelFromRadius(float radius)
 {
-	return log2((radius + 0.01f) * gVoxelScale) + gVoxelMipCount;
+	return log2((radius * 2.0f + 0.01f) * gVoxelScale) + gVoxelMipCount;
 }
 
 float4 sampleVoxelVolume(Texture3D<float4> voxelTexture, SamplerState voxelSampler, float3 worldPosition, float radius)
@@ -206,7 +206,7 @@ float4 filterAnsiotropicVoxelDirection(float4 f1, float4 f2, float4 f3, float4 f
 		directionalAccum.a += min(1.0f, frontVoxels[i].a + backVoxels[i].a) * 0.25f;
 	}*/
 
-	directionalAccum.rgb += (f1.rgb + b1.rgb * (1.0f - f1.a)) * 0.25f;
+	/*directionalAccum.rgb += (f1.rgb + b1.rgb * (1.0f - f1.a)) * 0.25f;
 	directionalAccum.a += min(1.0f, f1.a + b1.a) * 0.25f;
 
 	directionalAccum.rgb += (f2.rgb + b2.rgb * (1.0f - f2.a)) * 0.25f;
@@ -216,7 +216,12 @@ float4 filterAnsiotropicVoxelDirection(float4 f1, float4 f2, float4 f3, float4 f
 	directionalAccum.a += min(1.0f, f3.a + b3.a) * 0.25f;
 
 	directionalAccum.rgb += (f4.rgb + b4.rgb * (1.0f - f4.a)) * 0.25f;
-	directionalAccum.a += min(1.0f, f4.a + b4.a) * 0.25f;
+	directionalAccum.a += min(1.0f, f4.a + b4.a) * 0.25f;*/
+
+	directionalAccum += (f1 + b1 * (1.0f - f1.a)) * 0.25f;
+	directionalAccum += (f2 + b2 * (1.0f - f2.a)) * 0.25f;
+	directionalAccum += (f3 + b3 * (1.0f - f3.a)) * 0.25f;
+	directionalAccum += (f4 + b4 * (1.0f - f4.a)) * 0.25f;
 
 	return directionalAccum;
 }

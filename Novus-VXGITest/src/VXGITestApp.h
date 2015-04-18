@@ -24,6 +24,7 @@
 
 namespace novus
 {
+	class Actor;
 	class Camera;
 	class Texture2D;
 	class Texture3D;
@@ -72,7 +73,10 @@ private:
 
 	novus::CBPerFrame mPerFrameData;
 
+	novus::Actor* mpSphereActor;
+
 	novus::StaticMesh* mpMesh;
+	novus::StaticMesh* mpSphereMesh;
 
 	novus::Texture3D* mpVoxelTexture;
 

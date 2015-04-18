@@ -213,13 +213,13 @@ void GeometryGenerator::CreateSphere(float radius, UINT sliceCount, UINT stackCo
 			v.Tangent.y = 0.0f;
 			v.Tangent.z = +radius*sinf(phi)*cosf(theta);
 
-			v.Bitangent.x = 0.0f;
+			/*v.Bitangent.x = 0.0f;
 			v.Bitangent.y = radius*-sinf(phi);
-			v.Bitangent.z = +radius*sinf(phi)*cosf(theta);
+			v.Bitangent.z = +radius*sinf(phi)*cosf(theta);*/
 
 			v.Tangent = Normalize(v.Tangent);
 
-			v.Bitangent = Normalize(v.Bitangent);
+			//v.Bitangent = Normalize(v.Bitangent);
 
 			v.Position = Normalize(v.Position);
 
@@ -431,13 +431,13 @@ void GeometryGenerator::CreateGeosphere(float radius, UINT numSubdivisions, Mesh
 		mesh.Vertices[i].Tangent.y = 0.0f;
 		mesh.Vertices[i].Tangent.z = +radius*sinf(phi)*cosf(theta);
 
-		mesh.Vertices[i].Bitangent.x = 0.0f;
+		/*mesh.Vertices[i].Bitangent.x = 0.0f;
 		mesh.Vertices[i].Bitangent.y = radius*-sinf(phi);
-		mesh.Vertices[i].Bitangent.z = +radius*sinf(phi)*cosf(theta);
+		mesh.Vertices[i].Bitangent.z = +radius*sinf(phi)*cosf(theta);*/
 
 		mesh.Vertices[i].Tangent = Normalize(mesh.Vertices[i].Tangent);
 
-		mesh.Vertices[i].Bitangent = Normalize(mesh.Vertices[i].Bitangent);
+		//mesh.Vertices[i].Bitangent = Normalize(mesh.Vertices[i].Bitangent);
 	}
 }
 
@@ -550,11 +550,11 @@ void GeometryGenerator::BuildCylinderTopCap(float bottomRadius, float topRadius,
 		float u = x / height + 0.5f;
 		float v = z / height + 0.5f;
 
-		mesh.Vertices.push_back(Vertex(x, y, z, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, u, v));
+		mesh.Vertices.push_back(Vertex(x, y, z, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v));
 	}
 
 	// Cap center vertex.
-	mesh.Vertices.push_back(Vertex(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f));
+	mesh.Vertices.push_back(Vertex(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f));
 
 	// Index of center vertex.
 	UINT centerIndex = (UINT)mesh.Vertices.size() - 1;
@@ -589,11 +589,11 @@ void GeometryGenerator::BuildCylinderBottomCap(float bottomRadius, float topRadi
 		float u = x / height + 0.5f;
 		float v = z / height + 0.5f;
 
-		mesh.Vertices.push_back(Vertex(x, y, z, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, u, v));
+		mesh.Vertices.push_back(Vertex(x, y, z, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,  u, v));
 	}
 
 	// Cap center vertex.
-	mesh.Vertices.push_back(Vertex(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f));
+	mesh.Vertices.push_back(Vertex(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,  0.5f, 0.5f));
 
 	// Cache the index of center vertex.
 	UINT centerIndex = (UINT)mesh.Vertices.size() - 1;
@@ -635,7 +635,7 @@ void GeometryGenerator::CreatePlane(float width, float depth, UINT m, UINT n, Me
 			mesh.Vertices[i*n + j].Position = Vector3(x, 0.0f, z);
 			mesh.Vertices[i*n + j].Normal = Vector3(0.0f, 1.0f, 0.0f);
 			mesh.Vertices[i*n + j].Tangent = Vector3(1.0f, 0.0f, 0.0f);
-			mesh.Vertices[i*n + j].Bitangent = Vector3(0.0f, 1.0f, 0.0f);
+			//mesh.Vertices[i*n + j].Bitangent = Vector3(0.0f, 1.0f, 0.0f);
 
 			// Stretch texture over grid.
 			mesh.Vertices[i*n + j].TexCoord.x = j*du;
@@ -678,28 +678,24 @@ void GeometryGenerator::CreateFullscreenQuad(Mesh& mesh)
 		-1.0f, -1.0f, 0.0f,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
 		0.0f, 1.0f);
 
 	mesh.Vertices[1] = Vertex(
 		-1.0f, +1.0f, 0.0f,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f);
 
 	mesh.Vertices[2] = Vertex(
 		+1.0f, +1.0f, 0.0f,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
 		1.0f, 0.0f);
 
 	mesh.Vertices[3] = Vertex(
 		+1.0f, -1.0f, 0.0f,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
 		1.0f, 1.0f);
 
 	mesh.Indices[0] = 0;

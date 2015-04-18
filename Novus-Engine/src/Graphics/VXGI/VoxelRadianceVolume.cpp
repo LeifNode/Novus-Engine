@@ -212,7 +212,7 @@ void VoxelRadianceVolume::ClearColor(D3DRenderer* renderer)
 
 	renderer->context()->ClearRenderTargetView(mpVoxelRadianceVolume->getRenderTargetView(), &clearColor.x);
 
-	ID3D11UnorderedAccessView* sourceUav = mpSourceVolume->getTexture()->getUnorderedAccessView();
+	//ID3D11UnorderedAccessView* sourceUav = mpSourceVolume->getTexture()->getUnorderedAccessView();
 	ID3D11UnorderedAccessView* targetUav = mpVoxelRadianceVolume->getUnorderedAccessView();
 
 	unsigned int dispatchWidth = (mpVoxelRadianceVolume->getWidth() + 8 - 1) / 8;
@@ -221,13 +221,14 @@ void VoxelRadianceVolume::ClearColor(D3DRenderer* renderer)
 
 	ID3D11UnorderedAccessView* outputUavs[] =
 	{
-		sourceUav,
 		targetUav
 	};
 
 	renderer->setShader(mpCopyOcclusionShader);
 
-	renderer->context()->CSSetUnorderedAccessViews(0, 2, outputUavs, 0);
+	renderer->setTextureResource(0, mpSourceVolume->getTexture());
+	renderer->setTextureResource(1, mpSourceVolume->getEmissiveTexture());
+	renderer->context()->CSSetUnorderedAccessViews(0, 1, outputUavs, 0);
 
 	renderer->context()->Dispatch(dispatchWidth, dispatchHeight, dispatchDepth);
 

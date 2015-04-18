@@ -201,6 +201,7 @@ void GS(triangle GS_INPUT input[3], inout TriangleStream<PS_INPUT> triStream)
 void PS(PS_INPUT pin)
 {
 	float4 diffuseColor = gMaterial.Diffuse;
+	float3 emissiveColor = gMaterial.Emissive;
 
 	pin.Normal = normalize(pin.Normal);
 
@@ -239,6 +240,7 @@ void PS(PS_INPUT pin)
 		//imageAtomicRGBA8Avg(gVoxelVolume, texIndex, diffuseColor); //Two of these in sequence always hangs the graphics driver
 
 		gVoxelVolume[texIndex] = convVec4ToRGBA8(diffuseColor * 255.0f);
+		gVoxelEmissive[texIndex] = convVec4ToRGBA8(float4(emissiveColor.rgb, 1.0f) * 255.0f);
 		imageAtomicRGBA8Avg(gVoxelNormals, texIndex, normal);
 	}
 }

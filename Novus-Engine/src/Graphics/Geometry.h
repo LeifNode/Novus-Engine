@@ -29,7 +29,6 @@ struct Vertex
 	Vector3 Position;
 	Vector3 Normal;
 	Vector3 Tangent;
-	Vector3 Bitangent;
 	Vector2 TexCoord;
 
 	Vertex(){ ZeroMemory(this, sizeof(this)); }
@@ -45,22 +44,20 @@ struct Vertex
 		TexCoord(texCoord)
 	{}
 
-	Vertex(const Vector3& position, const Vector3& normal, const Vector2& texCoord, const Vector3& tangent, const Vector3& bitangent)
+	Vertex(const Vector3& position, const Vector3& normal, const Vector2& texCoord, const Vector3& tangent)
 		:Position(position),
 		Normal(normal),
 		TexCoord(texCoord),
-		Tangent(tangent),
-		Bitangent(bitangent)
+		Tangent(tangent)
 	{}
 
 	Vertex(
 		float px, float py, float pz,
 		float nx, float ny, float nz,
 		float tx, float ty, float tz,
-		float bx, float by, float bz,
 		float u, float v)
 		: Position(px, py, pz), Normal(nx, ny, nz),
-		Tangent(tx, ty, tz), Bitangent(bx, by, bz), TexCoord(u, v)
+		Tangent(tx, ty, tz), TexCoord(u, v)
 	{}
 };
 

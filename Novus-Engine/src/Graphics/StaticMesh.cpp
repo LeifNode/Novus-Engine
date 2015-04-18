@@ -8,12 +8,20 @@ namespace novus
 {
 
 StaticMesh::StaticMesh()
+:mFallbackSet(false)
 {
+	ZeroMemory(&mMaterialFallback.RenderMaterial, sizeof(mMaterialFallback.RenderMaterial));
 }
 
 StaticMesh::~StaticMesh()
 {
 	this->Free();
+}
+
+void StaticMesh::setMaterial(const StaticMeshMaterial& material)
+{
+	mMaterialFallback = material;
+	mFallbackSet = true;
 }
 
 void StaticMesh::Free()
@@ -33,7 +41,7 @@ void StaticMesh::Free()
 
 void StaticMesh::Init(assettypes::Scene* meshes)
 {
-	std::vector<StaticMeshVertex> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
 	if (meshes != NULL)
@@ -47,7 +55,7 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 
 			for (unsigned int i = 0; i < (*it)->mVertexCount; i++)
 			{
-				StaticMeshVertex vertex;
+				Vertex vertex;
 
 				vertex.Position = (*it)->mVertices[i];
 
@@ -89,7 +97,7 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 				}
 			}
 
-			MeshRenderer<StaticMeshVertex>* newMesh = AddMesh(vertices, indices);
+			MeshRenderer<Vertex>* newMesh = AddMesh(vertices, indices);
 
 			//Parse the mesh material
 			if ((*it)->mMaterialId != -1)
@@ -130,9 +138,9 @@ void StaticMesh::Init(assettypes::Scene* meshes)
 	}
 }
 
-MeshRenderer<StaticMeshVertex>* StaticMesh::AddMesh(std::vector<StaticMeshVertex>& vertices, std::vector<unsigned int>& indices)
+MeshRenderer<Vertex>* StaticMesh::AddMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices)
 {
-	MeshRenderer<novus::StaticMeshVertex>* newMesh = NE_NEW MeshRenderer<novus::StaticMeshVertex>();
+	MeshRenderer<novus::Vertex>* newMesh = NE_NEW MeshRenderer<novus::Vertex>();
 
 	newMesh->Init(EngineStatics::getRenderer(), vertices, indices);
 
@@ -155,7 +163,7 @@ void StaticMesh::Render(D3DRenderer* renderer)
 		perObject.TextureTransform = Matrix4(1.0f);
 
 		auto material = mMeshMaterials.find(*it);
-		if (material != mMeshMaterials.end())
+		if (material != mMeshMaterials.end() && !mFallbackSet)
 		{
 			perObject.Material = material->second->RenderMaterial;
 
@@ -175,8 +183,26 @@ void StaticMesh::Render(D3DRenderer* renderer)
 				}
 			}
 		}
+		else
+		{
+			perObject.Material = mMaterialFallback.RenderMaterial;
 
-		perObject.Material.Roughness = 0.1f;
+			for (auto texIt = mMaterialFallback.Textures.cbegin(); texIt != mMaterialFallback.Textures.cend(); ++texIt)
+			{
+				switch (texIt->first)
+				{
+				case assettypes::TextureType::Diffuse:
+					renderer->setTextureResource(0, texIt->second);
+					break;
+				case assettypes::TextureType::Normal:
+					renderer->setTextureResource(1, texIt->second);
+					break;
+				case assettypes::TextureType::Specular:
+					renderer->setTextureResource(2, texIt->second);
+					break;
+				}
+			}
+		}
 
 		renderer->setPerObjectBuffer(perObject);
 
