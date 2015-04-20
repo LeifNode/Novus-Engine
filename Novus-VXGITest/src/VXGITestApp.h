@@ -54,6 +54,7 @@ public:
 
 	void InitShaders();
 	void InitLights();
+	void InitBoxes();
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
@@ -77,6 +78,9 @@ private:
 
 	novus::StaticMesh* mpMesh;
 	novus::StaticMesh* mpSphereMesh;
+
+	std::vector<novus::Actor*> mObjects;
+	std::vector<novus::StaticMesh*> mObjectMeshes;
 
 	novus::Texture3D* mpVoxelTexture;
 

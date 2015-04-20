@@ -138,7 +138,7 @@ void DeferredRenderer::RenderDeferredShading(D3DRenderer* renderer)
 		{
 			PointLight light = mpLightManager->getLights()[i];
 			light.PositionView = Vector3(Vector4(light.PositionWorld, 1.0f) * view);
-			light.Range = light.Range = sqrt(light.Intensity / 0.004f) - 1.0f + light.Radius;
+			light.Range = light.Range = sqrt(light.Intensity / 0.0003f) - 1.0f + light.Radius;
 			//light.PositionView.z = -light.PositionView.z;
 
 			lightBufferPtr[i] = light;

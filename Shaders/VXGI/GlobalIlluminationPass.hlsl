@@ -90,8 +90,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	bool pastDiffuseDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.x;
 	bool pastSpecularDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.y;
 
-	surface.Roughness += 0.3f;
-	//surface.Roughness = 0.4f;
+	//surface.Roughness += 0.3f;
+	//surface.Roughness = 0.2f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -132,7 +132,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	float shadowContrib = CalculateShadow(gShadowSampler, gShadowMap, pointShadowSampleSpace);
 
-	float4 directColor = float4(finalColor * shadowContrib + surface.Emissive, 1.0f);
+	float4 directColor = float4(finalColor * shadowContrib, 1.0f);
 
 		//Cone tracing
 	float3 coneSamplePosition = surface.PositionWorld;
@@ -141,7 +141,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	const float radiusRatio = sin(calculateSpecularConeHalfAngle(roughness2));
 
 	//const float radiusRatio = sin(0.05f);
-	float startSampleDistance = 0.04f;
+	float startSampleDistance = 0.15f;
 
 	coneSamplePosition += surface.Normal * gVoxelScale * 2.0f; //Offset to avoid self intersections
 	float3 originSamplePosition = coneSamplePosition;
@@ -156,20 +156,21 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	//Specular GI
 	for (int i = 0; i < 512; i++)
 	{
+		bool outsideVolume = false;
 		float lastDistance = currentDistance;
-		currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
-		//currentDistance = currentDistance / (1.0f - radiusRatio);
+		//currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
+		currentDistance = currentDistance / (1.0f - radiusRatio);
 		coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 		currentRadius = radiusRatio * currentDistance;
 
 		//float4 sampleColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, currentRadius);
-		float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection);
+		float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection, outsideVolume);
 	
 		//sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
 
 		accumilateColorOcclusion(sampleColor, accumilatedColor, accumilatedOcclusion);
 
-		if (accumilatedOcclusion >= 1.0f)
+		if (accumilatedOcclusion >= 0.95f || outsideVolume)
 			break;
 	}
 
@@ -206,7 +207,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 		for (int i = 0; i < 64; i++)
 		{
-			float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection);
+			bool outsideVolume = false;
+			float4 sampleColor = sampleVoxelVolumeAnisotropic(gVoxelVolume, gVoxelVolumeAnisotropicMips, gVoxelSampler, coneSamplePosition, currentRadius, coneSampleDirection, outsideVolume);
 
 			float lastDistance = currentDistance;
 			//currentDistance = (currentDistance * (1.0f + diffuseRadiusRatio)) / (1.0f - diffuseRadiusRatio);
@@ -214,12 +216,12 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 			coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 			currentRadius = diffuseRadiusRatio * currentDistance;
 
-			//sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
+			sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
 			accumilateColorOcclusion(sampleColor, accumilatedColor, accumilatedOcclusion);
 
 			ambientOcclusionAccum += sampleColor.a * (0.1f / (currentDistance + 1.0f));
 
-			if (accumilatedOcclusion >= 1.0f)
+			if (accumilatedOcclusion >= 1.0f || outsideVolume)
 				break;
 		}
 
@@ -230,17 +232,21 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	//float4 sampledColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, 0.1f);
 
 	//gOutputTexture[globalCoords] = directColor * 11.0f;
+	directColor.rgb *= 11.0f;
+	directColor.rgb += surface.Emissive;
+
+
 	if (pastSpecularDivide)
 	{
-		gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f, 1.0f);
+		gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * (1.0f - diffuseOcclusionAccum), 1.0f);
 	}
 	else if (pastDiffuseDivide)
 	{
-		gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb * 11.0f + diffuseAccum.rgb * surface.Diffuse.rgb * (1.0f - diffuseOcclusionAccum), 1.0f);
+		gOutputTexture[globalCoords] = float4(accumilatedSpecular.rgb + directColor.rgb + diffuseAccum.rgb * surface.Diffuse.rgb * (1.0f - diffuseOcclusionAccum), 1.0f);
 	}
 	else
 	{
-		gOutputTexture[globalCoords] = float4(diffuseAccum.rgb * (1.0f - diffuseOcclusionAccum) + directColor.rgb * 11.0f, 1.0f);
+		gOutputTexture[globalCoords] = float4(diffuseAccum.rgb + directColor.rgb, 1.0f);
 	}
 	//gOutputTexture[globalCoords] = float4(1.0f - diffuseOcclusionAccum.rrr, 1.0f);
 }

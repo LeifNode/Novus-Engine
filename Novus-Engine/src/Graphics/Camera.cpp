@@ -83,8 +83,8 @@ void Camera::OnMouseMove(IEventDataPtr eventData)
 		int mouseDx = mLastMousePosition.x - dataPtr->getX();
 		int mouseDy = mLastMousePosition.y - dataPtr->getY();
 
-		float dx = -mouseDx * (Math::Pi / 180.0f) * 0.2f;
-		float dy = -mouseDy * (Math::Pi / 180.0f) * 0.2f;
+		float dx = -mouseDx * (Math::Pi / 180.0f) * 0.3f;
+		float dy = -mouseDy * (Math::Pi / 180.0f) * 0.3f;
 
 		Vector3 right = Normalize(Cross(mDirection, Vector3(0.0f, 1.0f, 0.0f)));
 		Quaternion rotationQuat;
@@ -139,7 +139,7 @@ void Camera::UpdatePosition(float dt)
 	InputSystem* inputSystem = EngineStatics::getInputSystem();
 	//HydraManager* hydra = inputSystem->getHydra();
 
-	float speedScalar = 14.0f;
+	float speedScalar = 14.0f * mMaxSpeed;
 	Vector3 forwardOffset = mDirection * speedScalar * dt;
 	Vector3 sidewaysOffset = Cross(mDirection, Vector3(0.0f, 1.0f, 0.0f)) * speedScalar * dt;
 

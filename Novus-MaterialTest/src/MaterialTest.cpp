@@ -11,6 +11,9 @@
 #include <Graphics/PostProcess/DeferredRenderer.h>
 #include <Graphics/Textures/Texture2D.h>
 #include <Graphics/SkyboxRenderer.h>
+#include <Resources/ResourceCache.h>
+#include <Graphics/StaticMesh.h>
+#include <Input/InputSystem.h>
 
 using namespace novus;
 
@@ -38,13 +41,15 @@ MaterialTest::MaterialTest(HINSTANCE instance)
 :
 NovusApplication(instance),
 mpMainShader(NULL),
-mpSkyboxRenderer(NULL)
+mpSkyboxRenderer(NULL),
+mpModelMesh(NULL),
+mModelRoughness(0.04f)
 {
 	mMainWndCaption = L"Novus Engine Material Test v0.1.66";
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
-	mpCamera->setSpeed(3.0f);
+	mpCamera->setSpeed(0.5f);
 
 	mpCamera->setPosition(Vector3(3.0f, 2.0f, 3.0f));
 	mpCamera->LookAt(Vector3(0.0f, 0.0f, 0.0f));
@@ -69,6 +74,7 @@ bool MaterialTest::Init()
 
 	InitShaders();
 	InitMesh();
+	InitLights();
 
 	novus::Font* verdana = mpFontManager->LoadFont(
 		"verdana",
@@ -118,6 +124,37 @@ void MaterialTest::InitMesh()
 	GeometryGenerator::CreatePlane(1000.0f, 1000.0f, 4, 4, mesh);
 
 	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
+
+	mpModelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/buddha.obj");
+
+	StaticMeshMaterial modelMat;
+	modelMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	modelMat.RenderMaterial.SpecularColor = Vector3(0.0f);
+	modelMat.RenderMaterial.Emissive = Vector3(0.0f, 0.0f, 0.0f);
+	modelMat.RenderMaterial.Metallic = 0.0f;
+	modelMat.RenderMaterial.Roughness = mModelRoughness;
+
+	mpModelMesh->setMaterial(modelMat);
+}
+
+void MaterialTest::InitLights()
+{
+	mLights.clear();
+	mLights.reserve(1024);
+	for (int i = 0; i < 1024; i++)
+	{
+		PointLight light;
+		light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
+		//light.Color = Vector3(1.0f, 1.0f, 1.0f);
+		light.Intensity = Math::RandF(0.3f, 2.7f) * 0.2f;
+		light.Radius = 0.0f;
+
+		light.FalloffPow = 1;
+		light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(0.0f, 0.2f), Math::RandF(-1.0f, 1.0f)) * 35.0f;
+		light.PositionWorld.y = Math::RandF(0.2f, 4.0f);
+
+		mLights.push_back(light);
+	}
 }
 
 void MaterialTest::HookInputEvents()
@@ -154,6 +191,31 @@ void MaterialTest::Update(float dt)
 	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
+
+	auto endIt = mLights.end();
+	for (auto it = mLights.begin(); it != endIt; ++it)
+	{
+		(*it).PositionWorld = Matrix3::RotateY(dt * 0.01f) * (*it).PositionWorld;
+		mpRenderer->getDeferredRenderer()->getLightManager()->AddLightForFrame(*it);
+	}
+
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
+	{
+		mModelRoughness = Math::Clamp(mModelRoughness - dt * 0.3f, 0.01f, 1.0f);
+	}
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
+	{
+		mModelRoughness = Math::Clamp(mModelRoughness + dt * 0.3f, 0.01f, 1.0f);
+	}
+
+	StaticMeshMaterial modelMat;
+	modelMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	modelMat.RenderMaterial.SpecularColor = Vector3(0.0f);
+	modelMat.RenderMaterial.Emissive = Vector3(0.0f, 0.0f, 0.0f);
+	modelMat.RenderMaterial.Metallic = 0.0f;
+	modelMat.RenderMaterial.Roughness = mModelRoughness;
+
+	mpModelMesh->setMaterial(modelMat);
 }
 
 void MaterialTest::Render()
@@ -194,7 +256,7 @@ void MaterialTest::Render()
 			perObject.Material.Metallic = static_cast<float>(z);
 
 			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) *
-				Matrix4::Translate(static_cast<float>(x) / 2.0f, 0.5f, static_cast<float>(z) / 2.0f);
+				Matrix4::Translate(static_cast<float>(x) / 2.0f, 0.1f, static_cast<float>(z) / 2.0f);
 
 			perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 			perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
@@ -205,6 +267,7 @@ void MaterialTest::Render()
 		}
 	}
 
+	//Plane
 	perObject.World = Matrix4::Translate(0.0f, 0.0f, 0.0f);
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
@@ -215,6 +278,11 @@ void MaterialTest::Render()
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);
 
+	//Buddha
+	perObject.World = Matrix4::RotateY(Math::Pi) * Matrix4::Scale(1.0f) * Matrix4::Translate(0.0f, 0.43f, 1.0f);
+	mpRenderer->PushTransform(perObject.World);
+	mpModelMesh->Render(mpRenderer);
+	mpRenderer->PopTransform();
 
 	mpSkyboxRenderer->Render(mpRenderer);
 

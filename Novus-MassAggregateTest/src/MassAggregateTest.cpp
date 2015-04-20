@@ -52,7 +52,7 @@ mpGravityForce(NULL)
 
 	mpCamera = NE_NEW Camera();
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
-	mpCamera->setSpeed(3.0f);
+	mpCamera->setSpeed(15.0f);
 
 	mpCamera->setPosition(Vector3(3.0f, 2.0f, 3.0f) * 10.0f);
 	mpCamera->LookAt(Vector3(0.0f, 0.0f, 0.0f));

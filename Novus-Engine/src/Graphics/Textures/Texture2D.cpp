@@ -101,7 +101,10 @@ void Texture2D::Load(D3DRenderer* renderer, const wchar_t* filePath)
 
 	if (textureResource == NULL || textureSRV == NULL)
 	{
-		NE_CRITICAL("Failed to load texture.", "Texture2D");
+		char errStr[256];
+		sprintf(errStr, "Failed to load texture %s.", filePath);
+
+		NE_CRITICAL(errStr, "Texture2D");
 		return;
 	}
 

@@ -92,6 +92,11 @@ VXGITestApplication::~VXGITestApplication()
 	NE_DELETE(mpGlobalIlluminationRenderPass);
 	NE_DELETE(mpRadianceVolume);
 	NE_DELETE(mpSphereMesh);
+
+	for (auto it = mObjectMeshes.begin(); it != mObjectMeshes.end(); ++it)
+	{
+		NE_DELETE(*it);
+	}
 }
 
 bool VXGITestApplication::Init()
@@ -147,8 +152,8 @@ bool VXGITestApplication::Init()
 
 	Mesh sphereMesh;
 
-	//GeometryGenerator::CreateBox(2.0f, 2.0f, 2.0f, sphereMesh);
-	GeometryGenerator::CreateSphere(1.0f, 30, 30, sphereMesh);
+	GeometryGenerator::CreateBox(2.0f, 2.0f, 2.0f, sphereMesh);
+	//GeometryGenerator::CreateSphere(1.0f, 30, 30, sphereMesh);
 
 	mpSphereMesh = NE_NEW StaticMesh();
 	mpSphereMesh->AddMesh(sphereMesh.Vertices, sphereMesh.Indices);
@@ -156,18 +161,22 @@ bool VXGITestApplication::Init()
 	StaticMeshMaterial sphereMat;
 	sphereMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	sphereMat.RenderMaterial.SpecularColor = Vector3(0.0f);
-	sphereMat.RenderMaterial.Emissive = Vector3(0.0f);
+	sphereMat.RenderMaterial.Emissive = Vector3(0.04f, 0.545f, 0.40f) * 0.0f;
 	sphereMat.RenderMaterial.Metallic = 1.0f;
 	sphereMat.RenderMaterial.Roughness = 0.01f;
 
+	//StaticMesh* modelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/hairball.obj");
 	StaticMesh* modelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/buddha.obj");
 
 	mpSphereMesh->setMaterial(sphereMat);
 	modelMesh->setMaterial(sphereMat);
 
 	mpSphereActor = NE_NEW Actor();
-	mpSphereActor->transform.SetPosition(Vector3(0.0f, 2.0f, 1.2f));
+	//mpSphereActor->transform.SetPosition(Vector3(0.0f, 2.0f, -0.5f));
+	//mpSphereActor->transform.SetScale(0.5f);
+	mpSphereActor->transform.SetPosition(Vector3(0.0f, 2.0f, 1.5f));
 	mpSphereActor->transform.SetScale(5.0f);
+	//mpSphereActor->transform.SetRotation(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), Math::PiOver2));
 	StaticMeshComponent* sphereMeshComponent = NE_NEW StaticMeshComponent(modelMesh);
 
 	mpSphereActor->AddComponent(sphereMeshComponent);
@@ -188,6 +197,8 @@ bool VXGITestApplication::Init()
 	meshActor->transform.SetScale(0.01f);
 
 	mpWorld->AddActor(meshActor);
+
+	InitBoxes();
 
 	return true;
 }
@@ -246,6 +257,41 @@ void VXGITestApplication::InitLights()
 		light.PositionWorld.y = Math::RandF(0.8f, 9.5f);
 
 		mLights.push_back(light);
+	}
+}
+
+void VXGITestApplication::InitBoxes()
+{
+	Mesh objectMesh;
+
+	GeometryGenerator::CreateBox(2.0f, 2.0f, 2.0f, objectMesh);
+	//GeometryGenerator::CreateSphere(1.0f, 30, 30, sphereMesh);
+
+	for (int i = 0; i < 60; i++)
+	{
+		StaticMesh* objectStaticMesh = NE_NEW StaticMesh();
+		objectStaticMesh->AddMesh(objectMesh.Vertices, objectMesh.Indices);
+
+		StaticMeshMaterial meshMat;
+		ZeroMemory(&meshMat, sizeof(meshMat));
+		meshMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		meshMat.RenderMaterial.SpecularColor = Vector3(1.0f);
+		meshMat.RenderMaterial.Emissive = Vector3(Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(0.0f, 1.0f)) * 0.8f;
+		meshMat.RenderMaterial.Metallic = 0.0f;
+		meshMat.RenderMaterial.Roughness = 1.0f;
+
+		objectStaticMesh->setMaterial(meshMat);
+		mObjectMeshes.push_back(objectStaticMesh);
+
+		Actor* modelMeshActor = NE_NEW Actor();
+		modelMeshActor->transform.SetPosition(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(0.0f, 1.0f), Math::RandF(-1.0f, 1.0f)) * 10.0f);
+		modelMeshActor->transform.SetScale(0.4f);
+		modelMeshActor->transform.SetRotation(Quaternion::AxisAngle(Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))), Math::RandF(0.0f, 2.0f * Math::Pi)));
+		StaticMeshComponent* sphereMeshComponent = NE_NEW StaticMeshComponent(objectStaticMesh);
+
+		modelMeshActor->AddComponent(sphereMeshComponent);
+		mpWorld->AddActor(modelMeshActor);
+		mObjects.push_back(modelMeshActor);
 	}
 }
 
@@ -311,7 +357,7 @@ void VXGITestApplication::Update(float dt)
 
 	Vector3 direction = Normalize(Vector3(mShadowOffsetY, -1.0f, mShadowOffsetX));
 	Vector3 position = -direction * 20.0f;
-	const float speedScalar = 0.04f;
+	const float speedScalar = 0.1f;
 
 	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
 	{
@@ -341,7 +387,13 @@ void VXGITestApplication::Update(float dt)
 
 	mpShadowMap->setDirection(mpGlobalIlluminationRenderPass->getLightDirection());
 
-	mpSphereActor->transform.Rotate(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dt));
+	//mpSphereActor->transform.Rotate(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dt));
+
+	for (auto it = mObjects.begin(); it != mObjects.end(); ++it)
+	{
+		(*it)->transform.Rotate((Quaternion::AxisAngle(Normalize((*it)->transform.GetPosition()), dt)));
+		(*it)->transform.SetPosition(Vector3(Vector4((*it)->transform.GetPosition(), 1.0f) * Quaternion::ToMatrix(Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dt * 0.2f))));
+	}
 
 	EngineStatics::getWorld()->Update(dt);
 }
@@ -351,20 +403,20 @@ void VXGITestApplication::Render()
 	mpRenderer->PreRender();
 
 
-	//if (!mSceneVoxelized)
-	//{
+	/*if (!mSceneVoxelized)
+	{*/
 		mpRenderer->setShader(mpDepthPassShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
 		//Render voxelization
 		mpRenderer->setShader(mpVoxelizationShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
-	//}
-	//else if (mRequiresReinject)
-	//{
-	//	mpRenderer->setShader(mpDepthPassShader);
-	//	mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
-	//}
+	/*}
+	else if (mRequiresReinject)
+	{
+		mpRenderer->setShader(mpDepthPassShader);
+		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
+	}*/
 
 	//Render meshes as normal
 	CBPerFrame perFrame;
@@ -400,8 +452,8 @@ void VXGITestApplication::Render()
 
 	mpSkyboxRenderer->Render(mpRenderer);
 
-	/*if (mRequiresReinject)
-	{*/
+	//if (mRequiresReinject)
+	//{
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
 	//}

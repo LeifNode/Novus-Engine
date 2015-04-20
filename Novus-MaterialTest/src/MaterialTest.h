@@ -20,6 +20,7 @@
 #include <Graphics/Geometry.h>
 #include <Events/EventSystem.h>
 #include <Math/Math.h>
+#include <Graphics/Lights.h>
 
 namespace novus
 {
@@ -48,9 +49,12 @@ public:
 
 	void InitShaders();
 	void InitMesh();
+	void InitLights();
 
 private:
 	novus::SkyboxRenderer* mpSkyboxRenderer;
+
+	std::vector<novus::PointLight> mLights;
 
 	novus::Camera* mpCamera;
 
@@ -60,6 +64,9 @@ private:
 
 	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
 	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
+	novus::StaticMesh* mpModelMesh;
+
+	float mModelRoughness;
 };
 
 
