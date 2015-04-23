@@ -90,7 +90,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	bool pastDiffuseDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.x;
 	bool pastSpecularDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.y;
 
-	//surface.Roughness += 0.3f;
+	surface.Roughness += 0.3f;
 	//surface.Roughness = 0.2f;
 
 	//Direct lighting
@@ -221,7 +221,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 			ambientOcclusionAccum += sampleColor.a * (0.1f / (currentDistance + 1.0f));
 
-			if (accumilatedOcclusion >= 1.0f || outsideVolume)
+			if (accumilatedOcclusion >= 0.995f || outsideVolume)
 				break;
 		}
 

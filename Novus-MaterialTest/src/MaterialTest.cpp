@@ -125,13 +125,13 @@ void MaterialTest::InitMesh()
 
 	mPlaneRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 
-	mpModelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/buddha.obj");
+	mpModelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/dragon.obj");
 
 	StaticMeshMaterial modelMat;
 	modelMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	modelMat.RenderMaterial.SpecularColor = Vector3(0.0f);
+	modelMat.RenderMaterial.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
 	modelMat.RenderMaterial.Emissive = Vector3(0.0f, 0.0f, 0.0f);
-	modelMat.RenderMaterial.Metallic = 0.0f;
+	modelMat.RenderMaterial.Metallic = 1.0f;
 	modelMat.RenderMaterial.Roughness = mModelRoughness;
 
 	mpModelMesh->setMaterial(modelMat);
@@ -210,7 +210,7 @@ void MaterialTest::Update(float dt)
 
 	StaticMeshMaterial modelMat;
 	modelMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	modelMat.RenderMaterial.SpecularColor = Vector3(0.0f);
+	modelMat.RenderMaterial.SpecularColor = Vector3(1.0f);
 	modelMat.RenderMaterial.Emissive = Vector3(0.0f, 0.0f, 0.0f);
 	modelMat.RenderMaterial.Metallic = 0.0f;
 	modelMat.RenderMaterial.Roughness = mModelRoughness;
@@ -279,7 +279,7 @@ void MaterialTest::Render()
 	mPlaneRenderer.Render(mpRenderer);
 
 	//Buddha
-	perObject.World = Matrix4::RotateY(Math::Pi) * Matrix4::Scale(1.0f) * Matrix4::Translate(0.0f, 0.43f, 1.0f);
+	perObject.World = Matrix4::RotateY(-Math::Pi / 2.0f) * Matrix4::Scale(2.1f) * Matrix4::Translate(0.0f, 0.55f, -0.7f); 
 	mpRenderer->PushTransform(perObject.World);
 	mpModelMesh->Render(mpRenderer);
 	mpRenderer->PopTransform();

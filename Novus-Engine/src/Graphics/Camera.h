@@ -61,6 +61,7 @@ private:
 	Vector3 mPosition;
 	Vector3 mDirection;
 	Quaternion mRotation;
+	Quaternion mTargetRotation;
 
 	float mNear;
 	float mFar;

@@ -70,4 +70,10 @@ Quaternion_t<T> operator* (const T& s, const Quaternion_t<T>& q);
 template <typename T>
 Quaternion_t<T> operator/ (const Quaternion_t<T>& q, const T& s);
 
+template <typename T>
+bool operator== (const Quaternion_t<T>& q1, const Quaternion_t<T>& q2);
+
+template <typename T>
+bool operator!= (const Quaternion_t<T>& q1, const Quaternion_t<T>& q2);
+
 }

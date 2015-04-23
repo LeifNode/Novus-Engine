@@ -169,4 +169,16 @@ namespace novus
 
 		return (sinAngle * (1 - t) / sinAngle) * q1 + (sinAngle * t / sinAngle) * q2;
 	}
+
+	template <typename T>
+	bool operator== (const Quaternion_t<T>& q1, const Quaternion_t<T>& q2)
+	{
+		return !(q1.x != q2.x || q1.y != q2.y || q1.z != q2.z || q1.w != q2.w);
+	}
+
+	template <typename T>
+	bool operator!= (const Quaternion_t<T>& q1, const Quaternion_t<T>& q2)
+	{
+		return q1.x != q2.x || q1.y != q2.y || q1.z != q2.z || q1.w != q2.w;
+	}
 }

@@ -52,6 +52,7 @@ void Camera::setPosition(const Vector3& p)
 void Camera::setRotation(const Quaternion& q)
 {
 	mRotation = q;
+	mTargetRotation = q;
 	mDirection = Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation));
 }
 
@@ -91,9 +92,9 @@ void Camera::OnMouseMove(IEventDataPtr eventData)
 
 		rotationQuat = Quaternion::AxisAngle(Vector3(0.0f, 1.0f, 0.0f), dx) * Quaternion::AxisAngle(right, dy);
 
-		mRotation = Quaternion::Normalize(mRotation * rotationQuat);
+		mTargetRotation = Quaternion::Normalize(mTargetRotation * rotationQuat);
 
-		mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
+		//mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
 
 		//mDirection = Matrix3::RotateY(dx) * mDirection;
 	}
@@ -131,6 +132,15 @@ void Camera::OnResize(int width, int height)
 
 void Camera::Update(float dt)
 {
+	if (Quaternion::Dot(mRotation, mTargetRotation) < 0.999999999f)
+	{
+		mRotation = Quaternion::Normalize(Quaternion::Slerp(mRotation, mTargetRotation, 0.1f));//.025 for material test
+	}
+	else
+		mRotation = mTargetRotation;
+
+	mDirection = Normalize(Vector3(0.0f, 0.0f, -1.0f) * Matrix3(Quaternion::ToMatrix(mRotation)));
+
 	UpdatePosition(dt);
 }
 
