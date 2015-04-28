@@ -14,6 +14,7 @@
 #include <Graphics/SkyboxRenderer.h>
 #include <Physics/Particle.h>
 #include <Physics/PhysicsSystem.h>
+#include <Input/InputSystem.h>
 
 using namespace novus;
 
@@ -259,7 +260,24 @@ void RigidBodyTest::Update(float dt)
 		(*it)->ClearAccumilators();
 		(*it)->CalculateDerivedData();
 
-		(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());//Gravity
+		//(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());//Gravity
+
+		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
+		{
+			(*it)->AddForceAtPoint(Vector3(0.0f, -9.8f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(1.0f, 0.0f, 0.0f));
+		}
+		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_C))
+		{
+			(*it)->AddForceAtPoint(Vector3(0.0f, -9.8f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f));
+		}
+		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
+		{
+			(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());
+		}
+		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_P))
+		{
+			mpContactRenderer->points.Clear();
+		}
 	}
 
 	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
@@ -286,7 +304,7 @@ void RigidBodyTest::UpdatePhysics(float dt)
 
 void RigidBodyTest::UpdateContactRenderers()
 {
-	mpContactRenderer->points.Clear();
+	//mpContactRenderer->points.Clear();
 
 	for (unsigned int i = 0; i < mCollisionData.contactCount; i++)
 	{
@@ -372,10 +390,10 @@ void RigidBodyTest::Render()
 		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 		perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		perObject.Material.Emissive = Vector3(0.5f);
+		perObject.Material.Emissive = Vector3(0.0f);
 		perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
-		perObject.Material.Metallic = 0.0f;
-		perObject.Material.Roughness = 0.12f;
+		perObject.Material.Metallic = 1.0f;
+		perObject.Material.Roughness = 0.15f;
 		mpRenderer->setPerObjectBuffer(perObject);
 
 		mMeshRenderer.Render(mpRenderer);

@@ -5,8 +5,8 @@ namespace novus
 
 RigidBody::RigidBody()
 : mInverseMass(1.0f),
-mLinearDamping(0.99f),
-mAngularDamping(0.99f)
+mLinearDamping(0.8f),
+mAngularDamping(0.7f)
 {
 	CalculateDerivedData();
 }
