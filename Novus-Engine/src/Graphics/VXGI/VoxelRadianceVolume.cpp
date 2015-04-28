@@ -310,7 +310,7 @@ void VoxelRadianceVolume::FilerMipLevel(D3DRenderer* renderer, int level)
 	ID3D11UnorderedAccessView* sourceUav = mMipUavs[level - 1];
 	ID3D11UnorderedAccessView* targetUav = mMipUavs[level];
 
-	unsigned int mipFraction = pow(2, level);
+	unsigned int mipFraction = static_cast<unsigned int>(pow(2, level));
 
 	unsigned int dispatchWidth = (mpVoxelRadianceVolume->getWidth() / mipFraction + 8 - 1) / 8;
 	unsigned int dispatchHeight = (mpVoxelRadianceVolume->getHeight() / mipFraction + 8 - 1) / 8;
@@ -368,7 +368,7 @@ void VoxelRadianceVolume::FilerAnisotropicMipLevel(D3DRenderer* renderer, int le
 	ID3D11UnorderedAccessView* sourceUav = mAnisotropicMipUavs[level - 1];
 	ID3D11UnorderedAccessView* targetUav = mAnisotropicMipUavs[level];
 
-	unsigned int mipFraction = pow(2, level);
+	unsigned int mipFraction = static_cast<unsigned int>(pow(2, level));
 
 	unsigned int dispatchWidth = ((mpAnisotropicMips->getWidth() / mipFraction) / 6 + 8 - 1) / 8;
 	unsigned int dispatchHeight = (mpAnisotropicMips->getHeight() / mipFraction + 8 - 1) / 8;

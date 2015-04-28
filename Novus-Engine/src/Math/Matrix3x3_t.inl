@@ -119,6 +119,14 @@ namespace novus
 	}
 
 	template <typename T>
+	typename Matrix3x3_t<T>::col_type Matrix3x3_t<T>::getAxisVector(size_t i) const
+	{
+		assert(i < this->size());
+
+		return Vector3_t<T>((*this)[0][i], (*this)[1][i], (*this)[2][i]);
+	}
+
+	template <typename T>
 	template <typename U>
 	Matrix3x3_t<T>& Matrix3x3_t<T>::operator= (const Matrix3x3_t<U>& m)
 	{
@@ -428,6 +436,32 @@ namespace novus
 			1, 0, x,
 			0, 1, y,
 			0, 0, 1);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::SkewSymmetric(const Vector3_t<T>& vec)
+	{
+		return Matrix3x3_t<T>(0.0f, -vec.z, vec.y,
+							  vec.z, 0.0f, -vec.x,
+							  -vec.y, vec.x, 0.0f);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::IntertiaTensorFromCoeffs(T ix, T iy, T iz, T ixy, T ixz, T iyz)
+	{
+		return Matrix3x3_t<T>(ix, -ixy, -ixz,
+							  -ixy, iy, -iyz,
+						  	  -ixz, -iyz, iz);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::BoxIntertiaTensor(const Vector3_t<T>& halfSizes, T mass)
+	{
+		Vector3_t<T> squares = halfSizes * halfSizes;
+
+		return IntertiaTensorFromCoeffs(static_cast<T>(0.3) * mass * (squares.y + squares.z),
+										static_cast<T>(0.3) * mass * (squares.x + squares.z),
+										static_cast<T>(0.3) * mass * (squares.x + squares.y));
 	}
 }
 

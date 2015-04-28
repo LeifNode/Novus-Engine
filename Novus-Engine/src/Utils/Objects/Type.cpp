@@ -7,7 +7,7 @@ namespace novus
 
 Type::Type(const char* className)
 {
-	int length = strlen(className);
+	int length = static_cast<int>(strlen(className));
 	ZeroMemory(mTypeName, 64);
 	memcpy(mTypeName, className, length);
 	mTypeHash = reinterpret_cast<TypeId>(HashedString::hash_name(className)); //TODO: replace with MurmurHash

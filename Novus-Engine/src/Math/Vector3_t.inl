@@ -301,6 +301,18 @@ namespace novus
 							v1.z * v2.x - v1.x * v2.z,
 							v1.x * v2.y - v1.y * v2.x);
 	}
+
+	template <typename T>
+	Vector3_t<T> Project(const Vector3_t<T>& v, const Vector3_t<T>& n)
+	{
+		return Dot(v, n) * n;
+	}
+
+	template <typename T>
+	Vector3_t<T> Reflect(const Vector3_t<T>& v, const Vector3_t<T>& n)
+	{
+		return v - 2.0f * Dot(v, n) * n;
+	}
 }
 
 #endif

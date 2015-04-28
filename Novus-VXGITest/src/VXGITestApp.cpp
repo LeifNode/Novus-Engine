@@ -62,7 +62,7 @@ mpVoxelTexture(NULL),
 mpShadowMap(NULL),
 mpVoxelVolume(NULL),
 mRenderVoxelization(false),
-mVoxelResolution(256),
+mVoxelResolution(512),
 mpGlobalIlluminationRenderPass(NULL),
 mpRadianceVolume(NULL),
 mSceneVoxelized(false),
@@ -182,7 +182,7 @@ bool VXGITestApplication::Init()
 	mpSphereActor->AddComponent(sphereMeshComponent);
 	mpWorld->AddActor(mpSphereActor);
 
-	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/san-miguel.obj");
+	mpMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/sponza.obj");
 
 	if (mpMesh)
 		std::cout << "Loaded mesh.\n";
@@ -194,11 +194,11 @@ bool VXGITestApplication::Init()
 	meshComponent->setDisplayName("Mesh1");
 
 	meshActor->AddComponent(meshComponent);
-	//meshActor->transform.SetScale(0.01f);
+	meshActor->transform.SetScale(0.01f);
 
 	mpWorld->AddActor(meshActor);
 
-	//InitBoxes();
+	InitBoxes();
 
 	return true;
 }
@@ -403,20 +403,20 @@ void VXGITestApplication::Render()
 	mpRenderer->PreRender();
 
 
-	if (!mSceneVoxelized)
-	{
+	//if (!mSceneVoxelized)
+	//{
 		mpRenderer->setShader(mpDepthPassShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
 		//Render voxelization
 		mpRenderer->setShader(mpVoxelizationShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
-	}
+	/*}
 	else if (mRequiresReinject)
 	{
 		mpRenderer->setShader(mpDepthPassShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
-	}
+	}*/
 
 	//Render meshes as normal
 	CBPerFrame perFrame;
@@ -452,11 +452,11 @@ void VXGITestApplication::Render()
 
 	mpSkyboxRenderer->Render(mpRenderer);
 
-	if (mRequiresReinject)
-	{
+	//if (mRequiresReinject)
+	//{
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
-	}
+	//}
 	
 	if (mRenderVoxelization)
 	{

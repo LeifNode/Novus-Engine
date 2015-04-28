@@ -70,7 +70,7 @@ float3 worldToVoxelVolume(float3 worldPosition)
 
 float getMipLevelFromRadius(float radius)
 {
-	return log2((radius * 2.0f + 0.01f) * gVoxelScale) + gVoxelMipCount;
+	return log2((radius + 0.01f) * gVoxelScale) + gVoxelMipCount;
 }
 
 float4 sampleVoxelVolume(Texture3D<float4> voxelTexture, SamplerState voxelSampler, float3 worldPosition, float radius)

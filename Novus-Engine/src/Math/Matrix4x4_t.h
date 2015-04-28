@@ -69,6 +69,8 @@ namespace novus
 		row_type& operator[] (size_t i);
 		const row_type& operator[] (size_t i) const;
 
+		col_type getAxisVector(size_t i) const;
+
 		template <typename U>
 		Matrix4x4_t<T>& operator= (const Matrix4x4_t<U>& m);
 

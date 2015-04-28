@@ -130,6 +130,14 @@ namespace novus
 	}
 
 	template <typename T>
+	typename Matrix4x4_t<T>::col_type Matrix4x4_t<T>::getAxisVector(size_t i) const
+	{
+		assert(i < this->size());
+
+		return Vector4_t<T>((*this)[0][i], (*this)[1][i], (*this)[2][i], (*this)[3][i]);
+	}
+
+	template <typename T>
 	template <typename U>
 	Matrix4x4_t<T>& Matrix4x4_t<T>::operator= (const Matrix4x4_t<U>& m)
 	{

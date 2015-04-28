@@ -273,6 +273,18 @@ namespace novus
 	{
 		return Vector2_t<T>(v1.x * v2.x + v1.y * v2.y);
 	}
+
+	template <typename T>
+	Vector2_t<T> Project(const Vector2_t<T>& v, const Vector2_t<T>& n)
+	{
+		return Dot(v, n) * n;
+	}
+
+	template <typename T>
+	Vector2_t<T> Reflect(const Vector2_t<T>& v, const Vector2_t<T>& n)
+	{
+		return v - 2.0f * Dot(v, n) * n;
+	}
 }
 
 #endif

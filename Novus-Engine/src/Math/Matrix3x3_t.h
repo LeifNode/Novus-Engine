@@ -64,6 +64,8 @@ namespace novus
 		row_type& operator[] (size_t i);
 		const row_type& operator[] (size_t i) const;
 
+		col_type getAxisVector(size_t i) const;
+
 		template <typename U>
 		Matrix3x3_t<T>& operator= (const Matrix3x3_t<U>& m);
 
@@ -102,6 +104,10 @@ namespace novus
 		static Matrix3x3_t<T> RotateZ(const T& r);
 
 		static Matrix3x3_t<T> Translate(const T& x, const T& y);
+
+		static Matrix3x3_t<T> SkewSymmetric(const Vector3_t<T>& vec);
+		static Matrix3x3_t<T> IntertiaTensorFromCoeffs(T ix, T iy, T iz, T ixy = 0, T ixz = 0, T iyz = 0);
+		static Matrix3x3_t<T> BoxIntertiaTensor(const Vector3_t<T>& halfSizes, T mass);
 	};
 
 	template <typename T>

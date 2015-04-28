@@ -90,8 +90,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	bool pastDiffuseDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.x;
 	bool pastSpecularDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.y;
 
-	surface.Roughness += 0.3f;
-	//surface.Roughness = 0.2f;
+	//surface.Roughness += 0.3f;
+	surface.Roughness = 0.1f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -158,8 +158,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	{
 		bool outsideVolume = false;
 		float lastDistance = currentDistance;
-		//currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
-		currentDistance = currentDistance / (1.0f - radiusRatio);
+		currentDistance = (currentDistance * (1.0f + radiusRatio)) / (1.0f - radiusRatio);
+		//currentDistance = currentDistance / (1.0f - radiusRatio);
 		coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 		currentRadius = radiusRatio * currentDistance;
 
@@ -216,12 +216,12 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 			coneSamplePosition = originSamplePosition + coneSampleDirection * currentDistance;
 			currentRadius = diffuseRadiusRatio * currentDistance;
 
-			sampleColor.a = 1.0f - pow((1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
+			sampleColor.a = 1.0f - pow(abs(1.0f - sampleColor.a), ((currentDistance - lastDistance) / currentRadius));
 			accumilateColorOcclusion(sampleColor, accumilatedColor, accumilatedOcclusion);
 
 			ambientOcclusionAccum += sampleColor.a * (0.1f / (currentDistance + 1.0f));
 
-			if (accumilatedOcclusion >= 0.995f || outsideVolume)
+			if (accumilatedOcclusion >= 0.99f || outsideVolume)
 				break;
 		}
 

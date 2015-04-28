@@ -38,6 +38,11 @@ struct Quaternion_t
 
 	Quaternion_t<T>& operator= (const Quaternion_t<T>& q);
 
+	Quaternion_t<T>& operator*= (const Quaternion_t<T>& q);
+
+	//Add rotation around the axis v where the amount is the length of v
+	Quaternion_t<T>& operator+= (const Vector3_t<T>& v);
+
 	static T Magnitude(const Quaternion_t<T>& q);
 	static Quaternion_t<T> Normalize(const Quaternion_t<T>& q);
 

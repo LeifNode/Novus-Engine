@@ -75,6 +75,32 @@ namespace novus
 	}
 
 	template <typename T>
+	Quaternion_t<T>& Quaternion_t<T>::operator*= (const Quaternion_t<T>& q2)
+	{
+		Quaternion_t<T> q1 = *this;
+
+		this->x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
+		this->y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
+		this->z = q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w;
+		this->w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+
+		return *this;
+	}
+
+	template <typename T>
+	Quaternion_t<T>& Quaternion_t<T>::operator+= (const Vector3_t<T>& v)
+	{
+		Quaternion_t<T> q(v.x, v.y, v.z, static_cast<T>(0));
+		q *= *this;
+		x += q.x * (static_cast<T>(0.5));
+		y += q.y * (static_cast<T>(0.5));
+		z += q.z * (static_cast<T>(0.5));
+		w += q.w * (static_cast<T>(0.5));
+
+		return *this;
+	}
+
+	template <typename T>
 	Quaternion_t<T> operator- (const Quaternion_t<T>& q)
 	{
 		return Quaternion_t<T>(-q.x, -q.y, -q.z, -q.w);

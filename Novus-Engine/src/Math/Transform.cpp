@@ -5,7 +5,9 @@ namespace novus
 {
 
 Transform::Transform()
-	: mScale(1.0f)
+	: mScale(1.0f),
+	mTransformDirty(true),
+	mInverseTransformDirty(true)
 {}
 
 Transform::~Transform()
@@ -14,6 +16,14 @@ Transform::~Transform()
 void Transform::Rotate(const Quaternion& rotationQuaternion)
 {
 	mRotation = mRotation * rotationQuaternion;
+	mRotation = Quaternion::Normalize(mRotation);
+	MarkDirty();
+}
+
+void Transform::Rotate(const Vector3& rotationAxis)
+{
+	mRotation += rotationAxis;
+	mRotation = Quaternion::Normalize(mRotation);
 	MarkDirty();
 }
 
@@ -97,6 +107,38 @@ const Matrix4& Transform::GetTransform() const
 	return mTransform;
 }
 
+const Matrix4& Transform::GetInverseTransform() const
+{
+	if (mInverseTransformDirty)
+	{
+		mInverseTransform = Matrix4::Inverse(GetTransform());
+		mInverseTransformDirty = false;
+	}
+
+	return mTransform;
+}
+
+Vector3 Transform::WorldPointToLocal(const Vector3& point) const
+{
+	return Vector3(GetInverseTransform() * Vector4(point, 1.0f));
+}
+
+Vector3 Transform::LocalPointToWorld(const Vector3& point) const
+{
+	//TODO: Should probably just inline this stuff at some point
+	return Vector3(GetTransform() * Vector4(point, 1.0f));
+}
+
+Vector3 Transform::WorldDirToLocal(const Vector3& direction) const
+{
+	return Vector3(GetInverseTransform() * Vector4(direction, 0.0f));
+}
+
+Vector3 Transform::LocalDirToWorld(const Vector3& direction) const
+{
+	return Vector3(GetTransform() * Vector4(direction, 0.0f));
+}
+
 void Transform::Reset()
 {
 	mTransform = Matrix4(1.0f);
@@ -110,7 +152,7 @@ void Transform::Reset()
 void Transform::MarkDirty()
 {
 	mTransformDirty = true;
-	//mInverseDirty = true;
+	mInverseTransformDirty = true;
 }
 
 }

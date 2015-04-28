@@ -134,6 +134,12 @@ namespace novus
 
 	template <typename T>
 	Vector3_t<T> Cross(const Vector3_t<T>& v1, const Vector3_t<T>& v2);
+
+	template <typename T>
+	Vector3_t<T> Project(const Vector3_t<T>& v, const Vector3_t<T>& n);
+
+	template <typename T>
+	Vector3_t<T> Reflect(const Vector3_t<T>& v, const Vector3_t<T>& n);
 }
 
 //#include "Vector3_t.inl"

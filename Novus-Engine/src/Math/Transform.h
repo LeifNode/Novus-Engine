@@ -24,6 +24,7 @@ public:
 	~Transform();
 
 	void Rotate(const Quaternion& rotationQuaternion);
+	void Rotate(const Vector3& rotationAxis);
 
 	const Quaternion& GetRotation() const;
 	void SetRotation(const Quaternion& rotation);
@@ -44,16 +45,25 @@ public:
 	const Vector3& GetPosition() const;
 
 	const Matrix4& GetTransform() const;
+	const Matrix4& GetInverseTransform() const;
 
 	void Reset();
+
+	Vector3 WorldPointToLocal(const Vector3& point) const;
+	Vector3 LocalPointToWorld(const Vector3& point) const;
+
+	Vector3 WorldDirToLocal(const Vector3& direction) const;
+	Vector3 LocalDirToWorld(const Vector3& direction) const;
 
 private:
 	void MarkDirty();
 
 private:
 	mutable bool mTransformDirty;
+	mutable bool mInverseTransformDirty;
 
 	mutable Matrix4 mTransform;
+	mutable Matrix4 mInverseTransform;
 
 	Quaternion mRotation;
 	Vector3    mScale;

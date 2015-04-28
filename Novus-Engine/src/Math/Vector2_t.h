@@ -125,6 +125,12 @@ namespace novus
 
 	template <typename T>
 	T Dot(const Vector2_t<T>& v1, const Vector2_t<T>& v2);
+
+	template <typename T>
+	Vector2_t<T> Project(const Vector2_t<T>& v, const Vector2_t<T>& n);
+
+	template <typename T>
+	Vector2_t<T> Reflect(const Vector2_t<T>& v, const Vector2_t<T>& n);
 }
 
 //#include "Vector2_t.inl"

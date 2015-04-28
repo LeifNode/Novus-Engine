@@ -38,7 +38,7 @@ cbuffer cbLightInjectionPass          : register(b3)
 [numthreads(COMPUTE_SHADER_TILE_GROUP_DIM, COMPUTE_SHADER_TILE_GROUP_DIM, 1)]
 void LightInjectionCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 {
-	if (dispatchThreadID.x >= gShadowMapDimensions.x || dispatchThreadID.y >= gShadowMapDimensions.y)
+	if (dispatchThreadID.x >= (uint)gShadowMapDimensions.x || dispatchThreadID.y >= (uint)gShadowMapDimensions.y)
 		return;
 
 	float2 textureCoordinates = dispatchThreadID.xy / float2(gShadowMapDimensions);

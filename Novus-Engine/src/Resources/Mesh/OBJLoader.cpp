@@ -362,7 +362,7 @@ void OBJLoader::ParseMaterials(File* file)
 		{
 			if (currentMaterial != NULL)
 			{
-				mMaterialRefMap[currentMaterial->name] = mpScene->mMaterials.size();
+				mMaterialRefMap[currentMaterial->name] = static_cast<int>(mpScene->mMaterials.size());
 				mpScene->mMaterials.push_back(currentMaterial);
 			}
 
@@ -373,7 +373,7 @@ void OBJLoader::ParseMaterials(File* file)
 		{
 			if (line[index + 1] == 's') //Ns is specular power
 			{
-				currentMaterial->specularPow = atof(&line[index + 2]);
+				currentMaterial->specularPow = static_cast<float>(atof(&line[index + 2]));
 			}
 		}
 		else if (line[index] == 'K')
@@ -454,7 +454,7 @@ void OBJLoader::ParseMaterials(File* file)
 
 	if (currentMaterial != NULL)
 	{	
-		mMaterialRefMap[currentMaterial->name] = mpScene->mMaterials.size();
+		mMaterialRefMap[currentMaterial->name] = static_cast<int>(mpScene->mMaterials.size());
 		mpScene->mMaterials.push_back(currentMaterial);
 	}
 }
