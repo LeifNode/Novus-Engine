@@ -455,13 +455,29 @@ namespace novus
 	}
 
 	template <class T>
-	Matrix3x3_t<T> Matrix3x3_t<T>::BoxIntertiaTensor(const Vector3_t<T>& halfSizes, T mass)
+	Matrix3x3_t<T> Matrix3x3_t<T>::BoxInertiaTensor(const Vector3_t<T>& halfSizes, T mass)
 	{
 		Vector3_t<T> squares = halfSizes * halfSizes;
 
 		return IntertiaTensorFromCoeffs(static_cast<T>(0.3) * mass * (squares.y + squares.z),
 										static_cast<T>(0.3) * mass * (squares.x + squares.z),
 										static_cast<T>(0.3) * mass * (squares.x + squares.y));
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::SphereSolidInertiaTensor(T radius, T mass)
+	{
+		return IntertiaTensorFromCoeffs((static_cast<T>(2.0) / static_cast<T>(5.0)) * mass * radius * radius,
+										(static_cast<T>(2.0) / static_cast<T>(5.0)) * mass * radius * radius,
+										(static_cast<T>(2.0) / static_cast<T>(5.0)) * mass * radius * radius);
+	}
+
+	template <class T>
+	Matrix3x3_t<T> Matrix3x3_t<T>::SphereShellInertiaTensor(T radius, T mass)
+	{
+		return IntertiaTensorFromCoeffs((static_cast<T>(2.0) / static_cast<T>(3.0)) * mass * radius * radius,
+										(static_cast<T>(2.0) / static_cast<T>(3.0)) * mass * radius * radius,
+										(static_cast<T>(2.0) / static_cast<T>(3.0)) * mass * radius * radius);
 	}
 }
 

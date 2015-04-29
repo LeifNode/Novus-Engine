@@ -46,7 +46,7 @@ void ContactResolver::ResolveContacts(Contact* contactArr, unsigned int numConta
 	PrepareContacts(contactArr, numContacts, dt);
 
 	//Resolve interpenetration
-	AdjustPositions(contactArr, numContacts, dt);
+	//AdjustPositions(contactArr, numContacts, dt);
 
 	//Resolve the velocities
 	AdjustVelocities(contactArr, numContacts, dt);

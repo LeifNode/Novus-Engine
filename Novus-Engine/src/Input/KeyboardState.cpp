@@ -18,19 +18,24 @@ KeyboardState::~KeyboardState()
 bool KeyboardState::IsKeyPressed(novus::KeyboardKey::Type key) const
 {
 	//return ((mKeys[key / 8] >> (key % 8)) & 1) != 0;
-	return mKeys[key];
+	if (key < KeyboardKey::KEY_COUNT)
+		return mKeys[key];
+	else
+		return false;
 }
 
 void KeyboardState::PressKey(novus::KeyboardKey::Type key)
 {
 	//mKeys[key / 8] |= (1 << (key % 8));
-	mKeys[key] = true;
+	if (key < KeyboardKey::KEY_COUNT)
+		mKeys[key] = true;
 }
 
 void KeyboardState::ReleaseKey(novus::KeyboardKey::Type key)
 {
 	//mKeys[key / 8] &= ~(1 << (key % 8));
-	mKeys[key] = false;
+	if (key < KeyboardKey::KEY_COUNT)
+		mKeys[key] = false;
 }
 
 }//namespace novus

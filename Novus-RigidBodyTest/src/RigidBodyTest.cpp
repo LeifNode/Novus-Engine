@@ -152,17 +152,18 @@ void RigidBodyTest::InitMesh()
 
 void RigidBodyTest::InitPhysicsActors()
 {
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		RigidBody* body = NE_NEW RigidBody();
 		//Set random position and rotation
 		body->getTransform()->SetPosition(Vector3(Math::RandF(-10.0f, 10.0f), 10.0f, Math::RandF(-10.0f, 10.0f)));
 		body->getTransform()->SetRotation(Quaternion::AxisAngle(Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))), Math::RandF(0.0f, 2.0f * Math::Pi)));
-		body->setMass(10.0f);
+		body->setMass(50.0f);
 
 		Vector3 halfScale = Vector3(0.5f);
 
-		Matrix3 tensor = Matrix3::BoxIntertiaTensor(halfScale, body->getMass());
+		Matrix3 tensor = Matrix3::BoxInertiaTensor(halfScale, body->getMass());
+		//Matrix3 tensor = Matrix3::SphereSolidInertiaTensor(0.5f, body->getMass());
 		body->setInertiaTensor(tensor);
 
 		body->ClearAccumilators();
@@ -190,6 +191,7 @@ void RigidBodyTest::InitPhysicsBounds()
 	CollisionPlane* plane = NE_NEW CollisionPlane();
 	plane->direction = Vector3(0.0f, 1.0f, 0.0f);
 	plane->origin = Vector3();
+	//plane->offset = 0.0f;
 
 	mCollisionHalfSpaces.push_back(plane);
 }
@@ -265,10 +267,12 @@ void RigidBodyTest::Update(float dt)
 		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
 		{
 			(*it)->AddForceAtPoint(Vector3(0.0f, -9.8f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(1.0f, 0.0f, 0.0f));
+			mpContactRenderer->points.AddLine(LineSegment((*it)->getTransform()->GetPosition() + Vector3(1.0f, 0.0f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(1.0f, -1.0f, 0.0f)));
 		}
 		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_C))
 		{
 			(*it)->AddForceAtPoint(Vector3(0.0f, -9.8f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f));
+			mpContactRenderer->points.AddLine(LineSegment((*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, -1.0f, 0.0f)));
 		}
 		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
 		{

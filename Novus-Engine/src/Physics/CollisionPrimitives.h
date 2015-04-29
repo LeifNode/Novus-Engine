@@ -59,6 +59,7 @@ public:
 	Vector3 direction;
 
 	Vector3 origin;
+	//float offset;
 };
 
 class CollisionBox : public CollisionPrimitive

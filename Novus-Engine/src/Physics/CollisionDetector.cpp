@@ -35,6 +35,7 @@ unsigned int CollisionDetector::BoxAndHalfSpace(const CollisionBox& box, const C
 		vertexPos = Vector3(Vector4(vertexPos, 1.0f) * box.getTransform());
 
 		float vertexDistance = Dot(plane.direction, (vertexPos - plane.origin));
+		//float vertexDistance = Dot(vertexPos, plane.direction);
 
 		if (vertexDistance <= 0.0f)
 		{
@@ -43,6 +44,12 @@ unsigned int CollisionDetector::BoxAndHalfSpace(const CollisionBox& box, const C
 			contact->contactPoint += vertexPos;
 			contact->contactNormal = plane.direction;
 			contact->penetration = -vertexDistance;
+
+			/*contact->contactPoint = plane.direction;
+			contact->contactPoint *= (vertexDistance - plane.offset);
+			contact->contactPoint += vertexPos;
+			contact->contactNormal = plane.direction;
+			contact->penetration = plane.offset - vertexDistance;*/
 
 			contact->setBodyData(box.body, NULL, data->friction, data->restitution);
 

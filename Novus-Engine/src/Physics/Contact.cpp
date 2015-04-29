@@ -60,25 +60,40 @@ void Contact::CalculateContactBasis()
 {
 	Vector3 contactTangent[2];
 
-	////Check if the Z axis is closer to the X or Y axis
-	//if (fabsf(contactNormal.x) > fabsf(contactNormal.y))
-	//{
-	//	const float scale = 1.0f / sqrtf(contactNormal.z * contactNormal.z + contactNormal.x * contactNormal.x);
+	//Check if the Z axis is closer to the X or Y axis
+	if (fabsf(contactNormal.x) > fabsf(contactNormal.y))
+	{
+		const float scale = 1.0f / sqrtf(contactNormal.z * contactNormal.z + contactNormal.x * contactNormal.x);
 
-	//	contactTangent[0].x = contactNormal.z * scale;
-	//	contactTangent[0].y = 0.0f;
-	//	contactTangent[0].z = -contactNormal.x * scale;
+		contactTangent[0].x = contactNormal.z * scale;
+		contactTangent[0].y = 0.0f;
+		contactTangent[0].z = -contactNormal.x * scale;
 
-	//	contactTangent[1].x = contactNormal.y * contactTangent[0].x;
-	//	contactTangent[1].y = contactNormal.z
-	//}
+		contactTangent[1].x = contactNormal.y * contactTangent[0].x;
+		contactTangent[1].y = contactNormal.z * contactTangent[0].x - contactNormal.x * contactTangent[0].z;
+		contactTangent[1].z = -contactNormal.y * contactTangent[0].x;
+	}
+	else
+	{
+		const float scale = 1.0f / sqrtf(contactNormal.z * contactNormal.z + contactNormal.y * contactNormal.y);
 
-	contactTangent[0] = Normalize(Cross(contactNormal, (contactNormal.y < 0.98f) ? Vector3(0.0f, 1.0f, 0.0f) : Vector3(1.0f, 0.0f, 0.0f)));
-	contactTangent[1] = Cross(contactNormal, contactTangent[0]);
+		contactTangent[0].x = 0.0f;
+		contactTangent[0].y = -contactNormal.z * scale;
+		contactTangent[0].z = contactNormal.y * scale;
+
+		contactTangent[1].x = contactNormal.y * contactTangent[0].z - contactNormal.z * contactTangent[0].y;
+		contactTangent[1].y = -contactNormal.x * contactTangent[0].z;
+		contactTangent[1].z = contactNormal.x * contactTangent[0].y;
+	}
+
+	/*contactTangent[0] = Normalize(Cross(contactNormal, (contactNormal.y < 0.98f) ? Vector3(0.0f, 1.0f, 0.0f) : Vector3(1.0f, 0.0f, 0.0f)));
+	contactTangent[1] = Cross(contactNormal, contactTangent[0]);*/
 
 	mContactToWorld = Matrix3(contactNormal.x, contactTangent[0].x, contactTangent[1].x,
 							  contactNormal.y, contactTangent[0].y, contactTangent[1].y,
 							  contactNormal.z, contactTangent[0].z, contactTangent[1].z);
+
+	//mContactToWorld = Matrix3(contactNormal, contactTangent[0], contactTangent[1]);
 
 	mWorldToContact = Matrix3::Transpose(mContactToWorld);
 }

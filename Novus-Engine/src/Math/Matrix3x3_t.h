@@ -107,7 +107,9 @@ namespace novus
 
 		static Matrix3x3_t<T> SkewSymmetric(const Vector3_t<T>& vec);
 		static Matrix3x3_t<T> IntertiaTensorFromCoeffs(T ix, T iy, T iz, T ixy = 0, T ixz = 0, T iyz = 0);
-		static Matrix3x3_t<T> BoxIntertiaTensor(const Vector3_t<T>& halfSizes, T mass);
+		static Matrix3x3_t<T> BoxInertiaTensor(const Vector3_t<T>& halfSizes, T mass);
+		static Matrix3x3_t<T> SphereSolidInertiaTensor(T radius, T mass);
+		static Matrix3x3_t<T> SphereShellInertiaTensor(T radius, T mass);
 	};
 
 	template <typename T>
