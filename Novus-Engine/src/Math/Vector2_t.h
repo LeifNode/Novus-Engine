@@ -19,8 +19,10 @@ namespace novus
 	template <typename T>
 	struct Vector2_t
 	{
-		union { T x, r; };
-		union { T y, g; };
+		//union { T x, r; };
+		//union { T y, g; };
+
+		T x, y;
 
 		Vector2_t();
 

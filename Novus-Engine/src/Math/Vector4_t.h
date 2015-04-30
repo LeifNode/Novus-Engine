@@ -19,10 +19,12 @@ namespace novus
 	template <typename T>
 	struct Vector4_t
 	{
-		union { T x, r; };
-		union { T y, g; };
-		union { T z, b; };
-		union { T w, a; };
+		//union { T x, r; };
+		//union { T y, g; };
+		//union { T z, b; };
+		//union { T w, a; };
+
+		T x, y, z, w;
 
 		Vector4_t();
 

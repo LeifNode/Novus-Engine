@@ -34,7 +34,7 @@ public:
 
 	Vector3 getAxis(unsigned int index) const
 	{
-		return Vector3(mTransform.getAxisVector(index));
+		return Vector3(mTransform[index]);
 	}
 
 	const Matrix4& getTransform() const
@@ -58,8 +58,8 @@ class CollisionPlane
 public:
 	Vector3 direction;
 
-	Vector3 origin;
-	//float offset;
+	//Vector3 origin;
+	float offset;
 };
 
 class CollisionBox : public CollisionPrimitive

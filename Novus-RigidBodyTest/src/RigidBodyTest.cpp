@@ -141,7 +141,8 @@ void RigidBodyTest::InitMesh()
 {
 	Mesh mesh;
 
-	GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, mesh);
+	//GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, mesh);
+	GeometryGenerator::CreateSphere(1.0f, 30, 30, mesh);
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 
@@ -152,35 +153,41 @@ void RigidBodyTest::InitMesh()
 
 void RigidBodyTest::InitPhysicsActors()
 {
-	for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 10; i++)
 	{
-		RigidBody* body = NE_NEW RigidBody();
-		//Set random position and rotation
-		body->getTransform()->SetPosition(Vector3(Math::RandF(-10.0f, 10.0f), 10.0f, Math::RandF(-10.0f, 10.0f)));
-		body->getTransform()->SetRotation(Quaternion::AxisAngle(Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))), Math::RandF(0.0f, 2.0f * Math::Pi)));
-		body->setMass(50.0f);
-
-		Vector3 halfScale = Vector3(0.5f);
-
-		Matrix3 tensor = Matrix3::BoxInertiaTensor(halfScale, body->getMass());
-		//Matrix3 tensor = Matrix3::SphereSolidInertiaTensor(0.5f, body->getMass());
-		body->setInertiaTensor(tensor);
-
-		body->ClearAccumilators();
-
-		body->CalculateDerivedData();
-
-		mPhysicsBodies.push_back(body);
-
-		CollisionBox* boxCollider = NE_NEW CollisionBox();
-		boxCollider->body = body;
-		boxCollider->halfSize = halfScale;
-		boxCollider->CalculateInternals();
-
-		mCollisionBoxes.push_back(boxCollider);
-	}
+		AddSphereActor(Vector3(Math::RandF(-10.0f, 10.0f), 10.0f, Math::RandF(-10.0f, 10.0f)), 1.0f, 50.0f);
+	}*/
 
 	InitPhysicsBounds();
+}
+
+void RigidBodyTest::AddSphereActor(const Vector3& position, float radius, float mass)
+{
+	RigidBody* body = NE_NEW RigidBody();
+	//Set random position and rotation
+	body->getTransform()->SetPosition(position);
+	body->getTransform()->SetRotation(Quaternion::AxisAngle(Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))), Math::RandF(0.0f, 2.0f * Math::Pi)));
+	body->setMass(mass);
+
+	Vector3 halfScale = Vector3(0.5f);
+
+	Matrix3 tensor = Matrix3::BoxInertiaTensor(halfScale, body->getMass());
+	//Matrix3 tensor = Matrix3::SphereSolidInertiaTensor(radius, body->getMass());
+	body->setInertiaTensor(tensor);
+
+	body->ClearAccumilators();
+
+	body->CalculateDerivedData();
+
+	mPhysicsBodies.push_back(body);
+
+	CollisionSphere* boxCollider = NE_NEW CollisionSphere();
+	boxCollider->body = body;
+	boxCollider->radius = radius;
+	//boxCollider->halfSize = halfScale;
+	boxCollider->CalculateInternals();
+
+	mCollisionBoxes.push_back(boxCollider);
 }
 
 void RigidBodyTest::InitPhysicsBounds()
@@ -190,8 +197,8 @@ void RigidBodyTest::InitPhysicsBounds()
 	//Ground
 	CollisionPlane* plane = NE_NEW CollisionPlane();
 	plane->direction = Vector3(0.0f, 1.0f, 0.0f);
-	plane->origin = Vector3();
-	//plane->offset = 0.0f;
+	//plane->origin = Vector3();
+	plane->offset = 0.0f;
 
 	mCollisionHalfSpaces.push_back(plane);
 }
@@ -235,8 +242,6 @@ void RigidBodyTest::OnKeyDown(novus::IEventDataPtr eventData)
 {
 	auto dataPtr = static_pointer_cast<EventData_KeyboardDown>(eventData);
 
-	float scale;
-
 	switch (dataPtr->getKey())
 	{
 	case KeyboardKey::KEY_ESC:
@@ -244,6 +249,9 @@ void RigidBodyTest::OnKeyDown(novus::IEventDataPtr eventData)
 		break;
 	case KeyboardKey::KEY_R:
 		ResetPhysicsSimulation();
+		break;
+	case KeyboardKey::KEY_N:
+		AddSphereActor(Vector3(Math::RandF(-10.0f, 10.0f), 10.0f, Math::RandF(-10.0f, 10.0f)), 1.0f, 50.0f);
 		break;
 	}
 }
@@ -356,7 +364,16 @@ void RigidBodyTest::GenerateContacts()
 		{
 			if (!mCollisionData.hasMoreContacts()) return;
 
-			CollisionDetector::BoxAndHalfSpace(*(*it), *(*plane), &mCollisionData);
+			CollisionDetector::SphereAndHalfSpace(*(*it), *(*plane), &mCollisionData);
+			//CollisionDetector::BoxAndHalfSpace(*(*it), *(*plane), &mCollisionData);
+		}
+
+		for (auto other = mCollisionBoxes.cbegin(); other != mCollisionBoxes.cend(); ++other)
+		{
+			if ((*it)->body != (*other)->body)
+			{
+				CollisionDetector::SphereAndSphere(*(*it), *(*other), &mCollisionData);
+			}
 		}
 	}
 }

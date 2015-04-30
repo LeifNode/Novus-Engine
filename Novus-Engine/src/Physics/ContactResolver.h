@@ -20,8 +20,8 @@ class Contact;
 class ContactResolver
 {
 public:
-	ContactResolver(unsigned int iterations, float velocityEpsilon = 0.01f, float positionEpsilon = 0.01f);
-	ContactResolver(unsigned int velocityIterations, unsigned int positionIterations, float velocityEpsilon = 0.01f, float positionEpsilon = 0.01f);
+	ContactResolver(unsigned int iterations, float velocityEpsilon = 0.001f, float positionEpsilon = 0.001f);
+	ContactResolver(unsigned int velocityIterations, unsigned int positionIterations, float velocityEpsilon = 0.001f, float positionEpsilon = 0.001f);
 
 	void setIterations(unsigned int velocityIterations, unsigned int positionIterations);
 

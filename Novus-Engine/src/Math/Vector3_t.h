@@ -19,9 +19,11 @@ namespace novus
 	template <typename T>
 	struct Vector3_t
 	{
-		union { T x, r; };
-		union { T y, g; };
-		union { T z, b; };
+		//union { T x, r; };
+		//union { T y, g; };
+		//union { T z, b; };
+
+		T x, y, z;
 
 		Vector3_t();
 

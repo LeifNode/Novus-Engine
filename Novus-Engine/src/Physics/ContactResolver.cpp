@@ -46,7 +46,7 @@ void ContactResolver::ResolveContacts(Contact* contactArr, unsigned int numConta
 	PrepareContacts(contactArr, numContacts, dt);
 
 	//Resolve interpenetration
-	//AdjustPositions(contactArr, numContacts, dt);
+	AdjustPositions(contactArr, numContacts, dt);
 
 	//Resolve the velocities
 	AdjustVelocities(contactArr, numContacts, dt);
@@ -135,7 +135,8 @@ void ContactResolver::AdjustPositions(Contact* contactArr, unsigned int numConta
 		if (index == numContacts)
 			break;
 
-		contactArr[index].ApplyPositionChange(linearChange, angularChange, max);
+		//contactArr[index].ApplyPositionChange(linearChange, angularChange, max);
+		contactArr[index].ApplyLinearPositionChange(linearChange, angularChange, max);
 
 		for (i = 0; i < numContacts; i++)
 		{

@@ -43,6 +43,8 @@ protected:
 
 	void ApplyPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], float penetration);
 
+	void ApplyLinearPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], float penetration);
+
 	Vector3 CalculateFrictionlessImpulse(Matrix3* inverIntertiaTensor);
 
 public:

@@ -214,9 +214,9 @@ namespace novus
 	Matrix3x3_t<T> operator- (const Matrix3x3_t<T>& m)
 	{
 		return Matrix3x3_t<T>(
-			-m1[0],
-			-m1[1],
-			-m1[2]);
+			-m[0],
+			-m[1],
+			-m[2]);
 	}
 
 	template <typename T>

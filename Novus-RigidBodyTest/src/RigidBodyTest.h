@@ -55,6 +55,8 @@ public:
 
 	void ResetPhysicsSimulation();
 
+	void AddSphereActor(const novus::Vector3& position, float radius, float mass);
+
 private:
 	void UpdateContactRenderers();
 	void UpdatePointLights(float dt);
@@ -78,7 +80,7 @@ private:
 	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
 
 	std::vector<novus::RigidBody*> mPhysicsBodies;
-	std::vector<novus::CollisionBox*> mCollisionBoxes;
+	std::vector<novus::CollisionSphere*> mCollisionBoxes;
 	std::vector<novus::CollisionPlane*> mCollisionHalfSpaces;
 
 	static const unsigned int msMaxContacts = 1024;

@@ -1,5 +1,6 @@
 #include "Contact.h"
 #include "RigidBody.h"
+#include <iostream>
 
 namespace novus
 {
@@ -153,12 +154,15 @@ void Contact::ApplyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 	velocityChange[0] = Vector3();
 	velocityChange[0] += impulse * body[0]->getInverseMass();
 
+	std::cout << "Impulse: " << velocityChange[0].x << ", " << velocityChange[0].y << ", " << velocityChange[0].z << std::endl;
+	std::cout << "Rotation Impulse: " << rotationChange[0].x << ", " << rotationChange[0].y << ", " << rotationChange[0].z << std::endl;
+
 	body[0]->AddVelocity(velocityChange[0]);
 	body[0]->AddAngularVelocity(rotationChange[0]);
 
 	if (body[1] != NULL)
 	{
-		Vector3 impulsiveTorque = Cross(impulse, mRelativeContactPosition[1]);
+		Vector3 impulsiveTorque = Cross(mRelativeContactPosition[1], impulse);
 		rotationChange[1] = inverseInertiaTensor[1] * impulsiveTorque;
 		velocityChange[1] = Vector3();
 		velocityChange[1] += impulse * -body[1]->getInverseMass();
@@ -250,24 +254,69 @@ void Contact::ApplyPositionChange(Vector3 linearChange[2], Vector3 angularChange
 	}
 }
 
-Vector3 Contact::CalculateFrictionlessImpulse(Matrix3* inverIntertiaTensor)
+void Contact::ApplyLinearPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], float penetration)
+{
+	angularChange[0] = Vector3();
+	angularChange[1] = Vector3();
+
+	if (penetration <= 0) return;
+
+	float totalInverseMass = body[0]->getInverseMass();
+
+	if (body[1]) 
+		totalInverseMass += body[1]->getInverseMass();
+
+	if (totalInverseMass <= 0) 
+		return;
+
+	Vector3 movePerIMass = contactNormal * (penetration / totalInverseMass);
+
+	//Move bodies proportional to their mass
+	linearChange[0] = movePerIMass * body[0]->getInverseMass();
+
+	if (body[1])
+	{
+		linearChange[1] = movePerIMass * -body[1]->getInverseMass();
+	}
+	else
+	{
+		linearChange[1] = Vector3();
+	}
+
+	body[0]->getTransform()->SetPosition(body[0]->getTransform()->GetPosition() + linearChange[0]);
+
+	if (body[1])
+	{
+		body[1]->getTransform()->SetPosition(body[1]->getTransform()->GetPosition() + linearChange[1]);
+	}
+}
+
+Vector3 Contact::CalculateFrictionlessImpulse(Matrix3* inverseIntertiaTensor)
 {
 	Vector3 impulseContact;
 
 	//Build a vector that shows the change in velocity for a unit impulse in the direcion of the contact normal
 	Vector3 deltaVelWorld = Cross(mRelativeContactPosition[0], contactNormal);
-	deltaVelWorld = inverIntertiaTensor[0] * deltaVelWorld;
+	deltaVelWorld = inverseIntertiaTensor[0] * deltaVelWorld;
 	deltaVelWorld = Cross(deltaVelWorld, mRelativeContactPosition[0]);
 
 	//Calculate the change in velocity in contact coordinates
 	float deltaVelocity = Dot(deltaVelWorld, contactNormal);
 
+	/*std::cout << "X component: " << mContactToWorld.getAxisVector(0).x << ", " << mContactToWorld.getAxisVector(0).y << ", " << mContactToWorld.getAxisVector(0).z << std::endl;
+	std::cout << "Y component: " << mContactToWorld.getAxisVector(1).x << ", " << mContactToWorld.getAxisVector(1).y << ", " << mContactToWorld.getAxisVector(1).z << std::endl;
+	std::cout << "Z component: " << mContactToWorld.getAxisVector(2).x << ", " << mContactToWorld.getAxisVector(2).y << ", " << mContactToWorld.getAxisVector(2).z << std::endl;*/
+
+	/*std::cout << "X component: " << mWorldToContact.getAxisVector(0).x << ", " << mWorldToContact.getAxisVector(0).y << ", " << mWorldToContact.getAxisVector(0).z << std::endl;
+	std::cout << "Y component: " << mWorldToContact.getAxisVector(1).x << ", " << mWorldToContact.getAxisVector(1).y << ", " << mWorldToContact.getAxisVector(1).z << std::endl;
+	std::cout << "Z component: " << mWorldToContact.getAxisVector(2).x << ", " << mWorldToContact.getAxisVector(2).y << ", " << mWorldToContact.getAxisVector(2).z << std::endl;*/
+
 	deltaVelocity += body[0]->getInverseMass();
 
 	if (body[1] != NULL)
 	{
-		Vector3 deltaVelWorld = Cross(mRelativeContactPosition[1], contactNormal);
-		deltaVelWorld = inverIntertiaTensor[1] * deltaVelWorld;
+		deltaVelWorld = Cross(mRelativeContactPosition[1], contactNormal);
+		deltaVelWorld = inverseIntertiaTensor[1] * deltaVelWorld;
 		deltaVelWorld = Cross(deltaVelWorld, mRelativeContactPosition[1]);
 
 		deltaVelocity += Dot(deltaVelWorld, contactNormal);
@@ -278,6 +327,8 @@ Vector3 Contact::CalculateFrictionlessImpulse(Matrix3* inverIntertiaTensor)
 	impulseContact.x = mDesiredDeltaVelocity / deltaVelocity;
 	impulseContact.y = 0.0f;
 	impulseContact.z = 0.0f;
+
+	//std::cout << "Impulse: " << impulseContact.x << ", " << impulseContact.y << ", " << impulseContact.z << std::endl;
 
 	return impulseContact;
 }

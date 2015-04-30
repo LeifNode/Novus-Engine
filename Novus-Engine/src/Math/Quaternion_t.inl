@@ -97,6 +97,12 @@ namespace novus
 		z += q.z * (static_cast<T>(0.5));
 		w += q.w * (static_cast<T>(0.5));
 
+		/*float length = Length(v);
+
+		Quaternion_t<T> q = Quaternion_t<T>::AxisAngle(v / length, length);
+
+		*this *= q;*/
+
 		return *this;
 	}
 
