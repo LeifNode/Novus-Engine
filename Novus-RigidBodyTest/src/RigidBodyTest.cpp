@@ -270,7 +270,7 @@ void RigidBodyTest::Update(float dt)
 		(*it)->ClearAccumilators();
 		(*it)->CalculateDerivedData();
 
-		//(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());//Gravity
+		(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());//Gravity
 
 		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
 		{
@@ -282,14 +282,15 @@ void RigidBodyTest::Update(float dt)
 			(*it)->AddForceAtPoint(Vector3(0.0f, -9.8f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f));
 			mpContactRenderer->points.AddLine(LineSegment((*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, -1.0f, 0.0f)));
 		}
-		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
+		/*if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
 		{
 			(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());
-		}
-		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_P))
-		{
-			mpContactRenderer->points.Clear();
-		}
+		}*/
+	}
+
+	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_P))
+	{
+		mpContactRenderer->points.Clear();
 	}
 
 	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));

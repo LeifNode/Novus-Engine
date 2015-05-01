@@ -154,8 +154,8 @@ void Contact::ApplyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 	velocityChange[0] = Vector3();
 	velocityChange[0] += impulse * body[0]->getInverseMass();
 
-	std::cout << "Impulse: " << velocityChange[0].x << ", " << velocityChange[0].y << ", " << velocityChange[0].z << std::endl;
-	std::cout << "Rotation Impulse: " << rotationChange[0].x << ", " << rotationChange[0].y << ", " << rotationChange[0].z << std::endl;
+	//std::cout << "Impulse: " << velocityChange[0].x << ", " << velocityChange[0].y << ", " << velocityChange[0].z << std::endl;
+	//std::cout << "Rotation Impulse: " << rotationChange[0].x << ", " << rotationChange[0].y << ", " << rotationChange[0].z << std::endl;
 
 	body[0]->AddVelocity(velocityChange[0]);
 	body[0]->AddAngularVelocity(rotationChange[0]);
