@@ -52,6 +52,7 @@ public:
 	void InitMesh();
 	void InitPhysicsActors();
 	void InitPhysicsBounds();
+	void InitPhysicsBoxes();
 
 	void ResetPhysicsSimulation();
 
@@ -77,20 +78,22 @@ private:
 	novus::CBPerFrame mPerFrameData;
 
 	novus::MeshRenderer<novus::Vertex> mMeshRenderer;
+	novus::MeshRenderer<novus::Vertex> mMeshRenderer2;
 	novus::MeshRenderer<novus::Vertex> mPlaneRenderer;
 
 	std::vector<novus::RigidBody*> mPhysicsBodies;
-	std::vector<novus::CollisionSphere*> mCollisionBoxes;
+	std::vector<novus::CollisionBox*> mCollisionBoxes;
+	std::vector<novus::CollisionSphere*> mCollisionSpheres;
 	std::vector<novus::CollisionPlane*> mCollisionHalfSpaces;
 
-	static const unsigned int msMaxContacts = 1024;
+	static const unsigned int msMaxContacts = 4096;
 
 	novus::Contact mContacts[msMaxContacts];
 	unsigned int mContactCount;
 	novus::CollisionData mCollisionData;
 	novus::ContactResolver mContactResolver;
 
-
+	bool mRecordNormals;
 };
 
 

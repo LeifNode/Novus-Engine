@@ -1,4 +1,5 @@
 #include "CollisionDetector.h"
+#include "RigidBody.h"
 
 namespace novus
 {
@@ -46,8 +47,8 @@ unsigned int CollisionDetector::SphereAndSphere(const CollisionSphere& one, cons
 	Contact* contact = data->contacts;
 
 	contact->contactNormal = normal;
-	contact->contactPoint = positionOne + midLine * 0.5f;
-	contact->penetration = one.radius + two.radius - length;
+	contact->contactPoint = positionOne - midLine * 0.5f;
+	contact->penetration = (one.radius + two.radius - length);
 	contact->setBodyData(one.body, two.body, data->friction, data->restitution);
 
 	data->AddContacts(1);
@@ -113,7 +114,67 @@ unsigned int CollisionDetector::BoxAndBox(const CollisionBox& one, const Collisi
 
 unsigned int CollisionDetector::BoxAndSphere(const CollisionBox& box, const CollisionSphere& sphere, CollisionData* data)
 {
-	return 0;
+	if (data->contactsLeft <= 0)
+		return 0;
+
+	Vector3 center = sphere.getAxis(3);
+
+	float dist = LengthSq(center - box.getAxis(3));
+
+	float boundingSphere = Dot(box.halfSize * box.body->getTransform()->GetScale(), box.halfSize * box.body->getTransform()->GetScale());
+	boundingSphere += sphere.radius * sphere.radius;
+
+	if (dist > boundingSphere)
+		return 0;
+	
+	Matrix4 transform = Quaternion::ToMatrix(box.body->getTransform()->GetRotation()) * Matrix4::Translate(box.body->getTransform()->GetPosition());
+	Matrix4 invTransform = Matrix4::Inverse(transform);
+
+	//float dist;
+	Vector3 relCenter = Vector3(Vector4(center, 1.0f) * invTransform);
+
+	Vector3 scaledHalfSize = box.halfSize * box.body->getTransform()->GetScale();
+	//Vector3 scaledHalfSize = Vector3(1.0f);
+
+	if (fabsf(relCenter.x) - sphere.radius > scaledHalfSize.x ||
+		fabsf(relCenter.y) - sphere.radius > scaledHalfSize.y ||
+		fabsf(relCenter.z) - sphere.radius > scaledHalfSize.z)
+	{
+		return 0;
+	}
+
+	Vector3 closestPt;
+
+	dist = relCenter.x;
+	if (dist > scaledHalfSize.x) dist = scaledHalfSize.x;
+	if (dist < -scaledHalfSize.x) dist = -scaledHalfSize.x;
+	closestPt.x = dist;
+
+	dist = relCenter.y;
+	if (dist > scaledHalfSize.y) dist = scaledHalfSize.y;
+	if (dist < -scaledHalfSize.y) dist = -scaledHalfSize.y;
+	closestPt.y = dist;
+
+	dist = relCenter.z;
+	if (dist > scaledHalfSize.z) dist = scaledHalfSize.z;
+	if (dist < -scaledHalfSize.z) dist = -scaledHalfSize.z;
+	closestPt.z = dist;
+
+	dist = LengthSq(closestPt - relCenter);
+	if (dist > sphere.radius * sphere.radius) 
+		return 0;
+
+	Vector3 closestPtWorld = Vector3(Vector4(closestPt, 1.0f) * transform);
+
+	Contact* contact = data->contacts;
+	contact->contactNormal = Normalize(closestPtWorld - center);
+	contact->contactPoint = closestPtWorld;
+	contact->penetration = (sphere.radius - sqrtf(dist));
+	//contact->setBodyData(box.body, sphere.body, data->friction, data->restitution);
+	contact->setBodyData(NULL, sphere.body, data->friction, data->restitution);
+
+	data->AddContacts(1);
+	return 1;
 }
 
 }

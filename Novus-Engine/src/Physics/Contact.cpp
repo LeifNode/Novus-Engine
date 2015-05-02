@@ -194,14 +194,16 @@ void Contact::ApplyPositionChange(Vector3 linearChange[2], Vector3 angularChange
 
 		linearInertia[i] = body[i]->getInverseMass();
 
-		totalInertia += linearInertia[i] + angularInertia[i];
+		//totalInertia += linearInertia[i] + angularInertia[i];
+		totalInertia += linearInertia[i];
 	}
 
 	for (unsigned int i = 0; i < 2; i++) if (body[i] != NULL)
 	{
+		angularMove[i] = 0.0f;
 		float sign = (i == 0) ? 1.0f : -1.0f;
 		
-		angularMove[i] = sign * penetration * (angularInertia[i] / totalInertia);
+		//angularMove[i] = sign * penetration * (angularInertia[i] / totalInertia);
 		linearMove[i] = sign * penetration * (linearInertia[i] / totalInertia);
 
 		//Avoid overrotation on massive objects by limiting the angular move
@@ -222,6 +224,8 @@ void Contact::ApplyPositionChange(Vector3 linearChange[2], Vector3 angularChange
 			angularMove[i] = maxMagnitude;
 			linearMove[i] = totalMove - angularMove[i];
 		}
+
+		angularMove[i] = 0.0f;
 
 		//Calculating the required rotation to apply to the rigidbody to match with the adjusted linear movement
 		if (angularMove[i] == 0.0f)

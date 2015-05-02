@@ -18,6 +18,9 @@ void RigidBody::CalculateDerivedData()
 
 void RigidBody::Integrate(float dt)
 {
+	if (mInverseMass == 0.0f)
+		return;
+
 	mLastFrameAcceleration = Vector3();
 	mLastFrameAcceleration += mForceAccum * mInverseMass;
 
@@ -32,7 +35,7 @@ void RigidBody::Integrate(float dt)
 
 	mTransform.Translate(mVelocity * dt);
 
-	mTransform.Rotate(mAngularVelocity * dt);
+	//mTransform.Rotate(mAngularVelocity * dt);
 
 	CalculateDerivedData();
 

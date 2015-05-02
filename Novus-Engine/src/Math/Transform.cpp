@@ -100,7 +100,7 @@ const Matrix4& Transform::GetTransform() const
 {
 	if (mTransformDirty)
 	{
-		mTransform = Quaternion::ToMatrix(mRotation) * Matrix4::Scale(mScale) * Matrix4::Translate(mPosition);
+		mTransform = Matrix4::Scale(mScale) * Quaternion::ToMatrix(mRotation) * Matrix4::Translate(mPosition);
 		mTransformDirty = false;
 	}
 

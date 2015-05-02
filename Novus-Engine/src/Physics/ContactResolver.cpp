@@ -61,99 +61,92 @@ void ContactResolver::PrepareContacts(Contact* contactArr, unsigned int numConta
 	}
 }
 
-void ContactResolver::AdjustVelocities(Contact* contactArr, unsigned int numContacts, float dt)
+void ContactResolver::AdjustVelocities(Contact* c, unsigned int numContacts, float dt)
 {
 	Vector3 velocityChange[2], rotationChange[2];
-	Vector3 deltaVal;
+	Vector3 deltaVel;
 
 	velocityIterationsUsed = 0;
 	while (velocityIterationsUsed < mVelocityIterations)
 	{
 		float max = mVelocityEpsilon;
-		unsigned int index = numContacts;
-
-		for (unsigned int i = 0; i < numContacts; i++)
+		unsigned index = numContacts;
+		for (unsigned i = 0; i < numContacts; i++)
 		{
-			if (contactArr[i].mDesiredDeltaVelocity > max)
+			if (c[i].mDesiredDeltaVelocity > max)
 			{
-				max = contactArr[i].mDesiredDeltaVelocity;
+				max = c[i].mDesiredDeltaVelocity;
 				index = i;
 			}
 		}
-
 		if (index == numContacts) 
 			break;
 
-		//Match awake here
 
-		contactArr[index].ApplyVelocityChange(velocityChange, rotationChange);
+		c[index].ApplyVelocityChange(velocityChange, rotationChange);
 
-		//Changing the velocity of the two bodies makes some of the other reletive velocities inaccurate
-		for (unsigned int i = 0; i < numContacts; i++)
+		for (unsigned i = 0; i < numContacts; i++)
 		{
-			for (unsigned int b = 0; b < 2; b++) if (contactArr[i].body[b] != NULL)
+			for (unsigned b = 0; b < 2; b++) if (c[i].body[b])
 			{
-				for (unsigned int d = 0; d < 2; d++)
+				for (unsigned d = 0; d < 2; d++)
 				{
-					if (contactArr[i].body[b] == contactArr[index].body[d])
+					if (c[i].body[b] == c[index].body[d])
 					{
-						deltaVal = velocityChange[d] + (rotationChange[d] * contactArr[i].mRelativeContactPosition[b]);
+						deltaVel = velocityChange[d] +
+							rotationChange[d] * c[i].mRelativeContactPosition[b];
 
-						contactArr[i].mContactVelocity += (contactArr[i].mWorldToContact * deltaVal) * (b ? -1.0f : 1.0f);
-						contactArr[i].CalculateDesiredDeltaVelocity(dt);
+						c[i].mContactVelocity += (c[i].mWorldToContact * deltaVel) * (b ? -1.0f : 1.0f);
+						c[i].CalculateDesiredDeltaVelocity(dt);
 					}
 				}
 			}
 		}
-
 		velocityIterationsUsed++;
 	}
 }
 
-void ContactResolver::AdjustPositions(Contact* contactArr, unsigned int numContacts, float dt)
+void ContactResolver::AdjustPositions(Contact* c, unsigned int numContacts, float dt)
 {
-	unsigned int i, index;
+	unsigned i, index;
 	Vector3 linearChange[2], angularChange[2];
 	float max;
 	Vector3 deltaPosition;
 
 	positionIterationsUsed = 0;
-
 	while (positionIterationsUsed < mPositionIterations)
 	{
 		max = mPositionEpsilon;
 		index = numContacts;
-		for (i = 0; i < numContacts; i++)
+		for (i = 0; i<numContacts; i++)
 		{
-			if (contactArr[i].penetration > max)
+			if (c[i].penetration > max)
 			{
-				max = contactArr[i].penetration;
+				max = c[i].penetration;
 				index = i;
 			}
 		}
-
-		if (index == numContacts)
+		if (index == numContacts) 
 			break;
 
-		//contactArr[index].ApplyPositionChange(linearChange, angularChange, max);
-		contactArr[index].ApplyLinearPositionChange(linearChange, angularChange, max);
+		c[index].ApplyLinearPositionChange(linearChange, angularChange, max);
 
 		for (i = 0; i < numContacts; i++)
 		{
-			for (unsigned int b = 0; b < 2; b++) if (contactArr[i].body[b] != NULL)
+			for (unsigned b = 0; b < 2; b++) if (c[i].body[b])
 			{
-				for (unsigned int d = 0; d < 2; d++)
+				for (unsigned d = 0; d < 2; d++)
 				{
-					if (contactArr[i].body[b] == contactArr[index].body[d])
+					if (c[i].body[b] == c[index].body[d])
 					{
-						deltaPosition = linearChange[d] + (angularChange[d] * contactArr[i].mRelativeContactPosition[b]);
+						deltaPosition = linearChange[d] +
+							angularChange[d] * c[i].mRelativeContactPosition[b];
 
-						contactArr[i].penetration += Dot(deltaPosition, contactArr[i].contactNormal) * (b ? 1.0f : -1.0f);
+						c[i].penetration += Dot(deltaPosition, (c[i].contactNormal)) * (b ? 1.0f : -1.0f);
 					}
 				}
 			}
 		}
-
 		positionIterationsUsed++;
 	}
 }

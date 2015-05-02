@@ -160,10 +160,10 @@ bool VXGITestApplication::Init()
 
 	StaticMeshMaterial sphereMat;
 	sphereMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	sphereMat.RenderMaterial.SpecularColor = Vector3(0.0f);
+	sphereMat.RenderMaterial.SpecularColor = Vector3(1.0f);
 	sphereMat.RenderMaterial.Emissive = Vector3(0.04f, 0.545f, 0.40f) * 0.0f;
-	sphereMat.RenderMaterial.Metallic = 1.0f;
-	sphereMat.RenderMaterial.Roughness = 0.01f;
+	sphereMat.RenderMaterial.Metallic = 0.0f;
+	sphereMat.RenderMaterial.Roughness = 0.15f;
 
 	//StaticMesh* modelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/hairball.obj");
 	StaticMesh* modelMesh = mpResourceCache->getResource<StaticMesh>(L"../Models/buddha.obj");
@@ -198,7 +198,7 @@ bool VXGITestApplication::Init()
 
 	mpWorld->AddActor(meshActor);
 
-	InitBoxes();
+	//InitBoxes();
 
 	return true;
 }
@@ -243,8 +243,8 @@ void VXGITestApplication::InitShaders()
 void VXGITestApplication::InitLights()
 {
 	mLights.clear();
-	mLights.reserve(256);
-	for (int i = 0; i < 256; i++)
+	mLights.reserve(1024);
+	for (int i = 0; i < 1024; i++)
 	{
 		PointLight light;
 		light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
@@ -403,20 +403,20 @@ void VXGITestApplication::Render()
 	mpRenderer->PreRender();
 
 
-	//if (!mSceneVoxelized)
-	//{
-		mpRenderer->setShader(mpDepthPassShader);
-		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
+	if (!mSceneVoxelized)
+	{
+	mpRenderer->setShader(mpDepthPassShader);
+	mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
 
-		//Render voxelization
-		mpRenderer->setShader(mpVoxelizationShader);
-		mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
-	/*}
+	//Render voxelization
+	mpRenderer->setShader(mpVoxelizationShader);
+	mpWorld->RenderScenePass(mpRenderer, RenderPass::GraphicsPrepass);
+	}
 	else if (mRequiresReinject)
 	{
 		mpRenderer->setShader(mpDepthPassShader);
 		mpWorld->RenderScenePass(mpRenderer, RenderPass::Shadow);
-	}*/
+	}
 
 	//Render meshes as normal
 	CBPerFrame perFrame;
@@ -452,11 +452,11 @@ void VXGITestApplication::Render()
 
 	mpSkyboxRenderer->Render(mpRenderer);
 
-	//if (mRequiresReinject)
-	//{
+	if (mRequiresReinject)
+	{
 		mpRadianceVolume->InjectRadiance(mpRenderer);
 		mRequiresReinject = false;
-	//}
+	}
 	
 	if (mRenderVoxelization)
 	{

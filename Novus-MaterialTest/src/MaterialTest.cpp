@@ -51,7 +51,7 @@ mModelRoughness(0.04f)
 	mpCamera->setPosition(Vector3(0.0f, 4.9f, 1.4f));
 	mpCamera->setSpeed(0.5f);
 
-	mpCamera->setPosition(Vector3(3.0f, 2.0f, 3.0f));
+	mpCamera->setPosition(Vector3(0.0f, 2.0f, 3.0f));
 	mpCamera->LookAt(Vector3(0.0f, 0.0f, 0.0f));
 	//mpCamera->setRotation(Quaternion::AxisAngle((Normalize(Vector3(0.5f, 1.0f, 0.0f))), Math::Pi * 0.3f));
 }

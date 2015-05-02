@@ -45,7 +45,8 @@ mpMainShader(NULL),
 mpSkyboxRenderer(NULL),
 mpContactRenderer(NULL),
 mContactCount(0),
-mContactResolver(msMaxContacts * 8)
+mContactResolver(msMaxContacts * 8),
+mRecordNormals(false)
 {
 	mMainWndCaption = L"Novus Engine Rigid Body Test v0.1.85";
 
@@ -71,6 +72,11 @@ RigidBodyTest::~RigidBodyTest()
 	}
 
 	for (auto it = mCollisionBoxes.begin(); it != mCollisionBoxes.end(); ++it)
+	{
+		NE_DELETE(*it);
+	}
+
+	for (auto it = mCollisionSpheres.begin(); it != mCollisionSpheres.end(); ++it)
 	{
 		NE_DELETE(*it);
 	}
@@ -141,10 +147,13 @@ void RigidBodyTest::InitMesh()
 {
 	Mesh mesh;
 
-	//GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, mesh);
 	GeometryGenerator::CreateSphere(1.0f, 30, 30, mesh);
 
 	mMeshRenderer.Init(mpRenderer, mesh.Vertices, mesh.Indices);
+
+	GeometryGenerator::CreateBox(2.0f, 2.0f, 2.0f, mesh);
+
+	mMeshRenderer2.Init(mpRenderer, mesh.Vertices, mesh.Indices);
 
 	GeometryGenerator::CreatePlane(1000.0f, 1000.0f, 4, 4, mesh);
 
@@ -159,6 +168,8 @@ void RigidBodyTest::InitPhysicsActors()
 	}*/
 
 	InitPhysicsBounds();
+	InitPhysicsBoxes();
+
 }
 
 void RigidBodyTest::AddSphereActor(const Vector3& position, float radius, float mass)
@@ -167,12 +178,13 @@ void RigidBodyTest::AddSphereActor(const Vector3& position, float radius, float 
 	//Set random position and rotation
 	body->getTransform()->SetPosition(position);
 	body->getTransform()->SetRotation(Quaternion::AxisAngle(Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))), Math::RandF(0.0f, 2.0f * Math::Pi)));
-	body->setMass(mass);
+	body->getTransform()->SetScale(radius);
+	body->setMass(mass * radius);
 
 	Vector3 halfScale = Vector3(0.5f);
 
-	Matrix3 tensor = Matrix3::BoxInertiaTensor(halfScale, body->getMass());
-	//Matrix3 tensor = Matrix3::SphereSolidInertiaTensor(radius, body->getMass());
+	//Matrix3 tensor = Matrix3::BoxInertiaTensor(halfScale, body->getMass());
+	Matrix3 tensor = Matrix3::SphereSolidInertiaTensor(radius, body->getMass());
 	body->setInertiaTensor(tensor);
 
 	body->ClearAccumilators();
@@ -187,7 +199,7 @@ void RigidBodyTest::AddSphereActor(const Vector3& position, float radius, float 
 	//boxCollider->halfSize = halfScale;
 	boxCollider->CalculateInternals();
 
-	mCollisionBoxes.push_back(boxCollider);
+	mCollisionSpheres.push_back(boxCollider);
 }
 
 void RigidBodyTest::InitPhysicsBounds()
@@ -203,6 +215,39 @@ void RigidBodyTest::InitPhysicsBounds()
 	mCollisionHalfSpaces.push_back(plane);
 }
 
+void RigidBodyTest::InitPhysicsBoxes()
+{
+	for (int i = 0; i < 400; i++)
+	{
+		RigidBody* body = NE_NEW RigidBody();
+		//Set random position and rotation
+		body->getTransform()->SetPosition(Vector3(Math::RandF(-1.0f, 1.0f), 0.0f, Math::RandF(-1.0f, 1.0f)) * 90.0f);
+		body->getTransform()->SetRotation(Quaternion::AxisAngle(Normalize(Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f), Math::RandF(-1.0f, 1.0f))), Math::RandF(0.0f, 2.0f * Math::Pi)));
+		body->getTransform()->SetScale(Vector3(Math::RandF(), Math::RandF(), Math::RandF()) * 8.0f);
+		body->setInverseMass(0.0f);
+
+		Vector3 halfScale = Vector3(1.0f);
+
+		//Matrix3 tensor = Matrix3::BoxInertiaTensor(halfScale, 1.0f);
+
+		Matrix3 tensor = Matrix3::SphereSolidInertiaTensor(1.0f, 1.0f);
+		body->setInertiaTensor(tensor);
+
+		body->ClearAccumilators();
+
+		body->CalculateDerivedData();
+
+		mPhysicsBodies.push_back(body);
+
+		CollisionBox* boxCollider = NE_NEW CollisionBox();
+		boxCollider->body = body;
+		boxCollider->halfSize = halfScale;
+		boxCollider->CalculateInternals();
+
+		mCollisionBoxes.push_back(boxCollider);
+	}
+}
+
 void RigidBodyTest::ResetPhysicsSimulation()
 {
 	for (auto it = mCollisionHalfSpaces.begin(); it != mCollisionHalfSpaces.end(); ++it)
@@ -215,6 +260,11 @@ void RigidBodyTest::ResetPhysicsSimulation()
 		NE_DELETE(*it);
 	}
 
+	for (auto it = mCollisionSpheres.begin(); it != mCollisionSpheres.end(); ++it)
+	{
+		NE_DELETE(*it);
+	}
+
 	for (auto it = mPhysicsBodies.begin(); it != mPhysicsBodies.end(); ++it)
 	{
 		NE_DELETE(*it);
@@ -222,10 +272,13 @@ void RigidBodyTest::ResetPhysicsSimulation()
 
 	mCollisionHalfSpaces.clear();
 	mCollisionBoxes.clear();
+	mCollisionSpheres.clear();
 	mPhysicsBodies.clear();
 
 	InitPhysicsActors();
 	InitPhysicsBounds();
+	InitPhysicsBoxes();
+	mpContactRenderer->points.Clear();
 }
 
 void RigidBodyTest::HookInputEvents()
@@ -251,7 +304,11 @@ void RigidBodyTest::OnKeyDown(novus::IEventDataPtr eventData)
 		ResetPhysicsSimulation();
 		break;
 	case KeyboardKey::KEY_N:
-		AddSphereActor(Vector3(Math::RandF(-10.0f, 10.0f), 10.0f, Math::RandF(-10.0f, 10.0f)), 1.0f, 50.0f);
+		AddSphereActor(Vector3(Math::RandF(-1.0f, 1.0f) * 30.0f, 30.0f, Math::RandF(-1.0f, 1.0f) * 30.0f), Math::RandF(0.7f, 1.5f), 50.0f);
+		break;
+	case KeyboardKey::KEY_P:
+		mRecordNormals = !mRecordNormals;
+		mpContactRenderer->points.Clear();
 		break;
 	}
 }
@@ -270,7 +327,8 @@ void RigidBodyTest::Update(float dt)
 		(*it)->ClearAccumilators();
 		(*it)->CalculateDerivedData();
 
-		(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());//Gravity
+		if ((*it)->getInverseMass() != 0.0f)
+			(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());//Gravity
 
 		if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_X))
 		{
@@ -282,20 +340,9 @@ void RigidBodyTest::Update(float dt)
 			(*it)->AddForceAtPoint(Vector3(0.0f, -9.8f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f));
 			mpContactRenderer->points.AddLine(LineSegment((*it)->getTransform()->GetPosition() + Vector3(-1.0f, 0.0f, 0.0f), (*it)->getTransform()->GetPosition() + Vector3(-1.0f, -1.0f, 0.0f)));
 		}
-		/*if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_Z))
-		{
-			(*it)->AddForce(Vector3(0.0f, -9.8f, 0.0f) * (*it)->getMass());
-		}*/
 	}
 
-	if (mpInputSystem->getKeyboardState()->IsKeyPressed(KeyboardKey::KEY_P))
-	{
-		mpContactRenderer->points.Clear();
-	}
-
-	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 	mpCamera->Update(dt);
-	//mpCamera->LookAt(Vector3(0.0f, -5.0f, 0.0f));
 
 	mpRenderer->getDeferredRenderer()->Update(dt);
 
@@ -321,7 +368,49 @@ void RigidBodyTest::UpdateContactRenderers()
 
 	for (unsigned int i = 0; i < mCollisionData.contactCount; i++)
 	{
-		mpContactRenderer->points.AddLine(LineSegment(mContacts[i].contactPoint, mContacts[i].contactPoint + mContacts[i].contactNormal));
+		Vector3 endPt = mContacts[i].contactPoint + mContacts[i].contactNormal;
+		Vector3 toStartPt = Normalize(mContacts[i].contactPoint - endPt);
+		Vector3 arrowEndAxisX = Cross(toStartPt, fabsf((toStartPt).y) < 0.98f ? Vector3(0.0f, 1.0f, 0.0f) : Vector3(1.0f, 0.0f, 0.0f));
+		Vector3 arrowEndAxisY = Cross(arrowEndAxisX, toStartPt);
+
+		Vector3 arrowEndPt1 = endPt + (arrowEndAxisX + toStartPt) * 0.25f;
+		Vector3 arrowEndPt2 = endPt + (-arrowEndAxisX + toStartPt) * 0.25f;
+		Vector3 arrowEndPt3 = endPt + (arrowEndAxisY + toStartPt) * 0.25f;
+		Vector3 arrowEndPt4 = endPt + (-arrowEndAxisY + toStartPt) * 0.25f;
+
+		Vector3 arrowEndPt5 = mContacts[i].contactPoint + (arrowEndAxisX) * 0.25f;
+		Vector3 arrowEndPt6 = mContacts[i].contactPoint + (-arrowEndAxisX) * 0.25f;
+		Vector3 arrowEndPt7 = mContacts[i].contactPoint + (arrowEndAxisY) * 0.25f;
+		Vector3 arrowEndPt8 = mContacts[i].contactPoint + (-arrowEndAxisY) * 0.25f;
+
+		if (mRecordNormals)
+			mpContactRenderer->points.AddLine(LineSegment(mContacts[i].contactPoint, endPt));
+
+		//mpContactRenderer->points.AddLine(LineSegment(endPt, arrowEndPt1));
+		//mpContactRenderer->points.AddLine(LineSegment(endPt, arrowEndPt2));
+		//mpContactRenderer->points.AddLine(LineSegment(endPt, arrowEndPt3));
+		//mpContactRenderer->points.AddLine(LineSegment(endPt, arrowEndPt4));
+
+		//mpContactRenderer->points.AddLine(LineSegment(mContacts[i].contactPoint, arrowEndPt5));
+		//mpContactRenderer->points.AddLine(LineSegment(mContacts[i].contactPoint, arrowEndPt6));
+		//mpContactRenderer->points.AddLine(LineSegment(mContacts[i].contactPoint, arrowEndPt7));
+		//mpContactRenderer->points.AddLine(LineSegment(mContacts[i].contactPoint, arrowEndPt8));
+			
+
+		PointLight light;
+		light.Color = Vector3(1.0f);
+		light.Intensity = 2.4f;
+		light.PositionWorld = mContacts[i].contactPoint + mContacts[i].contactNormal * 0.1f;
+		light.Radius = 0.0f;
+
+		mpRenderer->getDeferredRenderer()->getLightManager()->AddLightForFrame(light);
+
+		light.Color = Vector3(1.0f);
+		light.Intensity = 2.4f;
+		light.PositionWorld = mContacts[i].contactPoint + mContacts[i].contactNormal * -0.1f;
+		light.Radius = 0.0f;
+
+		mpRenderer->getDeferredRenderer()->getLightManager()->AddLightForFrame(light);
 	}
 
 	mpContactRenderer->ReloadPoints();
@@ -348,6 +437,12 @@ void RigidBodyTest::UpdateBodies(float dt)
 		(*it)->body->Integrate(dt);
 		(*it)->CalculateInternals();
 	}
+
+	for (auto it = mCollisionSpheres.cbegin(); it != mCollisionSpheres.cend(); ++it)
+	{
+		(*it)->body->Integrate(dt);
+		(*it)->CalculateInternals();
+	}
 }
 
 void RigidBodyTest::GenerateContacts()
@@ -357,9 +452,9 @@ void RigidBodyTest::GenerateContacts()
 	mCollisionData.Reset(msMaxContacts);
 	mCollisionData.friction = 0.9f;
 	mCollisionData.restitution = 0.6f;
-	mCollisionData.tolerance = 0.1f;
+	mCollisionData.tolerance = 0.01f;
 
-	for (auto it = mCollisionBoxes.cbegin(); it != mCollisionBoxes.cend(); ++it)
+	for (auto it = mCollisionSpheres.cbegin(); it != mCollisionSpheres.cend(); ++it)
 	{
 		for (auto plane = mCollisionHalfSpaces.cbegin(); plane != mCollisionHalfSpaces.cend(); ++plane)
 		{
@@ -369,14 +464,21 @@ void RigidBodyTest::GenerateContacts()
 			//CollisionDetector::BoxAndHalfSpace(*(*it), *(*plane), &mCollisionData);
 		}
 
-		for (auto other = mCollisionBoxes.cbegin(); other != mCollisionBoxes.cend(); ++other)
+		for (auto other = mCollisionSpheres.cbegin(); other != mCollisionSpheres.cend(); ++other)
 		{
 			if ((*it)->body != (*other)->body)
 			{
 				CollisionDetector::SphereAndSphere(*(*it), *(*other), &mCollisionData);
 			}
 		}
+
+		for (auto other = mCollisionBoxes.cbegin(); other != mCollisionBoxes.cend(); ++other)
+		{
+			CollisionDetector::BoxAndSphere(*(*other), *(*it), &mCollisionData);
+		}
 	}
+
+	//std::cout << mCollisionData.contactCount << std::endl;
 }
 
 void RigidBodyTest::Render()
@@ -406,7 +508,7 @@ void RigidBodyTest::Render()
 	perObject.Material.HasNormalTexture = false;
 	perObject.Material.HasSpecularTexture = false;
 
-	for (auto it = mCollisionBoxes.cbegin(); it != mCollisionBoxes.cend(); ++it)
+	for (auto it = mCollisionSpheres.cbegin(); it != mCollisionSpheres.cend(); ++it)
 	{
 		perObject.World = (*it)->body->getTransform()->GetTransform();
 		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
@@ -414,11 +516,27 @@ void RigidBodyTest::Render()
 		perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		perObject.Material.Emissive = Vector3(0.0f);
 		perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
-		perObject.Material.Metallic = 1.0f;
+		perObject.Material.Metallic = 0.0f;
 		perObject.Material.Roughness = 0.15f;
 		mpRenderer->setPerObjectBuffer(perObject);
 
 		mMeshRenderer.Render(mpRenderer);
+	}
+
+	for (auto it = mCollisionBoxes.cbegin(); it != mCollisionBoxes.cend(); ++it)
+	{
+		perObject.World = (*it)->body->getTransform()->GetTransform();
+		perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
+		perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
+		perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		perObject.Material.Emissive = Vector3(0.0f);
+		//perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
+		perObject.Material.SpecularColor = Vector3(0.5f);
+		perObject.Material.Metallic = 0.0f;
+		perObject.Material.Roughness = 0.15f;
+		mpRenderer->setPerObjectBuffer(perObject);
+
+		mMeshRenderer2.Render(mpRenderer);
 	}
 
 	perObject.World = Matrix4::Translate(0.0f, 0.0f, 0.0f);
