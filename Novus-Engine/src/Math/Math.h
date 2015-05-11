@@ -64,7 +64,9 @@ public:
 		return x < low ? low : (x > high ? high : x);
 	}
 
+	static int MipMapCount(int width);
 	static int MipMapCount(int width, int height);
+	static int MipMapCount(int width, int height, int depth);
 
 
 	static const float Pi;

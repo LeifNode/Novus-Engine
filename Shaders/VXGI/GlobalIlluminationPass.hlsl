@@ -90,8 +90,8 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	bool pastDiffuseDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.x;
 	bool pastSpecularDivide = surface.PositionTextureSpace.x + surface.PositionTextureSpace.y > gDiffuseSpecularInterpolation.y;
 
-	//surface.Roughness += 0.3f;
-	surface.Roughness = 0.1f;
+	surface.Roughness += 0.3f;
+	//surface.Roughness = 0.1f;
 
 	//Direct lighting
 	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
@@ -185,7 +185,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 	//Diffuse GI
 	float3 diffuseAccum = float3(0.0f, 0.0f, 0.0f);
 	float diffuseOcclusionAccum = 0.0f;
-	startSampleDistance = 0.1f;
+	startSampleDistance = 0.2f;
 
 	for (int conei = 0; conei < 6; conei++)
 	{
@@ -231,8 +231,7 @@ void GlobalIllumEvaluation(uint3 dispatchThreadID : SV_DispatchThreadID)
 
 	//float4 sampledColor = sampleVoxelVolume(gVoxelVolume, gVoxelSampler, coneSamplePosition, 0.1f);
 
-	//gOutputTexture[globalCoords] = directColor * 11.0f;
-	directColor.rgb *= 11.0f;
+	gOutputTexture[globalCoords] = directColor * 11.0f;
 	directColor.rgb += surface.Emissive;
 
 

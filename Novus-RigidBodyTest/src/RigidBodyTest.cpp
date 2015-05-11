@@ -516,7 +516,7 @@ void RigidBodyTest::Render()
 		perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		perObject.Material.Emissive = Vector3(0.0f);
 		perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
-		perObject.Material.Metallic = 0.0f;
+		perObject.Material.Metallic = 0.04f;
 		perObject.Material.Roughness = 0.15f;
 		mpRenderer->setPerObjectBuffer(perObject);
 
@@ -532,7 +532,7 @@ void RigidBodyTest::Render()
 		perObject.Material.Emissive = Vector3(0.0f);
 		//perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
 		perObject.Material.SpecularColor = Vector3(0.5f);
-		perObject.Material.Metallic = 0.0f;
+		perObject.Material.Metallic = 0.04f;
 		perObject.Material.Roughness = 0.15f;
 		mpRenderer->setPerObjectBuffer(perObject);
 
@@ -545,7 +545,7 @@ void RigidBodyTest::Render()
 	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	perObject.Material.SpecularColor = Vector3(1.0f, 1.0f, 1.0f);
 	perObject.Material.Emissive = Vector3(0.0f);
-	perObject.Material.Metallic = 0.0f;
+	perObject.Material.Metallic = 0.04f;
 	perObject.Material.Roughness = 0.2f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);

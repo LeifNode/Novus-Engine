@@ -134,7 +134,7 @@ void Camera::Update(float dt)
 {
 	if (Quaternion::Dot(mRotation, mTargetRotation) < 0.999999999f)
 	{
-		mRotation = Quaternion::Normalize(Quaternion::Slerp(mRotation, mTargetRotation, 0.1f));//.025 for material test
+		mRotation = Quaternion::Normalize(Quaternion::Slerp(mRotation, mTargetRotation, 8.0f * dt));
 	}
 	else
 		mRotation = mTargetRotation;

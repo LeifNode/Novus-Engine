@@ -57,7 +57,7 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	forward = normalize(forward);
 
 	//Find amount to advance each sample
-	const int sampleCount = 512;
+	const int sampleCount = 1024;
 	const float maxDistance = 20.0f;
 	forward *= maxDistance / sampleCount;
 
@@ -72,8 +72,8 @@ void RaymarchCS(uint3 dispatchThreadID : SV_DispatchThreadID)
 	{
 		//sampleColor = convRGBA8ToVec4(gVoxelVolume.SampleLevel(gVolumeSampler, WorldToVolume(samplePosition), 0));
 		int3 volumeCoord = WorldToVolume(samplePosition) * volumeDimensions / pow(2, mipLevel);
-		//volumeCoord.x /= 6;
-
+		volumeCoord.x /= 6;
+		volumeCoord.x += volumeDimensions.y * 5;
 		sampleColor = gVoxelVolume.Load(int4(volumeCoord, mipLevel));
 
 		//if (sampleColor.a > 0.0f)

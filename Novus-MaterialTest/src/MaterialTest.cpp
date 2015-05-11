@@ -140,17 +140,17 @@ void MaterialTest::InitMesh()
 void MaterialTest::InitLights()
 {
 	mLights.clear();
-	mLights.reserve(1024);
-	for (int i = 0; i < 1024; i++)
+	mLights.reserve(128);
+	for (int i = 0; i < 128; i++)
 	{
 		PointLight light;
 		light.Color = Vector3(Math::RandF(), Math::RandF(), Math::RandF());
 		//light.Color = Vector3(1.0f, 1.0f, 1.0f);
-		light.Intensity = Math::RandF(0.3f, 2.7f) * 0.2f;
+		light.Intensity = Math::RandF(0.3f, 2.7f) * 0.25f;
 		light.Radius = 0.0f;
 
 		light.FalloffPow = 1;
-		light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(0.0f, 0.2f), Math::RandF(-1.0f, 1.0f)) * 35.0f;
+		light.PositionWorld = Vector3(Math::RandF(-1.0f, 1.0f), Math::RandF(0.0f, 0.5f), Math::RandF(-1.0f, 1.0f)) * 8.0f;
 		light.PositionWorld.y = Math::RandF(0.2f, 4.0f);
 
 		mLights.push_back(light);
@@ -212,7 +212,7 @@ void MaterialTest::Update(float dt)
 	modelMat.RenderMaterial.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	modelMat.RenderMaterial.SpecularColor = Vector3(1.0f);
 	modelMat.RenderMaterial.Emissive = Vector3(0.0f, 0.0f, 0.0f);
-	modelMat.RenderMaterial.Metallic = 0.0f;
+	modelMat.RenderMaterial.Metallic = 0.04f;
 	modelMat.RenderMaterial.Roughness = mModelRoughness;
 
 	mpModelMesh->setMaterial(modelMat);
@@ -250,10 +250,11 @@ void MaterialTest::Render()
 	{
 		for (int z = 0; z < 2; z++)
 		{
+			//perObject.Material.Diffuse = Vector4(0.5f, 1.0f, 0.4f, 1.0f);
 			perObject.Material.Diffuse = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-			perObject.Material.SpecularColor = Vector3(0.725f, 0.58f, 0.271f);
+			perObject.Material.SpecularColor = (z == 0) ? Vector3(0.5f) : Vector3(0.725f, 0.58f, 0.271f);
 			perObject.Material.Roughness = Math::Clamp((x + 5) / 10.0f, 0.005f, 1.0f);
-			perObject.Material.Metallic = static_cast<float>(z);
+			perObject.Material.Metallic = static_cast<float>(Math::Min(z + 0.05f, 1.0f));
 
 			perObject.World = Matrix4::Scale(0.1f, 0.1f, 0.1f) *
 				Matrix4::Translate(static_cast<float>(x) / 2.0f, 0.1f, static_cast<float>(z) / 2.0f);
@@ -272,8 +273,8 @@ void MaterialTest::Render()
 	perObject.WorldInvTranspose = Matrix4::Transpose(Matrix4::Inverse(perObject.World));
 	perObject.WorldViewProj = perObject.World * perFrame.ViewProj;
 	perObject.Material.Diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	perObject.Material.SpecularColor = Vector3(1.0f, 1.0f, 1.0f);
-	perObject.Material.Metallic = 0.0f;
+	perObject.Material.SpecularColor = Vector3(0.3f);
+	perObject.Material.Metallic = 0.05f;
 	perObject.Material.Roughness = 0.15f;
 	mpRenderer->setPerObjectBuffer(perObject);
 	mPlaneRenderer.Render(mpRenderer);

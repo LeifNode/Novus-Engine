@@ -62,7 +62,7 @@ mpVoxelTexture(NULL),
 mpShadowMap(NULL),
 mpVoxelVolume(NULL),
 mRenderVoxelization(false),
-mVoxelResolution(512),
+mVoxelResolution(256),
 mpGlobalIlluminationRenderPass(NULL),
 mpRadianceVolume(NULL),
 mSceneVoxelized(false),
@@ -476,8 +476,9 @@ void VXGITestApplication::Render()
 
 		mpRenderer->setPerObjectBuffer(perObject);
 
-		ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getTexture()->getResourceView();
+		//ID3D11ShaderResourceView* voxelSRV = mpVoxelVolume->getTexture()->getResourceView();
 		//ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceMips()->getResourceView();
+		ID3D11ShaderResourceView* voxelSRV = mpRadianceVolume->getRadianceVolume()->getResourceView();
 		mpRenderer->context()->CSSetShaderResources(0, 1, &voxelSRV);
 
 		ID3D11UnorderedAccessView* outputUAV = mpRenderer->getDeferredRenderer()->getHDRRenderTarget()->getUnorderedAccessView();
@@ -487,7 +488,7 @@ void VXGITestApplication::Render()
 		unsigned int dispatchWidth = (getClientWidth() + 16 - 1) / 16;
 		unsigned int dispatchHeight = (getClientHeight() + 16 - 1) / 16;
 
-		mpRenderer->context()->Dispatch(dispatchWidth, dispatchHeight, 1);
+		//mpRenderer->context()->Dispatch(dispatchWidth, dispatchHeight, 1);
 
 		mpRenderer->UnbindTextureResources();
 		mpRenderer->UnbindUAVs();
